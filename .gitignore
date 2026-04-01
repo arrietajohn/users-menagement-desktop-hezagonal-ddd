@@ -38,9 +38,5 @@ build/
 .DS_Store
 
 .idea/
-*.iml
-out/
-target/
 *.log
-.DS_Store
 
