@@ -44,55 +44,59 @@ class UserModelTest {
   @DisplayName("create() debe fijar status PENDING y preservar todos los campos recibidos")
   void shouldCreateUserWithPendingStatusAndPreserveAllFields() {
     // Act
-    final UserModel model = UserModel.create(userId, userName, userEmail, password, UserRole.MEMBER);
+    final UserModel model =
+        UserModel.create(userId, userName, userEmail, password, UserRole.MEMBER);
 
     // Assert
-    assertAll("create() factory",
-        () -> assertEquals(UserStatus.PENDING, model.getStatus(), "status debe iniciar como PENDING"),
-        () -> assertSame(password, model.getPassword(),            "password debe preservarse")
-    );
+    assertAll(
+        "create() factory",
+        () ->
+            assertEquals(UserStatus.PENDING, model.getStatus(), "status debe iniciar como PENDING"),
+        () -> assertSame(password, model.getPassword(), "password debe preservarse"));
   }
 
-  // ── activate() ───────────────────────────────────────────────────────────
+  // ── activate()
 
   @Test
   @DisplayName("activate() debe retornar nueva instancia con ACTIVE y demás campos intactos")
   void shouldActivateAndPreserveOtherFields() {
     // Arrange
-    final UserModel pending = UserModel.create(userId, userName, userEmail, password, UserRole.REVIEWER);
+    final UserModel pending =
+        UserModel.create(userId, userName, userEmail, password, UserRole.REVIEWER);
 
     // Act
     final UserModel activated = pending.activate();
 
     // Assert
-    assertAll("resultado de activate()",
-        () -> assertNotSame(pending,              activated,               "debe ser una nueva instancia"),
-        () -> assertEquals(UserStatus.ACTIVE,     activated.getStatus(),   "status debe ser ACTIVE"),
-        () -> assertSame(userId,                  activated.getId(),       "id debe preservarse"),
-        () -> assertSame(userName,                activated.getName(),     "name debe preservarse"),
-        () -> assertSame(userEmail,               activated.getEmail(),    "email debe preservarse"),
-        () -> assertEquals(UserRole.REVIEWER,     activated.getRole(),     "role debe preservarse")
-    );
+    assertAll(
+        "resultado de activate()",
+        () -> assertNotSame(pending, activated, "debe ser una nueva instancia"),
+        () -> assertEquals(UserStatus.ACTIVE, activated.getStatus(), "status debe ser ACTIVE"),
+        () -> assertSame(userId, activated.getId(), "id debe preservarse"),
+        () -> assertSame(userName, activated.getName(), "name debe preservarse"),
+        () -> assertSame(userEmail, activated.getEmail(), "email debe preservarse"),
+        () -> assertEquals(UserRole.REVIEWER, activated.getRole(), "role debe preservarse"));
   }
 
-  // ── deactivate() ─────────────────────────────────────────────────────────
+  // ── deactivate()
 
   @Test
   @DisplayName("deactivate() debe retornar nueva instancia con INACTIVE y demás campos intactos")
   void shouldDeactivateAndPreserveOtherFields() {
     // Arrange
-    final UserModel active = new UserModel(
-        userId, userName, userEmail, password, UserRole.ADMIN, UserStatus.ACTIVE);
+    final UserModel active =
+        new UserModel(userId, userName, userEmail, password, UserRole.ADMIN, UserStatus.ACTIVE);
 
     // Act
     final UserModel deactivated = active.deactivate();
 
     // Assert
-    assertAll("resultado de deactivate()",
-        () -> assertNotSame(active,             deactivated,                "debe ser una nueva instancia"),
-        () -> assertEquals(UserStatus.INACTIVE, deactivated.getStatus(),    "status debe ser INACTIVE"),
-        () -> assertSame(userId,                deactivated.getId(),        "id debe preservarse"),
-        () -> assertEquals(UserRole.ADMIN,      deactivated.getRole(),      "role debe preservarse")
-    );
+    assertAll(
+        "resultado de deactivate()",
+        () -> assertNotSame(active, deactivated, "debe ser una nueva instancia"),
+        () ->
+            assertEquals(UserStatus.INACTIVE, deactivated.getStatus(), "status debe ser INACTIVE"),
+        () -> assertSame(userId, deactivated.getId(), "id debe preservarse"),
+        () -> assertEquals(UserRole.ADMIN, deactivated.getRole(), "role debe preservarse"));
   }
 }

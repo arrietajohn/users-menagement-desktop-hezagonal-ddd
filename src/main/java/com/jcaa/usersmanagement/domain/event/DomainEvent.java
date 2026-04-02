@@ -11,7 +11,7 @@ public abstract class DomainEvent {
   private final LocalDateTime occurredOn;
 
   protected DomainEvent(final String eventName) {
-    this.eventName  = eventName;
+    this.eventName = eventName;
     this.occurredOn = LocalDateTime.now();
   }
 

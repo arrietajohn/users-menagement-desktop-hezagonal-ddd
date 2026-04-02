@@ -76,9 +76,11 @@ class UserUpdatedDomainEventTest {
 
     // Assert
     assertNotNull(occurredOn, "occurredOn no debe ser null");
-    assertFalse(occurredOn.isBefore(before),
+    assertFalse(
+        occurredOn.isBefore(before),
         "occurredOn debe ser >= al instante anterior a la construcción");
-    assertFalse(occurredOn.isAfter(after),
+    assertFalse(
+        occurredOn.isAfter(after),
         "occurredOn debe ser <= al instante posterior a la construcción");
   }
 
@@ -109,13 +111,13 @@ class UserUpdatedDomainEventTest {
     final Map<String, String> payload = event.payload();
 
     // Assert
-    assertAll("payload de UserUpdatedDomainEvent",
-        () -> assertEquals(5,                          payload.size(),          "tamaño del mapa"),
-        () -> assertEquals(ID,                         payload.get("id"),       "id"),
-        () -> assertEquals(NAME,                       payload.get("name"),     "name"),
-        () -> assertEquals(EMAIL,                      payload.get("email"),    "email"),
-        () -> assertEquals(UserRole.ADMIN.name(),      payload.get("role"),     "role"),
-        () -> assertEquals(UserStatus.INACTIVE.name(), payload.get("status"),   "status")
-    );
+    assertAll(
+        "payload de UserUpdatedDomainEvent",
+        () -> assertEquals(5, payload.size(), "tamaño del mapa"),
+        () -> assertEquals(ID, payload.get("id"), "id"),
+        () -> assertEquals(NAME, payload.get("name"), "name"),
+        () -> assertEquals(EMAIL, payload.get("email"), "email"),
+        () -> assertEquals(UserRole.ADMIN.name(), payload.get("role"), "role"),
+        () -> assertEquals(UserStatus.INACTIVE.name(), payload.get("status"), "status"));
   }
 }

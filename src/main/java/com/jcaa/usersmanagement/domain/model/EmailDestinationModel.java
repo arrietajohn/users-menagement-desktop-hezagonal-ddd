@@ -21,7 +21,7 @@ public class EmailDestinationModel {
     this.destinationName =
         validateNotBlank(destinationName, "El nombre del destinatario es requerido.");
     this.subject = validateNotBlank(subject, "El asunto es requerido.");
-    this.body    = validateNotBlank(body,    "El cuerpo del mensaje es requerido.");
+    this.body = validateNotBlank(body, "El cuerpo del mensaje es requerido.");
   }
 
   private static String validateNotBlank(final String value, final String errorMessage) {

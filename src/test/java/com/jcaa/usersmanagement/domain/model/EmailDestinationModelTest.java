@@ -30,12 +30,12 @@ class EmailDestinationModelTest {
     final EmailDestinationModel model = new EmailDestinationModel(EMAIL, NAME, SUBJECT, BODY);
 
     // Assert
-    assertAll("campos de EmailDestinationModel",
-        () -> assertEquals(EMAIL,   model.getDestinationEmail(), "destinationEmail"),
-        () -> assertEquals(NAME,    model.getDestinationName(),  "destinationName"),
-        () -> assertEquals(SUBJECT, model.getSubject(),          "subject"),
-        () -> assertEquals(BODY,    model.getBody(),             "body")
-    );
+    assertAll(
+        "campos de EmailDestinationModel",
+        () -> assertEquals(EMAIL, model.getDestinationEmail(), "destinationEmail"),
+        () -> assertEquals(NAME, model.getDestinationName(), "destinationName"),
+        () -> assertEquals(SUBJECT, model.getSubject(), "subject"),
+        () -> assertEquals(BODY, model.getBody(), "body"));
   }
 
   // ── Validaciones de campo

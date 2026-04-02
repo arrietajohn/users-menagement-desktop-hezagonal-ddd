@@ -50,9 +50,11 @@ class UserDeletedDomainEventTest {
 
     // Assert
     assertNotNull(occurredOn, "occurredOn no debe ser null");
-    assertFalse(occurredOn.isBefore(before),
+    assertFalse(
+        occurredOn.isBefore(before),
         "occurredOn debe ser >= al instante anterior a la construcción");
-    assertFalse(occurredOn.isAfter(after),
+    assertFalse(
+        occurredOn.isAfter(after),
         "occurredOn debe ser <= al instante posterior a la construcción");
   }
 
@@ -84,9 +86,9 @@ class UserDeletedDomainEventTest {
     final Map<String, String> payload = event.payload();
 
     // Assert
-    assertAll("payload de UserDeletedDomainEvent",
-        () -> assertEquals(1,  payload.size(),    "el mapa debe tener exactamente 1 entrada"),
-        () -> assertEquals(ID, payload.get("id"), "id")
-    );
+    assertAll(
+        "payload de UserDeletedDomainEvent",
+        () -> assertEquals(1, payload.size(), "el mapa debe tener exactamente 1 entrada"),
+        () -> assertEquals(ID, payload.get("id"), "id"));
   }
 }
