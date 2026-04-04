@@ -11,12 +11,13 @@ import com.jcaa.usersmanagement.domain.valueobject.UserEmail;
 import com.jcaa.usersmanagement.domain.valueobject.UserId;
 import com.jcaa.usersmanagement.domain.valueobject.UserName;
 import com.jcaa.usersmanagement.domain.valueobject.UserPassword;
+import java.util.Objects;
+import lombok.experimental.UtilityClass;
 
-public final class UserApplicationMapper {
+@UtilityClass
+public class UserApplicationMapper {
 
-  private UserApplicationMapper() {}
-
-  public static UserModel fromCreateCommandToModel(final CreateUserCommand command) {
+  public UserModel fromCreateCommandToModel(final CreateUserCommand command) {
     return UserModel.create(
         new UserId(command.id()),
         new UserName(command.name()),
@@ -25,7 +26,7 @@ public final class UserApplicationMapper {
         UserRole.fromString(command.role()));
   }
 
-  public static UserModel fromUpdateCommandToModel(
+  public UserModel fromUpdateCommandToModel(
       final UpdateUserCommand command, final UserPassword currentPassword) {
 
     final UserPassword passwordToUse = resolvePassword(command.password(), currentPassword);
@@ -39,17 +40,17 @@ public final class UserApplicationMapper {
         UserStatus.fromString(command.status()));
   }
 
-  public static UserId fromGetUserByIdQueryToUserId(final GetUserByIdQuery query) {
+  public UserId fromGetUserByIdQueryToUserId(final GetUserByIdQuery query) {
     return new UserId(query.id());
   }
 
-  public static UserId fromDeleteCommandToUserId(final DeleteUserCommand command) {
+  public UserId fromDeleteCommandToUserId(final DeleteUserCommand command) {
     return new UserId(command.id());
   }
 
-  private static UserPassword resolvePassword(
+  private UserPassword resolvePassword(
       final String newPlainPassword, final UserPassword currentPassword) {
-    if (newPlainPassword == null || newPlainPassword.isBlank()) {
+    if (Objects.isNull(newPlainPassword) || newPlainPassword.isBlank()) {
       return currentPassword;
     }
     return UserPassword.fromPlainText(newPlainPassword);
