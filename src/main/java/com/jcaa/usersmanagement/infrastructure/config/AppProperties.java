@@ -12,16 +12,11 @@ public final class AppProperties {
   private final Properties properties;
 
   public AppProperties() {
-    final Properties loaded;
-    try (final InputStream stream =
-        AppProperties.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE)) {
-      loaded = doLoad(stream);
-    } catch (final IOException exception) {
-      throw ConfigurationException.becauseLoadFailed(exception);
-    }
-    this.properties = loaded;
+    this(AppProperties.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE));
   }
 
+  // Package-private — test entry point: inject null to simulate file-not-found,
+  // a failing stream to simulate IOException, or a valid stream for the happy path.
   AppProperties(final InputStream stream) {
     this.properties = doLoad(stream);
   }
@@ -29,7 +24,7 @@ public final class AppProperties {
   private static Properties doLoad(final InputStream stream) {
     Objects.requireNonNull(stream, "File not found in classpath: " + PROPERTIES_FILE);
     final Properties props = new Properties();
-    try {
+    try (stream) {
       props.load(stream);
     } catch (final IOException exception) {
       throw ConfigurationException.becauseLoadFailed(exception);

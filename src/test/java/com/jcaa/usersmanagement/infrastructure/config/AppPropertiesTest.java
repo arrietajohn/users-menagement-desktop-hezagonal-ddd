@@ -2,8 +2,10 @@ package com.jcaa.usersmanagement.infrastructure.config;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,7 +47,25 @@ class AppPropertiesTest {
   // ── doLoad() — null stream (file not found)
 
   @Test
-  @DisplayName("constructor throws NullPointerException when stream is null (file not found)")
+  @DisplayName("constructor(InputStream) loads properties from a valid stream")
+  void shouldLoadPropertiesFromValidStream() throws IOException {
+    // Arrange
+    final String content = "custom.key=custom.value\n";
+
+    // Act + Assert
+    try (final InputStream stream =
+        new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8))) {
+      final AppProperties loaded = new AppProperties(stream);
+      assertEquals(
+          "custom.value",
+          loaded.get("custom.key"),
+          "must load the property value from the injected stream");
+    }
+  }
+
+  @Test
+  @DisplayName(
+      "constructor(InputStream) throws NullPointerException when stream is null (file not found)")
   void shouldThrowNullPointerExceptionWhenStreamIsNull() {
     // Arrange
     // Act + Assert
