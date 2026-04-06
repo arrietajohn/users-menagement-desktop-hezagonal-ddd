@@ -12,15 +12,25 @@ public final class AppProperties {
   private final Properties properties;
 
   public AppProperties() {
-    this.properties = loadProperties();
+    final Properties loaded;
+    try (final InputStream stream =
+        AppProperties.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE)) {
+      loaded = doLoad(stream);
+    } catch (final IOException exception) {
+      throw ConfigurationException.becauseLoadFailed(exception);
+    }
+    this.properties = loaded;
   }
 
-  private static Properties loadProperties() {
+  AppProperties(final InputStream stream) {
+    this.properties = doLoad(stream);
+  }
+
+  private static Properties doLoad(final InputStream stream) {
+    Objects.requireNonNull(stream, "File not found in classpath: " + PROPERTIES_FILE);
     final Properties props = new Properties();
-    try (final InputStream inputStream =
-        AppProperties.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE)) {
-      Objects.requireNonNull(inputStream, "No se encontró el archivo: " + PROPERTIES_FILE);
-      props.load(inputStream);
+    try {
+      props.load(stream);
     } catch (final IOException exception) {
       throw ConfigurationException.becauseLoadFailed(exception);
     }
@@ -29,7 +39,7 @@ public final class AppProperties {
 
   public String get(final String key) {
     final String value = properties.getProperty(key);
-    Objects.requireNonNull(value, "Propiedad no encontrada en application.properties: " + key);
+    Objects.requireNonNull(value, "Property not found in " + PROPERTIES_FILE + ": " + key);
     return value;
   }
 
