@@ -2,7 +2,8 @@ package com.jcaa.usersmanagement.domain.enums;
 
 import com.jcaa.usersmanagement.domain.exception.InvalidUserRoleException;
 
-public enum UserRole {
+public enum
+UserRole {
   ADMIN,
   MEMBER,
   REVIEWER;
