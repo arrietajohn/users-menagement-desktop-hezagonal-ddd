@@ -71,6 +71,7 @@ public final class DependencyContainer {
             getUserByIdUseCase,
             getAllUsersUseCase,
             loginUseCase);
+
   }
 
   public UserController userController() {
