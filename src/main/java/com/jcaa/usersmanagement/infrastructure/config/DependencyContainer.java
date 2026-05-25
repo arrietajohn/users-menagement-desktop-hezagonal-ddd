@@ -1,5 +1,7 @@
 package com.jcaa.usersmanagement.infrastructure.config;
 
+import com.jcaa.usersmanagement.application.candidate.CandidateRepository;
+import com.jcaa.usersmanagement.application.candidate.CreateCandidateUseCase;
 import com.jcaa.usersmanagement.application.port.in.CreateUserUseCase;
 import com.jcaa.usersmanagement.application.port.in.DeleteUserUseCase;
 import com.jcaa.usersmanagement.application.port.in.GetAllUsersUseCase;
@@ -18,10 +20,10 @@ import com.jcaa.usersmanagement.infrastructure.adapter.email.SmtpConfig;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConfig;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConnectionFactory;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
+import com.jcaa.usersmanagement.infrastructure.candidate.MySqlCandidateRepository;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
-
-import java.sql.Connection;
 import jakarta.validation.Validator;
+import java.sql.Connection;
 
 public final class DependencyContainer {
 
@@ -46,6 +48,12 @@ public final class DependencyContainer {
     final Connection connection = buildDatabaseConnection(properties);
     final UserRepositoryMySQL userRepository = new UserRepositoryMySQL(connection);
 
+    final CandidateRepository candidateRepository =
+            new MySqlCandidateRepository(connection);
+
+    final CreateCandidateUseCase createCandidateUseCase =
+            new CreateCandidateUseCase(candidateRepository);
+
     final JavaMailEmailSenderAdapter emailSender =
         new JavaMailEmailSenderAdapter(buildSmtpConfig(properties));
     final EmailNotificationService emailNotification = new EmailNotificationService(emailSender);
@@ -66,6 +74,7 @@ public final class DependencyContainer {
     this.userController =
         new UserController(
             createUserUseCase,
+            createCandidateUseCase,
             updateUserUseCase,
             deleteUserUseCase,
             getUserByIdUseCase,

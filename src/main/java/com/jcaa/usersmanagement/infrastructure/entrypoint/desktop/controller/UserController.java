@@ -1,5 +1,6 @@
 package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller;
 
+import com.jcaa.usersmanagement.application.candidate.CreateCandidateUseCase;
 import com.jcaa.usersmanagement.application.port.in.CreateUserUseCase;
 import com.jcaa.usersmanagement.application.port.in.DeleteUserUseCase;
 import com.jcaa.usersmanagement.application.port.in.GetAllUsersUseCase;
@@ -11,19 +12,34 @@ import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.LoginReque
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UpdateUserRequest;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UserResponse;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.mapper.UserDesktopMapper;
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
-@RequiredArgsConstructor
 public final class UserController {
 
   private final CreateUserUseCase createUserUseCase;
+  private final CreateCandidateUseCase createCandidateUseCase;
   private final UpdateUserUseCase updateUserUseCase;
   private final DeleteUserUseCase deleteUserUseCase;
   private final GetUserByIdUseCase getUserByIdUseCase;
   private final GetAllUsersUseCase getAllUsersUseCase;
   private final LoginUseCase loginUseCase;
+
+  public UserController(
+      final CreateUserUseCase createUserUseCase,
+      final CreateCandidateUseCase createCandidateUseCase,
+      final UpdateUserUseCase updateUserUseCase,
+      final DeleteUserUseCase deleteUserUseCase,
+      final GetUserByIdUseCase getUserByIdUseCase,
+      final GetAllUsersUseCase getAllUsersUseCase,
+      final LoginUseCase loginUseCase) {
+    this.createUserUseCase = createUserUseCase;
+    this.createCandidateUseCase = createCandidateUseCase;
+    this.updateUserUseCase = updateUserUseCase;
+    this.deleteUserUseCase = deleteUserUseCase;
+    this.getUserByIdUseCase = getUserByIdUseCase;
+    this.getAllUsersUseCase = getAllUsersUseCase;
+    this.loginUseCase = loginUseCase;
+  }
 
   public List<UserResponse> listAllUsers() {
     final var users = getAllUsersUseCase.execute();
@@ -40,6 +56,10 @@ public final class UserController {
     final var command = UserDesktopMapper.toCreateCommand(request);
     final var user = createUserUseCase.execute(command);
     return UserDesktopMapper.toResponse(user);
+  }
+
+  public void createCandidate(final String dni, final String name, final String party) {
+    createCandidateUseCase.execute(dni, name, party);
   }
 
   public UserResponse updateUser(final UpdateUserRequest request) {

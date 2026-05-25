@@ -1,5 +1,6 @@
 package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli;
 
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.CreateCandidateHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.CreateUserHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.DeleteUserHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.FindUserByIdHandler;
@@ -74,7 +75,8 @@ public final class UserManagementCli {
         MenuOption.CREATE_USER, new CreateUserHandler(userController, console, printer),
         MenuOption.UPDATE_USER, new UpdateUserHandler(userController, console, printer),
         MenuOption.DELETE_USER, new DeleteUserHandler(userController, console),
-        MenuOption.LOGIN,       new LoginHandler(userController, console, printer));
+        MenuOption.LOGIN,       new LoginHandler(userController, console, printer),
+        MenuOption.CREATE_CANDIDATE, new CreateCandidateHandler(userController, console));
   }
 
   private void printMenu() {
