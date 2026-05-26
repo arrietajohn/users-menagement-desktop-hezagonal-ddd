@@ -21,14 +21,8 @@ public class UpdateNinoService implements UpdateNinoUseCase {
         Nino nino = ninoRepository.findById(id)
                 .orElseThrow(() -> new NinoNotFoundException(id));
 
-        // Actualizar datos
-        // Nota: En una implementación más completa se actualizarían más campos
-        // Se simplifican para la actividad
 
-        // Como la entidad es inmutable en algunos campos, en la práctica se crearía una nueva o se actualizarían los mutables
-        // Por simplicidad se usan los métodos existentes (esto puede necesitar ajustes en Nino.java)
-
-        Nino updatedNino = ninoRepository.save(nino); // En una versión más completa se actualizarían los campos primero
+        Nino updatedNino = ninoRepository.save(nino);
 
         return new NinoResponse(updatedNino);
     }
