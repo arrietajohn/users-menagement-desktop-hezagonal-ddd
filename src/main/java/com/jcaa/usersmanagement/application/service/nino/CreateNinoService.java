@@ -6,11 +6,11 @@ import com.jcaa.usersmanagement.application.service.nino.dto.NinoResponse;
 import com.jcaa.usersmanagement.domain.model.nino.Nino;
 import com.jcaa.usersmanagement.domain.model.nino.NinoRepository;
 
-public class CreateNinoUseCaseImpl implements CreateNinoUseCase {
+public class CreateNinoService implements CreateNinoUseCase {
 
     private final NinoRepository ninoRepository;
 
-    public CreateNinoUseCaseImpl(NinoRepository ninoRepository) {
+    public CreateNinoService(NinoRepository ninoRepository) {
         this.ninoRepository = ninoRepository;
     }
 

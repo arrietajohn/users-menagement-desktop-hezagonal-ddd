@@ -8,11 +8,11 @@ import com.jcaa.usersmanagement.domain.model.nino.NinoRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ListNinosUseCaseImpl implements ListNinosUseCase {
+public class ListNinosService implements ListNinosUseCase {
 
     private final NinoRepository ninoRepository;
 
-    public ListNinosUseCaseImpl(NinoRepository ninoRepository) {
+    public ListNinosService(NinoRepository ninoRepository) {
         this.ninoRepository = ninoRepository;
     }
 
