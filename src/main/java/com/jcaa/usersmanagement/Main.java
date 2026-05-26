@@ -1,21 +1,66 @@
 package com.jcaa.usersmanagement;
 
 import com.jcaa.usersmanagement.infrastructure.config.DependencyContainer;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.ActivityManagementCli;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.UserManagementCli;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
+
 import java.util.Scanner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class Main {
 
-  private static final Logger log = LoggerFactory.getLogger(Main.class);
-
   public static void main(final String[] args) {
-    log.info("Starting Users Management System...");
-    final DependencyContainer container = new DependencyContainer();
+
+    final DependencyContainer container =
+            new DependencyContainer();
+
     try (final Scanner scanner = new Scanner(System.in)) {
-      new UserManagementCli(container.userController(), new ConsoleIO(scanner, System.out)).start();
+
+      final ConsoleIO console =
+              new ConsoleIO(scanner, System.out);
+
+      final UserManagementCli userCli =
+              new UserManagementCli(
+                      container.userController(),
+                      console
+              );
+
+      final ActivityManagementCli activityCli =
+              new ActivityManagementCli(
+                      container.activityController(),
+                      console
+              );
+
+      boolean running = true;
+
+      while (running) {
+
+        console.println();
+        console.println("==========================================");
+        console.println("        HOTEL MANAGEMENT SYSTEM");
+        console.println("==========================================");
+        console.println("[1] Users Management");
+        console.println("[2] Activities Management");
+        console.println("[0] Exit");
+        console.println("==========================================");
+
+        final int option =
+                console.readInt("Option: ");
+
+        switch (option) {
+
+          case 1 -> userCli.start();
+
+          case 2 -> activityCli.start();
+
+          case 0 -> {
+            console.println("\nGoodbye!");
+            running = false;
+          }
+
+          default -> console.println("Invalid option.");
+        }
+      }
     }
   }
 }

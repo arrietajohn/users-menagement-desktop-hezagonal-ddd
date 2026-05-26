@@ -2,49 +2,43 @@ package com.jcaa.usersmanagement.infrastructure.adapter.persistence;
 
 import com.jcaa.usersmanagement.application.port.out.ActivityRepository;
 import com.jcaa.usersmanagement.domain.model.Activity;
-import com.jcaa.usersmanagement.infrastructure.adapter.persistence.mapper.ActivityMapper;
-import com.jcaa.usersmanagement.infrastructure.persistence.repository.JpaActivityRepository;
-import org.springframework.stereotype.Component;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-@Component // con esto se le dice a spring boot que administre este adaptador automáticamente
 public class ActivityPersistenceAdapter implements ActivityRepository {
 
-    private final JpaActivityRepository jpaRepository;
+    private final Connection connection;
 
-    // Inyección por constructor
-    public ActivityPersistenceAdapter(JpaActivityRepository jpaRepository) {
-        this.jpaRepository = jpaRepository;
+    public ActivityPersistenceAdapter(Connection connection) {
+        this.connection = connection;
     }
 
     @Override
     public void save(Activity activity) {
-        jpaRepository.save(ActivityMapper.toEntity(activity));
+        // TODO: Implementar el INSERT INTO usando PreparedStatement con la inyección de connection
     }
 
     @Override
     public Optional<Activity> findById(String id) {
-        return jpaRepository.findById(id)
-                .map(ActivityMapper::toDomain);
+        // TODO: Implementar el SELECT * FROM usando PreparedStatement
+        return Optional.empty();
     }
 
     @Override
     public void update(Activity activity) {
-        jpaRepository.save(ActivityMapper.toEntity(activity));
+        // TODO: Implementar el UPDATE usando PreparedStatement
     }
 
     @Override
     public void deleteById(String id) {
-        jpaRepository.deleteById(id);
+        // TODO: Implementar el DELETE FROM usando PreparedStatement
     }
 
     @Override
     public List<Activity> findAll() {
-        return jpaRepository.findAll().stream()
-                .map(ActivityMapper::toDomain)
-                .collect(Collectors.toList());
+        // TODO: Implementar el SELECT * para listar todo
+        return List.of();
     }
 }
