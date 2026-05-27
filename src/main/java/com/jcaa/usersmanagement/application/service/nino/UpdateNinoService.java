@@ -17,7 +17,7 @@ public class UpdateNinoService implements UpdateNinoUseCase {
     }
 
     @Override
-    public NinoResponse execute(Long id, String nombreCompleto, String fechaNacimiento) {
+    public NinoResponse execute(Long id, String nombreCompleto, LocalDate fechaNacimiento) {
         Nino nino = ninoRepository.findById(id)
                 .orElseThrow(() -> new NinoNotFoundException(id));
 
