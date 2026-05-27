@@ -1,6 +1,7 @@
 package com.jcaa.usersmanagement;
 
 import com.jcaa.usersmanagement.infrastructure.config.DependencyContainer;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.RangoMilitarCli;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.UserManagementCli;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import java.util.Scanner;
@@ -15,7 +16,18 @@ public final class Main {
     log.info("Starting Users Management System...");
     final DependencyContainer container = new DependencyContainer();
     try (final Scanner scanner = new Scanner(System.in)) {
-      new UserManagementCli(container.userController(), new ConsoleIO(scanner, System.out)).start();
+      final ConsoleIO console = new ConsoleIO(scanner, System.out);
+
+      console.println("\n  Seleccione el modulo:");
+      console.println("  [1] Gestion de Usuarios");
+      console.println("  [2] Gestion de Rangos Militares");
+      final int modulo = console.readInt("\n  Opcion: ");
+
+      if (modulo == 2) {
+        new RangoMilitarCli(container.rangoMilitarController(), console).start();
+      } else {
+        new UserManagementCli(container.userController(), console).start();
+      }
     }
   }
 }
