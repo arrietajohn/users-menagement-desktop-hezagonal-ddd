@@ -1,9 +1,9 @@
-package com.jcaa.usersmanagement.infrastructure.adapter.persistence.entity;
+package com.jcaa.usersmanagement.infrastructure.adapter.persistence.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record NinoEntity(
+public record NinoPersistenceDto(
         Long id,
         String numero_matricula,
         String nombre_completo,
