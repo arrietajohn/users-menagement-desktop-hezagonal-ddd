@@ -4,3 +4,4 @@ import com.jcaa.usersmanagement.domain.model.RangoMilitarModel;
 
 public interface SaveRangoMilitarPort {
     RangoMilitarModel save(RangoMilitarModel rango);
+}

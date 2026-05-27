@@ -109,3 +109,25 @@ public final class DependencyContainer {
   public RangoMilitarController rangoMilitarController() {
     return rangoMilitarController;
   }
+
+  private static Connection buildDatabaseConnection(final AppProperties properties) {
+    final DatabaseConfig config =
+        new DatabaseConfig(
+            properties.get(DB_HOST),
+            properties.getInt(DB_PORT),
+            properties.get(DB_NAME),
+            properties.get(DB_USER),
+            properties.get(DB_PASSWORD));
+    return DatabaseConnectionFactory.createConnection(config);
+  }
+
+  private static SmtpConfig buildSmtpConfig(final AppProperties properties) {
+    return new SmtpConfig(
+        properties.get(SMTP_HOST),
+        properties.getInt(SMTP_PORT),
+        properties.get(SMTP_USER),
+        properties.get(SMTP_PASSWORD),
+        properties.get(SMTP_FROM),
+        properties.get(SMTP_FROM_NAME));
+  }
+}

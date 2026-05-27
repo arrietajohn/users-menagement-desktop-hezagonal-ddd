@@ -19,7 +19,7 @@ public final class CreateRangoMilitarHandler implements OperationHandler {
         final String id          = console.readRequired("  ID                              : ");
         final String codigo      = console.readRequired("  Codigo (ej: TEN, CAP, SGT)     : ");
         final String nombre      = console.readRequired("  Nombre                          : ");
-        final String descripcion = console.readLine    ("  Descripcion (opcional)          : ");
+        final String descripcion = console.readOptional ("  Descripcion (opcional)          : ");
         final String linea       = console.readRequired("  Linea (OFICIAL/SUBOFICIAL/RECLUTA): ");
         final int    meses       = console.readInt     ("  Tiempo minimo ascenso (meses)   : ");
 

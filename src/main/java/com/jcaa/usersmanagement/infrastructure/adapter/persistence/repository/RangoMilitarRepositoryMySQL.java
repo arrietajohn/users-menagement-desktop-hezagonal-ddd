@@ -14,7 +14,6 @@ import com.jcaa.usersmanagement.infrastructure.adapter.persistence.dto.RangoMili
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.exception.RangoMilitarPersistenceException;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.mapper.RangoMilitarPersistenceMapper;
 import lombok.RequiredArgsConstructor;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

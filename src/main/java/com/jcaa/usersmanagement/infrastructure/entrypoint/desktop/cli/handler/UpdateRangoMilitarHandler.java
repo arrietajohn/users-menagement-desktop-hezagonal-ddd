@@ -19,7 +19,7 @@ public final class UpdateRangoMilitarHandler implements OperationHandler {
         final String id          = console.readRequired("  ID del rango a actualizar       : ");
         final String codigo      = console.readRequired("  Nuevo codigo (ej: TEN, CAP)     : ");
         final String nombre      = console.readRequired("  Nuevo nombre                    : ");
-        final String descripcion = console.readLine    ("  Nueva descripcion (opcional)    : ");
+        final String descripcion = console.readOptional ("  Nueva descripcion (opcional)    : ");
         final String linea       = console.readRequired("  Linea (OFICIAL/SUBOFICIAL/RECLUTA): ");
         final int    meses       = console.readInt     ("  Tiempo minimo ascenso (meses)   : ");
 

@@ -5,10 +5,10 @@ import com.jcaa.usersmanagement.domain.exception.InvalidLineaMilitarException;
 public enum LineaMilitar {
     OFICIAL,
     SUBOFICIAL,
-    RECLUTA,
+    RECLUTA;
 
     public static LineaMilitar fromString(final String value) {
-        for  (final LineaMilitar linea : values()) {
+        for (final LineaMilitar linea : values()) {
             if (linea.name().equalsIgnoreCase(value)) {
                 return linea;
             }
