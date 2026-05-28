@@ -19,6 +19,22 @@ import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.Databa
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConnectionFactory;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
+import com.jcaa.usersmanagement.application.port.in.CreateNinoUseCase;
+import com.jcaa.usersmanagement.application.port.in.DeleteNinoUseCase;
+import com.jcaa.usersmanagement.application.port.in.GetNinoByIdUseCase;
+import com.jcaa.usersmanagement.application.port.in.ListNinosUseCase;
+import com.jcaa.usersmanagement.application.port.in.UpdateNinoUseCase;
+
+import com.jcaa.usersmanagement.application.service.nino.CreateNinoService;
+import com.jcaa.usersmanagement.application.service.nino.DeleteNinoService;
+import com.jcaa.usersmanagement.application.service.nino.GetNinoByIdService;
+import com.jcaa.usersmanagement.application.service.nino.ListNinosService;
+import com.jcaa.usersmanagement.application.service.nino.UpdateNinoService;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.NinoHandler;
+import com.jcaa.usersmanagement.application.port.in.*;
+import com.jcaa.usersmanagement.application.service.nino.*;
+import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.NinoRepositoryMySQL;
+import com.jcaa.usersmanagement.domain.model.nino.NinoRepository;
 
 import java.sql.Connection;
 import jakarta.validation.Validator;
@@ -39,6 +55,7 @@ public final class DependencyContainer {
   private static final String SMTP_FROM_NAME = "smtp.from.name";
 
   private final UserController userController;
+  private final NinoHandler ninoHandler;
 
   public DependencyContainer() {
     final AppProperties properties = new AppProperties();
@@ -71,6 +88,25 @@ public final class DependencyContainer {
             getUserByIdUseCase,
             getAllUsersUseCase,
             loginUseCase);
+
+    // ==================== NINO MODULE ====================
+    final NinoRepository ninoRepository = new NinoRepositoryMySQL(connection);
+
+    final CreateNinoUseCase createNinoUseCase = new CreateNinoService(ninoRepository);
+    final ListNinosUseCase listNinosUseCase = new ListNinosService(ninoRepository);
+    final GetNinoByIdUseCase getNinoByIdUseCase = new GetNinoByIdService(ninoRepository);
+    final UpdateNinoUseCase updateNinoUseCase = new UpdateNinoService(ninoRepository);
+    final DeleteNinoUseCase deleteNinoUseCase = new DeleteNinoService(ninoRepository);
+
+    this.ninoHandler = new NinoHandler(
+            createNinoUseCase,
+            listNinosUseCase,
+            getNinoByIdUseCase,
+            deleteNinoUseCase,
+            updateNinoUseCase
+    );
+
+
   }
 
   public UserController userController() {
@@ -96,5 +132,8 @@ public final class DependencyContainer {
         properties.get(SMTP_PASSWORD),
         properties.get(SMTP_FROM),
         properties.get(SMTP_FROM_NAME));
+  }
+  public NinoHandler ninoHandler() {
+    return ninoHandler;
   }
 }

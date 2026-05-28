@@ -14,6 +14,7 @@ public enum MenuOption {
   UPDATE_USER(4, "Update user"),
   DELETE_USER(5, "Delete user"),
   LOGIN(6, "Login"),
+  NINO_MANAGEMENT(7, "Gestión de Niños"),
   EXIT(0, "Exit");
 
   private final int number;

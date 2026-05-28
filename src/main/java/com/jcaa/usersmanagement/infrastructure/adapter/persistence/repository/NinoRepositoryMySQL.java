@@ -4,6 +4,7 @@ import com.jcaa.usersmanagement.application.port.out.*;
 import com.jcaa.usersmanagement.domain.model.nino.Nino;
 import com.jcaa.usersmanagement.domain.model.nino.NinoNotFoundException;
 import com.jcaa.usersmanagement.domain.model.nino.vo.Matricula;
+import com.jcaa.usersmanagement.domain.model.nino.NinoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 
@@ -19,16 +20,22 @@ import java.util.Optional;
 @Log
 @RequiredArgsConstructor
 public final class NinoRepositoryMySQL
-        implements SaveNinoPort, GetNinoByIdPort, GetAllNinosPort, DeleteNinoPort, UpdateNinoPort {
+        implements NinoRepository,
+        SaveNinoPort,
+        GetNinoByIdPort,
+        GetAllNinosPort,
+        DeleteNinoPort,
+        UpdateNinoPort {
+
 
     private final Connection connection;
 
     @Override
     public Nino save(Nino nino) {
         String sql = """
-            INSERT INTO ninos (numero_matricula, nombre_completo, fecha_nacimiento, 
-                             fecha_ingreso, estado, created_at, updated_at)
-            VALUES (?, ?, ?, ?, 'ACTIVO', NOW(), NOW())
+            INSERT INTO nino (numero_matricula, nombre_completo, fecha_nacimiento, 
+                             fecha_ingreso, estado)
+            VALUES (?, ?, ?, ?, 'ACTIVO')
             """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -42,6 +49,8 @@ public final class NinoRepositoryMySQL
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     Long generatedId = rs.getLong(1);
+                    System.out.println("✅ ID generado por BD: " + generatedId);
+
                     return new Nino(
                             generatedId,
                             nino.getMatricula(),
@@ -52,7 +61,8 @@ public final class NinoRepositoryMySQL
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error al guardar niño", e);
+            e.printStackTrace();
+            throw new RuntimeException("Error al guardar niño: " + e.getMessage(), e);
         }
 
         return nino;
@@ -61,19 +71,19 @@ public final class NinoRepositoryMySQL
     @Override
     public Optional<Nino> getById(Long id) {
         String sql = """
-            SELECT id, numero_matricula, nombre_completo, fecha_nacimiento, 
-                   fecha_ingreso, fecha_baja, estado, created_at, updated_at
-            FROM ninos 
-            WHERE id = ? LIMIT 1
+            SELECT numero_matricula, nombre_completo, fecha_nacimiento, 
+                   fecha_ingreso, fecha_baja, estado
+            FROM nino 
+            WHERE numero_matricula = ? LIMIT 1
             """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setLong(1, id);
+            stmt.setString(1, id.toString());
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 return Optional.of(new Nino(
-                        rs.getLong("id"),
+                        null,  // ID numérico no lo tenemos
                         new Matricula(rs.getString("numero_matricula")),
                         rs.getString("nombre_completo"),
                         rs.getObject("fecha_nacimiento", LocalDate.class),
@@ -82,16 +92,16 @@ public final class NinoRepositoryMySQL
             }
             return Optional.empty();
         } catch (SQLException e) {
-            throw new RuntimeException("Error al buscar niño por ID", e);
+            e.printStackTrace();
+            throw new RuntimeException("Error al buscar niño por ID: " + e.getMessage(), e);
         }
     }
-
     @Override
     public List<Nino> getAll() {
         String sql = """
-            SELECT id, numero_matricula, nombre_completo, fecha_nacimiento, 
-                   fecha_ingreso, fecha_baja, estado, created_at, updated_at
-            FROM ninos 
+            SELECT numero_matricula, nombre_completo, fecha_nacimiento, 
+                   fecha_ingreso, fecha_baja, estado
+            FROM nino 
             ORDER BY nombre_completo ASC
             """;
 
@@ -102,7 +112,7 @@ public final class NinoRepositoryMySQL
 
             while (rs.next()) {
                 ninos.add(new Nino(
-                        rs.getLong("id"),
+                        null,
                         new Matricula(rs.getString("numero_matricula")),
                         rs.getString("nombre_completo"),
                         rs.getObject("fecha_nacimiento", LocalDate.class),
@@ -110,7 +120,8 @@ public final class NinoRepositoryMySQL
                 ));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error al listar niños", e);
+            e.printStackTrace();
+            throw new RuntimeException("Error al listar niños: " + e.getMessage(), e);
         }
 
         return ninos;
@@ -118,35 +129,61 @@ public final class NinoRepositoryMySQL
 
     @Override
     public void delete(Long id) {
-        String sql = "DELETE FROM ninos WHERE id = ?";
+        String sql = "DELETE FROM nino WHERE numero_matricula = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setLong(1, id);
+            stmt.setString(1, id.toString());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error al eliminar niño", e);
+            e.printStackTrace();
+            throw new RuntimeException("Error al eliminar niño: " + e.getMessage(), e);
         }
     }
 
     @Override
     public Nino update(Nino nino) {
         String sql = """
-            UPDATE ninos 
-            SET nombre_completo = ?, fecha_nacimiento = ?, 
-                fecha_ingreso = ?, updated_at = NOW()
-            WHERE id = ?
+            UPDATE nino 
+            SET nombre_completo = ?, 
+                fecha_nacimiento = ?, 
+                fecha_ingreso = ?
+            WHERE numero_matricula = ?
             """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, nino.getNombreCompleto());
             stmt.setObject(2, nino.getFechaNacimiento());
             stmt.setObject(3, nino.getFechaIngreso());
-            stmt.setLong(4, nino.getId());
+            stmt.setString(4, nino.getMatricula().getValue());
 
             stmt.executeUpdate();
             return nino;
         } catch (SQLException e) {
-            throw new RuntimeException("Error al actualizar niño", e);
+            e.printStackTrace();
+            throw new RuntimeException("Error al actualizar niño: " + e.getMessage(), e);
         }
+    }
+    @Override
+    public Optional<Nino> findByMatricula(Matricula matricula) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Nino> findActivos() {
+        return getAll();
+    }
+
+    @Override
+    public boolean existsByMatricula(Matricula matricula) {
+        return false;
+    }
+    @Override
+    public Optional<Nino> findById(Long id) {
+        return getById(id);
+    }
+
+    @Override
+    public List<Nino> findAll() {
+        return getAll();
     }
 }

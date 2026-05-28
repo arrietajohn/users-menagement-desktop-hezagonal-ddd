@@ -20,4 +20,6 @@ public interface NinoRepository {
     boolean existsByMatricula(Matricula matricula);
 
     void delete(Long id);
+
+    Nino update(Nino nino);
 }

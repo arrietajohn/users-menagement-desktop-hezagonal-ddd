@@ -11,6 +11,8 @@ import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io.Console
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io.UserResponsePrinter;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.menu.MenuOption;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.NinoHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.NinoMenuHandler;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +31,7 @@ public final class UserManagementCli {
 
   private final UserController userController;
   private final ConsoleIO console;
+  private final NinoHandler ninoHandler;
 
   public void start() {
     console.println(BANNER);
@@ -74,7 +77,8 @@ public final class UserManagementCli {
         MenuOption.CREATE_USER, new CreateUserHandler(userController, console, printer),
         MenuOption.UPDATE_USER, new UpdateUserHandler(userController, console, printer),
         MenuOption.DELETE_USER, new DeleteUserHandler(userController, console),
-        MenuOption.LOGIN,       new LoginHandler(userController, console, printer));
+        MenuOption.LOGIN,       new LoginHandler(userController, console, printer),
+            MenuOption.NINO_MANAGEMENT, new NinoMenuHandler(ninoHandler, console));
   }
 
   private void printMenu() {
