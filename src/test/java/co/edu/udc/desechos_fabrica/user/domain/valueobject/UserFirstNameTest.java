@@ -13,22 +13,22 @@ class UserFirstNameTest {
   // --- Happy Path Tests ---
 
   @ParameterizedTest
-  @ValueSource(strings = {"John Arrieta", "   John Arrieta   ", "John Arrieta \t"})
+  @ValueSource(strings = {"Miguel", "   Miguel   ", "Miguel \t"})
   @DisplayName("Valida que el nombre tenga al menos 3 caracteres")
-  void shouldValidateUserNameMinimumLength(final String userName) {
+  void shouldValidateUserNameMinimumLength(final String userFirstName) {
     // Arrange
-    final String correctUserName = "John Arrieta";
+    final String correctUserFirstName = "Miguel";
     // Act
-    final UserFirstName userFirstNameVo = new UserFirstName(userName);
+    final UserFirstName userFirstNameVo = new UserFirstName(userFirstName);
     // Assert
-    assertEquals(correctUserName, userFirstNameVo.toString());
+    assertEquals(correctUserFirstName, userFirstNameVo.value());
   }
 
   // -- Flujo con excepciones y ramas de validación ---
 
   @Test
   @DisplayName("Valida que el nombre no sea nulo")
-  void shouldValidateUserNameIsNotNull() {
+  void shouldValidateUserFirstNameIsNotNull() {
     assertThrows(NullPointerException.class, () -> new UserFirstName(null));
   }
 
@@ -36,7 +36,7 @@ class UserFirstNameTest {
   @ValueSource(
       strings = {"", "  ", "\t", "\n", "\r", "\f", "\b", "Jo", "Ty  ", "", "   Cy ", "Ed\t"})
   @DisplayName("Valida que el nombre no sea vacio y tenga un tamaño minimo")
-  void shouldValidateUserNameIsNotEmptyAndMinimumLength(final String userName) {
-    assertThrows(InvalidUserNameException.class, () -> new UserFirstName(userName));
+  void shouldValidateUserFirstNameIsNotEmptyAndMinimumLength(final String userFirstName) {
+    assertThrows(InvalidUserNameException.class, () -> new UserFirstName(userFirstName));
   }
 }
