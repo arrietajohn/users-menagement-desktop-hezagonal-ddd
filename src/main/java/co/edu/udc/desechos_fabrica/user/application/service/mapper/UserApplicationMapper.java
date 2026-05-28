@@ -9,7 +9,7 @@ import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import java.util.Objects;
 import lombok.experimental.UtilityClass;
@@ -20,7 +20,7 @@ public class UserApplicationMapper {
   public UserModel fromCreateCommandToModel(final CreateUserCommand command) {
     return UserModel.create(
         new UserId(command.id()),
-        new UserName(command.name()),
+        new UserFirstName(command.name()),
         new UserEmail(command.email()),
         UserPassword.fromPlainText(command.password()),
         UserRole.fromString(command.role()));
@@ -33,7 +33,7 @@ public class UserApplicationMapper {
 
     return new UserModel(
         new UserId(command.id()),
-        new UserName(command.name()),
+        new UserFirstName(command.name()),
         new UserEmail(command.email()),
         passwordToUse,
         UserRole.fromString(command.role()),

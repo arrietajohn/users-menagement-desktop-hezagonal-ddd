@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
-import co.edu.udc.desechos_fabrica.user.application.service.LoginService;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.LoginCommand;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
@@ -13,7 +12,7 @@ import co.edu.udc.desechos_fabrica.user.domain.exception.InvalidCredentialsExcep
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -61,7 +60,7 @@ class LoginServiceTest {
     final UserModel activeUser =
         new UserModel(
             new UserId("u-001"),
-            new UserName("John Arrieta"),
+            new UserFirstName("John Arrieta"),
             new UserEmail(EMAIL),
             UserPassword.fromPlainText(PASSWORD),
             UserRole.ADMIN,
@@ -101,7 +100,7 @@ class LoginServiceTest {
     final UserModel user =
         new UserModel(
             new UserId("u-001"),
-            new UserName("John Arrieta"),
+            new UserFirstName("John Arrieta"),
             new UserEmail(EMAIL),
             UserPassword.fromPlainText(PASSWORD),
             UserRole.MEMBER,
@@ -124,7 +123,7 @@ class LoginServiceTest {
     final UserModel pendingUser =
         new UserModel(
             new UserId("u-001"),
-            new UserName("John Arrieta"),
+            new UserFirstName("John Arrieta"),
             new UserEmail(EMAIL),
             UserPassword.fromPlainText(PASSWORD),
             UserRole.MEMBER,

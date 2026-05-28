@@ -5,7 +5,7 @@ import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.dto.UserPersistenceDto;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.entity.UserEntity;
@@ -46,7 +46,7 @@ public class UserPersistenceMapper {
   public UserModel fromEntityToModel(final UserEntity entity) {
     return new UserModel(
         new UserId(entity.id()),
-        new UserName(entity.name()),
+        new UserFirstName(entity.name()),
         new UserEmail(entity.email()),
         UserPassword.fromHash(entity.password()),
         UserRole.fromString(entity.role()),

@@ -29,9 +29,8 @@ import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
-import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller.UserController;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.CreateUserRequest;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.LoginRequest;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.UpdateUserRequest;
@@ -78,7 +77,7 @@ class UserControllerTest {
       final UserStatus status) {
     return new UserModel(
         new UserId(id),
-        new UserName(name),
+        new UserFirstName(name),
         new UserEmail(email),
         UserPassword.fromHash(BCRYPT_HASH),
         role,

@@ -7,8 +7,6 @@ import static org.mockito.Mockito.*;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByIdPort;
 import co.edu.udc.desechos_fabrica.user.application.port.out.UpdateUserPort;
-import co.edu.udc.desechos_fabrica.user.application.service.EmailNotificationService;
-import co.edu.udc.desechos_fabrica.user.application.service.UpdateUserService;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
@@ -17,7 +15,7 @@ import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -68,7 +66,7 @@ class UpdateUserServiceTest {
     existingUser =
         new UserModel(
             new UserId(ID),
-            new UserName("John Arrieta"),
+            new UserFirstName("John Arrieta"),
             new UserEmail(EMAIL),
             UserPassword.fromHash(HASH),
             UserRole.MEMBER,
@@ -126,7 +124,7 @@ class UpdateUserServiceTest {
     final UserModel otherUser =
         new UserModel(
             new UserId("u-999"),
-            new UserName("Other User"),
+            new UserFirstName("Other User"),
             new UserEmail("other@example.com"),
             UserPassword.fromHash(HASH),
             UserRole.MEMBER,

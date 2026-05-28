@@ -4,10 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
-import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,14 +26,14 @@ class UserModelTest {
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
 
   private UserId userId;
-  private UserName userName;
+  private UserFirstName userFirstName;
   private UserEmail userEmail;
   private UserPassword password;
 
   @BeforeEach
   void setUp() {
     userId = new UserId("u-001");
-    userName = new UserName("Alice Smith");
+    userFirstName = new UserFirstName("Alice Smith");
     userEmail = new UserEmail("alice@example.com");
     password = UserPassword.fromHash(HASH);
   }
@@ -46,7 +45,7 @@ class UserModelTest {
   void shouldCreateUserWithPendingStatusAndPreserveAllFields() {
     // Act
     final UserModel model =
-        UserModel.create(userId, userName, userEmail, password, UserRole.MEMBER);
+        UserModel.create(userId, userFirstName, userEmail, password, UserRole.MEMBER);
 
     // Assert
     assertAll(
@@ -63,7 +62,7 @@ class UserModelTest {
   void shouldActivateAndPreserveOtherFields() {
     // Arrange
     final UserModel pending =
-        UserModel.create(userId, userName, userEmail, password, UserRole.REVIEWER);
+        UserModel.create(userId, userFirstName, userEmail, password, UserRole.REVIEWER);
 
     // Act
     final UserModel activated = pending.activate();
@@ -74,7 +73,7 @@ class UserModelTest {
         () -> assertNotSame(pending, activated, "debe ser una nueva instancia"),
         () -> assertEquals(UserStatus.ACTIVE, activated.getStatus(), "status debe ser ACTIVE"),
         () -> assertSame(userId, activated.getId(), "id debe preservarse"),
-        () -> assertSame(userName, activated.getName(), "name debe preservarse"),
+        () -> assertSame(userFirstName, activated.getName(), "name debe preservarse"),
         () -> assertSame(userEmail, activated.getEmail(), "email debe preservarse"),
         () -> assertEquals(UserRole.REVIEWER, activated.getRole(), "role debe preservarse"));
   }
@@ -86,7 +85,7 @@ class UserModelTest {
   void shouldDeactivateAndPreserveOtherFields() {
     // Arrange
     final UserModel active =
-        new UserModel(userId, userName, userEmail, password, UserRole.ADMIN, UserStatus.ACTIVE);
+        new UserModel(userId, userFirstName, userEmail, password, UserRole.ADMIN, UserStatus.ACTIVE);
 
     // Act
     final UserModel deactivated = active.deactivate();

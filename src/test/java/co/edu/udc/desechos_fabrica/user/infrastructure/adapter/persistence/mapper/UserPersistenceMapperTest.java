@@ -9,7 +9,7 @@ import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.dto.UserPersistenceDto;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.entity.UserEntity;
@@ -17,7 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.mapper.UserPersistenceMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +54,7 @@ class UserPersistenceMapperTest {
     userModel =
         new UserModel(
             new UserId(ID),
-            new UserName(NAME),
+            new UserFirstName(NAME),
             new UserEmail(EMAIL),
             UserPassword.fromHash(HASH),
             UserRole.ADMIN,

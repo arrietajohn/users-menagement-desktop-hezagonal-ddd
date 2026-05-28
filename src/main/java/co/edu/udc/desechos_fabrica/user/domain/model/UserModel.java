@@ -4,7 +4,7 @@ import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import lombok.Value;
 
@@ -12,7 +12,7 @@ import lombok.Value;
 public class UserModel {
 
   UserId id;
-  UserName name;
+  UserFirstName name;
   UserEmail email;
   UserPassword password;
   UserRole role;
@@ -20,7 +20,7 @@ public class UserModel {
 
   public static UserModel create(
       final UserId id,
-      final UserName name,
+      final UserFirstName name,
       final UserEmail email,
       final UserPassword password,
       final UserRole role) {

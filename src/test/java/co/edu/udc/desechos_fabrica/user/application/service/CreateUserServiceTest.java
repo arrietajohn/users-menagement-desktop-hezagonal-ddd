@@ -6,8 +6,6 @@ import static org.mockito.Mockito.*;
 
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.port.out.SaveUserPort;
-import co.edu.udc.desechos_fabrica.user.application.service.CreateUserService;
-import co.edu.udc.desechos_fabrica.user.application.service.EmailNotificationService;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.CreateUserCommand;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
@@ -15,7 +13,7 @@ import co.edu.udc.desechos_fabrica.user.domain.exception.UserAlreadyExistsExcept
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -67,7 +65,7 @@ class CreateUserServiceTest {
     final UserModel savedUser =
         new UserModel(
             new UserId("u-01"),
-            new UserName("John Arrieta"),
+            new UserFirstName("John Arrieta"),
             new UserEmail("john@example.com"),
             UserPassword.fromPlainText("Pass1234"),
             UserRole.ADMIN,
@@ -101,7 +99,7 @@ class CreateUserServiceTest {
     final UserModel existing =
         new UserModel(
             new UserId("u-99"),
-            new UserName("Jane Doe"),
+            new UserFirstName("Jane Doe"),
             new UserEmail("jane@example.com"),
             UserPassword.fromPlainText("OtraPass1"),
             UserRole.MEMBER,

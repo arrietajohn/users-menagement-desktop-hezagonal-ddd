@@ -3,13 +3,12 @@ package co.edu.udc.desechos_fabrica.user.domain.valueobject;
 import static org.junit.jupiter.api.Assertions.*;
 
 import co.edu.udc.desechos_fabrica.user.domain.exception.InvalidUserNameException;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class UserNameTest {
+class UserFirstNameTest {
 
   // --- Happy Path Tests ---
 
@@ -20,9 +19,9 @@ class UserNameTest {
     // Arrange
     final String correctUserName = "John Arrieta";
     // Act
-    final UserName userNameVo = new UserName(userName);
+    final UserFirstName userFirstNameVo = new UserFirstName(userName);
     // Assert
-    assertEquals(correctUserName, userNameVo.toString());
+    assertEquals(correctUserName, userFirstNameVo.toString());
   }
 
   // -- Flujo con excepciones y ramas de validación ---
@@ -30,7 +29,7 @@ class UserNameTest {
   @Test
   @DisplayName("Valida que el nombre no sea nulo")
   void shouldValidateUserNameIsNotNull() {
-    assertThrows(NullPointerException.class, () -> new UserName(null));
+    assertThrows(NullPointerException.class, () -> new UserFirstName(null));
   }
 
   @ParameterizedTest
@@ -38,6 +37,6 @@ class UserNameTest {
       strings = {"", "  ", "\t", "\n", "\r", "\f", "\b", "Jo", "Ty  ", "", "   Cy ", "Ed\t"})
   @DisplayName("Valida que el nombre no sea vacio y tenga un tamaño minimo")
   void shouldValidateUserNameIsNotEmptyAndMinimumLength(final String userName) {
-    assertThrows(InvalidUserNameException.class, () -> new UserName(userName));
+    assertThrows(InvalidUserNameException.class, () -> new UserFirstName(userName));
   }
 }

@@ -6,14 +6,13 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 import co.edu.udc.desechos_fabrica.user.application.port.out.EmailSenderPort;
-import co.edu.udc.desechos_fabrica.user.application.service.EmailNotificationService;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.exception.EmailSenderException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -58,7 +57,7 @@ class EmailNotificationServiceTest {
     user =
         new UserModel(
             new UserId("u-001"),
-            new UserName(NAME),
+            new UserFirstName(NAME),
             new UserEmail(EMAIL),
             UserPassword.fromPlainText(PASSWORD),
             UserRole.ADMIN,

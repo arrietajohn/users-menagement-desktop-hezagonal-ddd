@@ -3,12 +3,12 @@ package co.edu.udc.desechos_fabrica.user.domain.valueobject;
 import co.edu.udc.desechos_fabrica.user.domain.exception.InvalidUserNameException;
 import java.util.Objects;
 
-public record UserName(String value) {
+public record UserFirstName(String value) {
 
   private static final int MINIMUM_LENGTH = 3;
 
-  public UserName {
-    final String normalizedValue = Objects.requireNonNull(value, "UserName cannot be null").trim();
+  public UserFirstName {
+    final String normalizedValue = Objects.requireNonNull(value, "UserFirstName cannot be null").trim();
     validateNotEmpty(normalizedValue);
     validateMinimumLength(normalizedValue);
     value = normalizedValue;

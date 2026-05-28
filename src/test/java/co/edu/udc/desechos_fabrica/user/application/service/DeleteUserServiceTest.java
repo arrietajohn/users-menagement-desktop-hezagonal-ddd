@@ -6,7 +6,6 @@ import static org.mockito.Mockito.*;
 
 import co.edu.udc.desechos_fabrica.user.application.port.out.DeleteUserPort;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByIdPort;
-import co.edu.udc.desechos_fabrica.user.application.service.DeleteUserService;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUserCommand;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
@@ -14,7 +13,7 @@ import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -60,7 +59,7 @@ class DeleteUserServiceTest {
     final UserModel existing =
         new UserModel(
             new UserId("u-001"),
-            new UserName("John Arrieta"),
+            new UserFirstName("John Arrieta"),
             new UserEmail("john@example.com"),
             UserPassword.fromHash("$2a$12$abcdefghijklmnopqrstuO"),
             UserRole.ADMIN,

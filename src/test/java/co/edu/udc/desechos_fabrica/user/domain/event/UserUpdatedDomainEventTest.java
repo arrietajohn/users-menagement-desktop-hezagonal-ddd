@@ -4,11 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
-import co.edu.udc.desechos_fabrica.user.domain.event.UserUpdatedDomainEvent;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -40,7 +39,7 @@ class UserUpdatedDomainEventTest {
     user =
         new UserModel(
             new UserId(ID),
-            new UserName(NAME),
+            new UserFirstName(NAME),
             new UserEmail(EMAIL),
             UserPassword.fromHash(HASH),
             UserRole.ADMIN,
