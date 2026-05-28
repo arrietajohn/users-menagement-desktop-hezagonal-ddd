@@ -45,7 +45,7 @@ class UserModelTest {
   void shouldCreateUserWithPendingStatusAndPreserveAllFields() {
     // Act
     final UserModel model =
-        UserModel.create(userId, userFirstName, userEmail, password, UserRole.MEMBER);
+        UserModel.create(userFirstName, userEmail, password, UserRole.MEMBER);
 
     // Assert
     assertAll(
@@ -62,7 +62,7 @@ class UserModelTest {
   void shouldActivateAndPreserveOtherFields() {
     // Arrange
     final UserModel pending =
-        UserModel.create(userId, userFirstName, userEmail, password, UserRole.REVIEWER);
+        UserModel.create(userFirstName, userEmail, password, UserRole.REVIEWER);
 
     // Act
     final UserModel activated = pending.activate();

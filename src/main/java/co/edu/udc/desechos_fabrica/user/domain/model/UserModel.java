@@ -3,35 +3,35 @@ package co.edu.udc.desechos_fabrica.user.domain.model;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import lombok.Value;
 
 @Value
 public class UserModel {
 
-  UserId id;
-  UserFirstName name;
+  UserFirstName firstName;
+  UserLastName lastName;
   UserEmail email;
   UserPassword password;
   UserRole role;
   UserStatus status;
 
   public static UserModel create(
-      final UserId id,
-      final UserFirstName name,
+      final UserFirstName firstName,
+      final UserLastName lastName,
       final UserEmail email,
       final UserPassword password,
       final UserRole role) {
-    return new UserModel(id, name, email, password, role, UserStatus.PENDING);
+    return new UserModel(firstName, lastName, email, password, role, UserStatus.PENDING);
   }
 
   public UserModel activate() {
-    return new UserModel(id, name, email, password, role, UserStatus.ACTIVE);
+    return new UserModel(firstName, lastName, email, password, role, UserStatus.ACTIVE);
   }
 
   public UserModel deactivate() {
-    return new UserModel(id, name, email, password, role, UserStatus.INACTIVE);
+    return new UserModel(firstName, lastName, email, password, role, UserStatus.INACTIVE);
   }
 }

@@ -8,7 +8,7 @@ public record UserLastName(String value) {
   private static final int MINIMUM_LENGTH = 3;
 
   public UserLastName {
-    final String normalizedValue = Objects.requireNonNull(value, "UserLastName cannot be null").trim();
+    final String normalizedValue = Objects.requireNonNull(value, "user last name cannot be null").trim();
     validateNotEmpty(normalizedValue);
     validateMinimumLength(normalizedValue);
     value = normalizedValue;

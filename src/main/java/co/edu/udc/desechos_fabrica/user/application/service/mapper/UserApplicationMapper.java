@@ -19,8 +19,7 @@ public class UserApplicationMapper {
 
   public UserModel fromCreateCommandToModel(final CreateUserCommand command) {
     return UserModel.create(
-        new UserId(command.id()),
-        new UserFirstName(command.name()),
+            new UserFirstName(command.name()),
         new UserEmail(command.email()),
         UserPassword.fromPlainText(command.password()),
         UserRole.fromString(command.role()));

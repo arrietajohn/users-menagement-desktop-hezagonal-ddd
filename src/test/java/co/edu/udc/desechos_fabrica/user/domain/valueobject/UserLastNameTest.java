@@ -15,8 +15,8 @@ class UserLastNameTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"Jaller", "   Jaller   ", "Jaller \t"})
-  @DisplayName("Valida que el apellido tenga al menos 3 caracteres")
-  void shouldValidateUserLastNameMinimumLength(final String userLastName) {
+  @DisplayName("Valida que el nombre tenga al menos 3 caracteres")
+  void shouldValidateUserNameMinimumLength(final String userLastName) {
     // Arrange
     final String correctUserLastName = "Jaller";
     // Act
@@ -28,7 +28,7 @@ class UserLastNameTest {
   // -- Flujo con excepciones y ramas de validación ---
 
   @Test
-  @DisplayName("Valida que el apellido no sea nulo")
+  @DisplayName("Valida que el nombre no sea nulo")
   void shouldValidateUserLastNameIsNotNull() {
     assertThrows(NullPointerException.class, () -> new UserLastName(null));
   }
@@ -36,7 +36,7 @@ class UserLastNameTest {
   @ParameterizedTest
   @ValueSource(
       strings = {"", "  ", "\t", "\n", "\r", "\f", "\b", "Jo", "Ty  ", "", "   Cy ", "Ed\t"})
-  @DisplayName("Valida que el apellido no sea vacio y tenga un tamaño minimo")
+  @DisplayName("Valida que el nombre no sea vacio y tenga un tamaño minimo")
   void shouldValidateUserLastNameIsNotEmptyAndMinimumLength(final String userLastName) {
     assertThrows(InvalidUserNameException.class, () -> new UserLastName(userLastName));
   }
