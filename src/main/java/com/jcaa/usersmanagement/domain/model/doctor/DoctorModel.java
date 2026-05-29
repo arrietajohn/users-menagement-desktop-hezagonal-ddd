@@ -66,6 +66,11 @@ public class DoctorModel {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
+    // METODO AGREGADO: Punto de entrada estático para instanciar el Builder
+    public static Builder builder() {
+        return new Builder();
+    }
+
     // Patrón de Diseño: Builder (Especialmente útil en DDD para construir entidades complejas)
     public static class Builder {
         private String id;
