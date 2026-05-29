@@ -5,10 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.*;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +24,8 @@ import org.junit.jupiter.api.Test;
 class UserUpdatedDomainEventTest {
 
   // ── Arranges globales
-  private static final String ID = "user-003";
-  private static final String NAME = "Jane Doe";
+  private static final String FIRST_NAME = "Jane";
+  private static final String LAST_NAME = "Doe";
   private static final String EMAIL = "jane.doe@example.com";
   // fromHash() acepta cualquier string no-null: evita el coste de BCrypt en tests
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
@@ -38,8 +36,8 @@ class UserUpdatedDomainEventTest {
   void setUp() {
     user =
         new UserModel(
-            new UserId(ID),
-            new UserFirstName(NAME),
+            new UserFirstName(FIRST_NAME),
+            new UserLastName(LAST_NAME),
             new UserEmail(EMAIL),
             UserPassword.fromHash(HASH),
             UserRole.ADMIN,
@@ -114,8 +112,8 @@ class UserUpdatedDomainEventTest {
     assertAll(
         "payload de UserUpdatedDomainEvent",
         () -> assertEquals(5, payload.size(), "tamaño del mapa"),
-        () -> assertEquals(ID, payload.get("id"), "id"),
-        () -> assertEquals(NAME, payload.get("name"), "name"),
+        () -> assertEquals(FIRST_NAME, payload.get("firstName"), "firstName"),
+        () -> assertEquals(LAST_NAME, payload.get("lastName"), "lastName"),
         () -> assertEquals(EMAIL, payload.get("email"), "email"),
         () -> assertEquals(UserRole.ADMIN.name(), payload.get("role"), "role"),
         () -> assertEquals(UserStatus.INACTIVE.name(), payload.get("status"), "status"));
