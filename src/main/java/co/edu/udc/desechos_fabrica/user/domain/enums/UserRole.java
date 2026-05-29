@@ -4,8 +4,9 @@ import co.edu.udc.desechos_fabrica.user.domain.exception.InvalidUserRoleExceptio
 
 public enum UserRole {
   ADMIN,
-  MEMBER,
-  REVIEWER;
+  REVIEWER,
+  ENTERPRISE_ADMIN,
+  MEMBER;
 
   public static UserRole fromString(final String value) {
     for (final UserRole role : values()) {
