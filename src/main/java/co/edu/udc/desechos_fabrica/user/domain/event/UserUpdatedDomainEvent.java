@@ -19,8 +19,8 @@ public final class UserUpdatedDomainEvent extends DomainEvent {
   @Override
   public Map<String, String> payload() {
     return Map.of(
-        "id", user.getId().value(),
-        "name", user.getName().value(),
+        "firstName", user.getFirstName().value(),
+        "lastName", user.getLastName().value(),
         "email", user.getEmail().value(),
         "role", user.getRole().name(),
         "status", user.getStatus().name());
