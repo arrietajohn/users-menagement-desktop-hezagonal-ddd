@@ -18,16 +18,16 @@ import org.junit.jupiter.api.Test;
 class UserNotFoundExceptionTest {
 
   @Test
-  @DisplayName("becauseIdWasNotFound() debe incluir el id del usuario en el mensaje de error")
-  void shouldIncludeUserIdInMessage() {
+  @DisplayName("becauseEmailWasNotFound() debe incluir el email del usuario en el mensaje de error")
+  void shouldIncludeUserEmailInMessage() {
     // Arrange
-    final String userId = "user-404";
+    final String userEmail = "miguel-jaller@example.com";
 
     // Act
-    final String message = UserNotFoundException.becauseIdWasNotFound(userId).getMessage();
+    final String message = UserNotFoundException.becauseEmailWasNotFound(userEmail).getMessage();
 
     // Assert
     assertTrue(
-        message.contains(userId), "el mensaje debe identificar el id del usuario no encontrado");
+        message.contains(userEmail), "el mensaje debe identificar el email del usuario no encontrado");
   }
 }
