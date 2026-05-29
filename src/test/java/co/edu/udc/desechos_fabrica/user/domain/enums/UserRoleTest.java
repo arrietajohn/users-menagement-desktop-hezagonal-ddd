@@ -2,7 +2,6 @@ package co.edu.udc.desechos_fabrica.user.domain.enums;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.exception.InvalidUserRoleException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,9 +15,10 @@ class UserRoleTest {
   @Test
   @DisplayName("Should return correct UserRole for valid input")
   void shouldReturnCorrectUserRoleForValidInput() {
-    assertEquals(UserRole.ADMIN, UserRole.fromString("ADMIN"));
+      assertEquals(UserRole.ADMIN, UserRole.fromString("ADMIN"));
     assertEquals(UserRole.MEMBER, UserRole.fromString("MEMBER"));
     assertEquals(UserRole.REVIEWER, UserRole.fromString("REVIEWER"));
+    assertEquals(UserRole.ENTERPRISE_ADMIN, UserRole.fromString("ENTERPRISE_ADMIN"));
   }
 
   // --- Flujo con excepciones y ramas de validación ---
