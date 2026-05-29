@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.domain.event;
 
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import java.util.Map;
 import lombok.Getter;
 
@@ -9,15 +9,15 @@ public final class UserDeletedDomainEvent extends DomainEvent {
 
   private static final String EVENT_NAME = "user.deleted";
 
-  private final UserId userId;
+  private final UserEmail userEmail;
 
-  public UserDeletedDomainEvent(final UserId userId) {
+  public UserDeletedDomainEvent(final UserEmail userEmail) {
     super(EVENT_NAME);
-    this.userId = userId;
+    this.userEmail = userEmail;
   }
 
   @Override
   public Map<String, String> payload() {
-    return Map.of("id", userId.value());
+    return Map.of("email", userEmail.value());
   }
 }
