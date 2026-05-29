@@ -14,6 +14,12 @@ public enum MenuOption {
   UPDATE_USER(4, "Update user"),
   DELETE_USER(5, "Delete user"),
   LOGIN(6, "Login"),
+  CREATE_CANDIDATE(7, "Create candidate"),
+  CREATE_VOTER(8, "Create voter"),
+  FIND_VOTER(9, "Find voter by DNI"),
+  LIST_VOTERS(10, "List all voters"),
+  UPDATE_VOTER(11, "Update voter"),
+  DELETE_VOTER(12, "Delete voter"),
   EXIT(0, "Exit");
 
   private final int number;

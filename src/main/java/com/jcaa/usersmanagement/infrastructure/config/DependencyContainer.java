@@ -1,5 +1,7 @@
 package com.jcaa.usersmanagement.infrastructure.config;
 
+import com.jcaa.usersmanagement.application.candidate.CandidateRepository;
+import com.jcaa.usersmanagement.application.candidate.CreateCandidateUseCase;
 import com.jcaa.usersmanagement.application.port.in.CreateUserUseCase;
 import com.jcaa.usersmanagement.application.port.in.DeleteUserUseCase;
 import com.jcaa.usersmanagement.application.port.in.GetAllUsersUseCase;
@@ -18,10 +20,10 @@ import com.jcaa.usersmanagement.infrastructure.adapter.email.SmtpConfig;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConfig;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConnectionFactory;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
+import com.jcaa.usersmanagement.infrastructure.candidate.MySqlCandidateRepository;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
-
-import java.sql.Connection;
 import jakarta.validation.Validator;
+import java.sql.Connection;
 
 public final class DependencyContainer {
 
@@ -46,6 +48,30 @@ public final class DependencyContainer {
     final Connection connection = buildDatabaseConnection(properties);
     final UserRepositoryMySQL userRepository = new UserRepositoryMySQL(connection);
 
+    final CandidateRepository candidateRepository =
+            new MySqlCandidateRepository(connection);
+
+    final CreateCandidateUseCase createCandidateUseCase =
+            new CreateCandidateUseCase(candidateRepository);
+
+    final com.jcaa.usersmanagement.infrastructure.adapter.persistence.voter.MySqlVoterRepository voterRepository =
+            new com.jcaa.usersmanagement.infrastructure.adapter.persistence.voter.MySqlVoterRepository(connection);
+
+    final com.jcaa.usersmanagement.application.voter.CreateVoterUseCase createVoterUseCase =
+            new com.jcaa.usersmanagement.application.voter.CreateVoterUseCase(voterRepository);
+
+    final com.jcaa.usersmanagement.application.voter.FindVoterByDniUseCase findVoterByDniUseCase =
+            new com.jcaa.usersmanagement.application.voter.FindVoterByDniUseCase(voterRepository);
+
+    final com.jcaa.usersmanagement.application.voter.ListVotersUseCase listVotersUseCase =
+            new com.jcaa.usersmanagement.application.voter.ListVotersUseCase(voterRepository);
+
+    final com.jcaa.usersmanagement.application.voter.UpdateVoterUseCase updateVoterUseCase =
+            new com.jcaa.usersmanagement.application.voter.UpdateVoterUseCase(voterRepository);
+
+    final com.jcaa.usersmanagement.application.voter.DeleteVoterUseCase deleteVoterUseCase =
+            new com.jcaa.usersmanagement.application.voter.DeleteVoterUseCase(voterRepository);
+
     final JavaMailEmailSenderAdapter emailSender =
         new JavaMailEmailSenderAdapter(buildSmtpConfig(properties));
     final EmailNotificationService emailNotification = new EmailNotificationService(emailSender);
@@ -64,15 +90,20 @@ public final class DependencyContainer {
     final LoginUseCase loginUseCase = new LoginService(userRepository, validator);
 
     this.userController =
-        new UserController(
-            createUserUseCase,
-            updateUserUseCase,
-            deleteUserUseCase,
-            getUserByIdUseCase,
-            getAllUsersUseCase,
-            loginUseCase);
+            new UserController(
+                    createUserUseCase,
+                    createCandidateUseCase,
+                    createVoterUseCase,
+                    findVoterByDniUseCase,
+                    listVotersUseCase,
+                    updateVoterUseCase,
+                    deleteVoterUseCase,
+                    updateUserUseCase,
+                    deleteUserUseCase,
+                    getUserByIdUseCase,
+                    getAllUsersUseCase,
+                    loginUseCase);
   }
-
   public UserController userController() {
     return userController;
   }
