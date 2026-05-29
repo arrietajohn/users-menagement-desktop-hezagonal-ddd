@@ -2,6 +2,8 @@ package com.jcaa.usersmanagement.infrastructure.config;
 
 import com.jcaa.usersmanagement.application.port.in.*;
 import com.jcaa.usersmanagement.application.service.*;
+import com.jcaa.usersmanagement.application.port.in.ListAvailableRoomsUseCase;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.RoomController;
 import com.jcaa.usersmanagement.infrastructure.adapter.email.JavaMailEmailSenderAdapter;
 import com.jcaa.usersmanagement.infrastructure.adapter.email.SmtpConfig;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.RoomMysqlRepository;
@@ -9,7 +11,6 @@ import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.Databa
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConnectionFactory;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
-// Nota: Importaremos el RoomController que crearemos en breve
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.RoomController;
 
 import java.sql.Connection;
@@ -31,15 +32,15 @@ public final class DependencyContainer {
   private static final String SMTP_FROM_NAME = "smtp.from.name";
 
   private final UserController userController;
-  private final RoomController roomController; // 1. Atributo añadido para Habitaciones
+  private final RoomController roomController; // añadimos atributo para habitaciones
 
   public DependencyContainer() {
     final AppProperties properties = new AppProperties();
 
-    // Conexión única compartida de la base de datos
+
     final Connection connection = buildDatabaseConnection(properties);
 
-    // --- MÓDULO DE USUARIOS ---
+
     final UserRepositoryMySQL userRepository = new UserRepositoryMySQL(connection);
 
     final JavaMailEmailSenderAdapter emailSender =
@@ -67,30 +68,31 @@ public final class DependencyContainer {
                     getAllUsersUseCase,
                     loginUseCase);
 
-    // --- MÓDULO DE HABITACIONES (NUEVO) ---
-    // 2. Instanciamos tu repositorio inyectándole la conexión compartida
+
+
+
     final RoomMysqlRepository roomRepository = new RoomMysqlRepository(connection);
 
-    // 3. Instanciamos cada uno de tus 4 servicios de aplicación
-    final CreateRoomUseCase createRoomUseCase = new CreateRoomService(roomRepository, validator);
-    final UpdateRoomUseCase updateRoomUseCase = new UpdateRoomService(roomRepository, validator);
-    final DeleteRoomUseCase deleteRoomUseCase = new DeleteRoomService(roomRepository, validator);
-    final GetAvailableRoomsUseCase getAvailableRoomsUseCase = new GetAvailableRoomsService(roomRepository);
+    final CreateRoomUseCase createRoomUseCase = new CreateRoomService(roomRepository);
+    final UpdateRoomUseCase updateRoomUseCase = new UpdateRoomService(roomRepository);
+    final DeleteRoomUseCase deleteRoomUseCase = new DeleteRoomService(roomRepository);
 
-    // 4. Inicializamos el controlador de Habitaciones pasándole los casos de uso
+
+    final GetAvailableRoomsUseCase listAvailableRoomsUseCase = new GetAvailableRoomsService(roomRepository);
+
     this.roomController =
             new RoomController(
                     createRoomUseCase,
                     updateRoomUseCase,
                     deleteRoomUseCase,
-                    getAvailableRoomsUseCase);
+                    listAvailableRoomsUseCase);
   }
 
   public UserController userController() {
     return userController;
   }
 
-  // 5. Método público para exponer el controlador de habitaciones
+
   public RoomController roomController() {
     return roomController;
   }
