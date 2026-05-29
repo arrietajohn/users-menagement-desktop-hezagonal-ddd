@@ -3,7 +3,7 @@ package co.edu.udc.desechos_fabrica.user.domain.event;
 import static org.junit.jupiter.api.Assertions.*;
 
 import co.edu.udc.desechos_fabrica.user.domain.event.UserDeletedDomainEvent;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import java.time.LocalDateTime;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -12,14 +12,14 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests para UserDeletedDomainEvent.
  *
- * <p>Este evento es el más simple: recibe un UserId y genera un payload con una sola entrada. Se
+ * <p>Este evento es el más simple: recibe un UserEmail y genera un payload con una sola entrada. Se
  * verifica que el nombre del evento sea correcto, que occurredOn quede registrado, que el accessor
- * userId() devuelva la misma referencia y que el payload contenga exactamente un campo.
+ * UserEmail() devuelva la misma referencia y que el payload contenga exactamente un campo.
  */
 @DisplayName("UserDeletedDomainEvent")
 class UserDeletedDomainEventTest {
 
-  private static final String ID = "user-002";
+  private static final String EMAIL = "john.arrieta@gmail.com";
 
   // ── eventName
 
@@ -27,7 +27,7 @@ class UserDeletedDomainEventTest {
   @DisplayName("eventName() debe retornar la constante 'user.deleted'")
   void shouldHaveEventNameUserDeleted() {
     // Arrange
-    final UserDeletedDomainEvent event = new UserDeletedDomainEvent(new UserId(ID));
+    final UserDeletedDomainEvent event = new UserDeletedDomainEvent(new UserEmail(EMAIL));
 
     // Act
     final String result = event.getEventName();
@@ -43,7 +43,7 @@ class UserDeletedDomainEventTest {
   void shouldRecordOccurredOnAtCreationTime() {
     // Arrange
     final LocalDateTime before = LocalDateTime.now();
-    final UserDeletedDomainEvent event = new UserDeletedDomainEvent(new UserId(ID));
+    final UserDeletedDomainEvent event = new UserDeletedDomainEvent(new UserEmail(EMAIL));
     final LocalDateTime after = LocalDateTime.now();
 
     // Act
@@ -59,29 +59,29 @@ class UserDeletedDomainEventTest {
         "occurredOn debe ser <= al instante posterior a la construcción");
   }
 
-  // ── userId()
+  // ── UserEmail()
 
   @Test
-  @DisplayName("userId() debe devolver la misma instancia de UserId recibida en el constructor")
-  void shouldReturnSameUserIdInstance() {
+  @DisplayName("UserEmail() debe devolver la misma instancia de UserEmail recibida en el constructor")
+  void shouldReturnSameUserEmailInstance() {
     // Arrange
-    final UserId userId = new UserId(ID);
-    final UserDeletedDomainEvent event = new UserDeletedDomainEvent(userId);
+    final UserEmail UserEmail = new UserEmail(EMAIL);
+    final UserDeletedDomainEvent event = new UserDeletedDomainEvent(UserEmail);
 
     // Act
-    final UserId result = event.getUserId();
+    final UserEmail result = event.getUserEmail();
 
     // Assert
-    assertSame(userId, result);
+    assertSame(UserEmail, result);
   }
 
   // ── payload()
 
   @Test
-  @DisplayName("payload() debe contener únicamente la entrada 'id' con el valor del UserId")
-  void shouldReturnPayloadWithOnlyUserId() {
+  @DisplayName("payload() debe contener únicamente la entrada 'id' con el valor del UserEmail")
+  void shouldReturnPayloadWithOnlyUserEmail() {
     // Arrange
-    final UserDeletedDomainEvent event = new UserDeletedDomainEvent(new UserId(ID));
+    final UserDeletedDomainEvent event = new UserDeletedDomainEvent(new UserEmail(EMAIL));
 
     // Act
     final Map<String, String> payload = event.payload();
@@ -90,6 +90,6 @@ class UserDeletedDomainEventTest {
     assertAll(
         "payload de UserDeletedDomainEvent",
         () -> assertEquals(1, payload.size(), "el mapa debe tener exactamente 1 entrada"),
-        () -> assertEquals(ID, payload.get("id"), "id"));
+        () -> assertEquals(EMAIL, payload.get("email"), "email"));
   }
 }
