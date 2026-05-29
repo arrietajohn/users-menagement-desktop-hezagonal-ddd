@@ -18,7 +18,7 @@ import com.jcaa.usersmanagement.infrastructure.adapter.email.SmtpConfig;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConfig;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConnectionFactory;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
+import com.jcaa.usersmanagement.infrastructure.desktop.controller.UserController;
 
 import java.sql.Connection;
 import jakarta.validation.Validator;

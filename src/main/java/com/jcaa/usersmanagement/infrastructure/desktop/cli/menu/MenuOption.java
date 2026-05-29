@@ -1,4 +1,4 @@
-package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.menu;
+package com.jcaa.usersmanagement.infrastructure.desktop.cli.menu;
 
 import java.util.Optional;
 import lombok.Getter;

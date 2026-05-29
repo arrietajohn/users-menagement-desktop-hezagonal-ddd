@@ -1,4 +1,4 @@
-package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto;
+package com.jcaa.usersmanagement.infrastructure.desktop.dto;
 
 public record UserResponse(
     String id,

@@ -1,4 +1,4 @@
-package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.mapper;
+package com.jcaa.usersmanagement.infrastructure.desktop.mapper;
 
 import com.jcaa.usersmanagement.application.service.dto.command.CreateUserCommand;
 import com.jcaa.usersmanagement.application.service.dto.command.DeleteUserCommand;
@@ -6,10 +6,10 @@ import com.jcaa.usersmanagement.application.service.dto.command.LoginCommand;
 import com.jcaa.usersmanagement.application.service.dto.command.UpdateUserCommand;
 import com.jcaa.usersmanagement.application.service.dto.query.GetUserByIdQuery;
 import com.jcaa.usersmanagement.domain.model.UserModel;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.CreateUserRequest;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.LoginRequest;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UpdateUserRequest;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UserResponse;
+import com.jcaa.usersmanagement.infrastructure.desktop.dto.CreateUserRequest;
+import com.jcaa.usersmanagement.infrastructure.desktop.dto.LoginRequest;
+import com.jcaa.usersmanagement.infrastructure.desktop.dto.UpdateUserRequest;
+import com.jcaa.usersmanagement.infrastructure.desktop.dto.UserResponse;
 
 import java.util.List;
 

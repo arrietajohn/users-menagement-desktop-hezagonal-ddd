@@ -1,4 +1,4 @@
-package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io;
+package com.jcaa.usersmanagement.infrastructure.desktop.cli.io;
 
 import java.io.PrintStream;
 import java.util.Scanner;

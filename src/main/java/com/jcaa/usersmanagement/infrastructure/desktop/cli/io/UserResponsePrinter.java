@@ -1,6 +1,6 @@
-package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io;
+package com.jcaa.usersmanagement.infrastructure.desktop.cli.io;
 
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UserResponse;
+import com.jcaa.usersmanagement.infrastructure.desktop.dto.UserResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 

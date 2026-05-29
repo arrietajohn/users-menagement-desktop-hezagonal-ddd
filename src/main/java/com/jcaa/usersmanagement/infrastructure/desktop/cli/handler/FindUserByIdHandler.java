@@ -1,10 +1,10 @@
-package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler;
+package com.jcaa.usersmanagement.infrastructure.desktop.cli.handler;
 
 import com.jcaa.usersmanagement.domain.exception.UserNotFoundException;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io.UserResponsePrinter;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UserResponse;
+import com.jcaa.usersmanagement.infrastructure.desktop.cli.io.ConsoleIO;
+import com.jcaa.usersmanagement.infrastructure.desktop.cli.io.UserResponsePrinter;
+import com.jcaa.usersmanagement.infrastructure.desktop.controller.UserController;
+import com.jcaa.usersmanagement.infrastructure.desktop.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
