@@ -21,7 +21,7 @@ public class UpdateNinoService implements UpdateNinoUseCase {
         Nino nino = ninoRepository.findById(id)
                 .orElseThrow(() -> new NinoNotFoundException(id));
 
-        // Crear una versión actualizada del niño
+
         Nino ninoActualizado = new Nino(
                 nino.getId(),
                 nino.getMatricula(),
@@ -30,7 +30,7 @@ public class UpdateNinoService implements UpdateNinoUseCase {
                 nino.getFechaIngreso()
         );
 
-        Nino updated = ninoRepository.update(ninoActualizado);   // ← Cambiado a update()
+        Nino updated = ninoRepository.update(ninoActualizado);
 
         return new NinoResponse(updated);
     }
