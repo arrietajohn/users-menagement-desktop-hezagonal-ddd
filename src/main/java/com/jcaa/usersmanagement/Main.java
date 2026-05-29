@@ -4,9 +4,7 @@ import com.jcaa.usersmanagement.infrastructure.config.DependencyContainer;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.UserManagementCli;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 
-// 1. CORRECCIÓN DE IMPORTS:
-// Si estos imports se ponen rojos, bórralos por completo, haz clic en la palabra roja de abajo en el código,
-// presiona Alt + Enter y selecciona "Import class" para que IntelliJ encuentre la carpeta real.
+
 import com.jcaa.usersmanagement.infrastructure.entrypoint.console.RoomManagementCli;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.ActivityManagementCli;
 
@@ -44,20 +42,14 @@ public class Main {
           System.out.println("\nAbriendo gestión de actividades...");
           ConsoleIO console = new ConsoleIO(scanner, System.out);
 
-          // REVISIÓN DE ACTIVIDADES:
-          // Si '(container.activityController(), console)' sale malo, es porque quitamos el controlador del contenedor.
-          // Prueba borrando 'container.activityController(), ' y deja solo 'console' o 'scanner' según lo pida el IDE.
-          // Si sigue en rojo, hazle caso a IntelliJ presionando Alt + Enter para ver qué constructor te sugiere.
+
           ActivityManagementCli activityCli = new ActivityManagementCli(container.activityController(), console);
           activityCli.start();
         }
 
         case "3" -> {
           System.out.println("\nAbriendo gestión de habitaciones...");
-          // REVISIÓN DE HABITACIONES:
-          // En tu código original que sí funcionaba, llamabas a RoomManagementCli pasándole el 'container.roomController()'.
-          // Si da error en 'start()', es porque el método para iniciar en tu clase de la Unidad III no se llama 'start',
-          // tal vez se llama 'ejecutar()', 'init()' o 'showMenu()'.
+
           RoomManagementCli roomCli = new RoomManagementCli(container.roomController());
           roomCli.start();
         }

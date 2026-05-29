@@ -20,7 +20,7 @@ public final class ActivityManagementCli {
     private static final String BANNER =
             """
             ==========================================
-                 Activities Management System
+                 Gestion de Actividades
             ==========================================""";
 
     private final ActivityController activityController;
@@ -45,7 +45,7 @@ public final class ActivityManagementCli {
             printMenu();
 
             final int option =
-                    console.readInt("\n  Option: ");
+                    console.readInt("\n  Opción: ");
 
             switch (option) {
 
@@ -60,11 +60,11 @@ public final class ActivityManagementCli {
                 case 5 -> handlers.get(5).handle();
 
                 case 0 -> {
-                    console.println("\n  Returning to main menu...\n");
+                    console.println("\n  Regresando al menu preincipal...\n");
                     running = false;
                 }
 
-                default -> console.println("  Invalid option.");
+                default -> console.println("  Opcion invalida.");
             }
         }
     }
@@ -85,14 +85,14 @@ public final class ActivityManagementCli {
 
         console.println();
         console.println("  ==========================================");
-        console.println("    Activities Menu");
+        console.println("    Menu de Actividades");
         console.println("  ==========================================");
-        console.println("    [1] List all activities");
-        console.println("    [2] Find activity by ID");
-        console.println("    [3] Create activity");
-        console.println("    [4] Update activity");
-        console.println("    [5] Delete activity");
-        console.println("    [0] Back");
+        console.println("    [1] Listar todas las actividades");
+        console.println("    [2] Encontrar actividad con el id");
+        console.println("    [3] Crear actividad");
+        console.println("    [4] Actualizar actividad");
+        console.println("    [5] Eliminar actividad");
+        console.println("    [0] Regresar");
         console.println("  ==========================================");
     }
 }

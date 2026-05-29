@@ -5,15 +5,14 @@ import com.jcaa.usersmanagement.application.service.*;
 import com.jcaa.usersmanagement.infrastructure.adapter.email.JavaMailEmailSenderAdapter;
 import com.jcaa.usersmanagement.infrastructure.adapter.email.SmtpConfig;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.RoomMysqlRepository;
-// Imports corregidos según la estructura de carpetas de tu proyecto:
+
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConfig;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConnectionFactory;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.ActivityController;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
 
-// NOTA IMPORTANTE: Si las clases de actividades están en subcarpetas diferentes,
-// al pegar este código, haz clic sobre la palabra roja, presiona Alt + Enter y selecciona "Import class".
+
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.RoomController;
 
 import java.sql.Connection;
