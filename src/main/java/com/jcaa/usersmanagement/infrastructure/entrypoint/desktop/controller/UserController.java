@@ -7,6 +7,12 @@ import com.jcaa.usersmanagement.application.port.in.GetAllUsersUseCase;
 import com.jcaa.usersmanagement.application.port.in.GetUserByIdUseCase;
 import com.jcaa.usersmanagement.application.port.in.LoginUseCase;
 import com.jcaa.usersmanagement.application.port.in.UpdateUserUseCase;
+import com.jcaa.usersmanagement.application.voter.CreateVoterUseCase;
+import com.jcaa.usersmanagement.application.voter.DeleteVoterUseCase;
+import com.jcaa.usersmanagement.application.voter.FindVoterByDniUseCase;
+import com.jcaa.usersmanagement.application.voter.ListVotersUseCase;
+import com.jcaa.usersmanagement.application.voter.UpdateVoterUseCase;
+import com.jcaa.usersmanagement.domain.voter.Voter;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.CreateUserRequest;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.LoginRequest;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UpdateUserRequest;
@@ -24,16 +30,32 @@ public final class UserController {
   private final GetAllUsersUseCase getAllUsersUseCase;
   private final LoginUseCase loginUseCase;
 
+  private final CreateVoterUseCase createVoterUseCase;
+  private final FindVoterByDniUseCase findVoterByDniUseCase;
+  private final ListVotersUseCase listVotersUseCase;
+  private final UpdateVoterUseCase updateVoterUseCase;
+  private final DeleteVoterUseCase deleteVoterUseCase;
+
   public UserController(
-      final CreateUserUseCase createUserUseCase,
-      final CreateCandidateUseCase createCandidateUseCase,
-      final UpdateUserUseCase updateUserUseCase,
-      final DeleteUserUseCase deleteUserUseCase,
-      final GetUserByIdUseCase getUserByIdUseCase,
-      final GetAllUsersUseCase getAllUsersUseCase,
-      final LoginUseCase loginUseCase) {
+          final CreateUserUseCase createUserUseCase,
+          final CreateCandidateUseCase createCandidateUseCase,
+          final CreateVoterUseCase createVoterUseCase,
+          final FindVoterByDniUseCase findVoterByDniUseCase,
+          final ListVotersUseCase listVotersUseCase,
+          final UpdateVoterUseCase updateVoterUseCase,
+          final DeleteVoterUseCase deleteVoterUseCase,
+          final UpdateUserUseCase updateUserUseCase,
+          final DeleteUserUseCase deleteUserUseCase,
+          final GetUserByIdUseCase getUserByIdUseCase,
+          final GetAllUsersUseCase getAllUsersUseCase,
+          final LoginUseCase loginUseCase) {
     this.createUserUseCase = createUserUseCase;
     this.createCandidateUseCase = createCandidateUseCase;
+    this.createVoterUseCase = createVoterUseCase;
+    this.findVoterByDniUseCase = findVoterByDniUseCase;
+    this.listVotersUseCase = listVotersUseCase;
+    this.updateVoterUseCase = updateVoterUseCase;
+    this.deleteVoterUseCase = deleteVoterUseCase;
     this.updateUserUseCase = updateUserUseCase;
     this.deleteUserUseCase = deleteUserUseCase;
     this.getUserByIdUseCase = getUserByIdUseCase;
@@ -60,6 +82,26 @@ public final class UserController {
 
   public void createCandidate(final String dni, final String name, final String party) {
     createCandidateUseCase.execute(dni, name, party);
+  }
+
+  public void createVoter(final String dni, final String fullName, final String email, final String commune) {
+    createVoterUseCase.execute(dni, fullName, email, commune);
+  }
+
+  public Voter findVoterByDni(final String dni) {
+    return findVoterByDniUseCase.execute(dni);
+  }
+
+  public List<Voter> listVoters() {
+    return listVotersUseCase.execute();
+  }
+
+  public void updateVoter(final String dni, final String fullName, final String email, final String commune) {
+    updateVoterUseCase.execute(dni, fullName, email, commune);
+  }
+
+  public void deleteVoter(final String dni) {
+    deleteVoterUseCase.execute(dni);
   }
 
   public UserResponse updateUser(final UpdateUserRequest request) {
