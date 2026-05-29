@@ -6,8 +6,8 @@ import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -26,8 +26,8 @@ import org.junit.jupiter.api.Test;
 class UserCreatedDomainEventTest {
 
   // ── Arrenge Generales
-  private static final String ID = "user-001";
-  private static final String NAME = "John Arrieta";
+  private static final String FIRST_NAME = "John";
+  private static final String LAST_NAME = "Arrieta";
   private static final String EMAIL = "john.arrieta@gmail.com";
   // fromHash() acepta cualquier string no-null: evitamos el coste de BCrypt en tests
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
@@ -38,8 +38,8 @@ class UserCreatedDomainEventTest {
   void setUp() {
     user =
         new UserModel(
-            new UserId(ID),
-            new UserFirstName(NAME),
+            new UserFirstName(FIRST_NAME),
+            new UserLastName(LAST_NAME),
             new UserEmail(EMAIL),
             UserPassword.fromHash(HASH),
             UserRole.MEMBER,
@@ -114,8 +114,8 @@ class UserCreatedDomainEventTest {
     assertAll(
         "payload de UserCreatedDomainEvent",
         () -> assertEquals(5, payload.size(), "tamaño del mapa"),
-        () -> assertEquals(ID, payload.get("id"), "id"),
-        () -> assertEquals(NAME, payload.get("name"), "name"),
+        () -> assertEquals(FIRST_NAME, payload.get("firstName"), "firstName"),
+        () -> assertEquals(LAST_NAME, payload.get("lastName"), "lastName"),
         () -> assertEquals(EMAIL, payload.get("email"), "email"),
         () -> assertEquals(UserRole.MEMBER.name(), payload.get("role"), "role"),
         () -> assertEquals(UserStatus.ACTIVE.name(), payload.get("status"), "status"));
