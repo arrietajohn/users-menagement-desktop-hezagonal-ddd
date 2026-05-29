@@ -19,6 +19,7 @@ public class RoomMysqlRepository implements RoomRepository {
     public RoomMysqlRepository(Connection connection) {
         this.connection = connection;
     }
+    
 
     @Override
     public Room save(Room room) {
