@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 
 public record ActivityResponse(
         String id,
-        String name,
-        String description,
-        String dayOfWeek,
-        String schedule,
-        BigDecimal price,
-        boolean isFree,
-        String employeeId,
+        String nombre,
+        String descripción,
+        String Dia,
+        String cronograma,
+        BigDecimal precio,
+        boolean EsGratis,
+        String IdEmpleado,
         int hotelId) {}
