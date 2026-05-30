@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public enum MenuOption {
 
   LIST_USERS(1, "List all users"),
-  FIND_USER(2, "Find user by ID"),
+  FIND_USER(2, "Find user by Email"),
   CREATE_USER(3, "Create user"),
   UPDATE_USER(4, "Update user"),
   DELETE_USER(5, "Delete user"),
