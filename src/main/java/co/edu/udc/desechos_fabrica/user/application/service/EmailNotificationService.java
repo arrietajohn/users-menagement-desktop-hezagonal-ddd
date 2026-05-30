@@ -22,7 +22,8 @@ public final class EmailNotificationService {
   private static final String SUBJECT_UPDATED =
       "Tu cuenta ha sido actualizada — Gestión de Usuarios";
 
-  private static final String TOKEN_NAME     = "name";
+  private static final String TOKEN_FIRSTNAME = "firstName";
+  private static final String TOKEN_LASTNAME  = "lastName";
   private static final String TOKEN_EMAIL    = "email";
   private static final String TOKEN_PASSWORD = "password";
   private static final String TOKEN_ROLE     = "role";
@@ -36,7 +37,8 @@ public final class EmailNotificationService {
         renderTemplate(
             template,
             Map.of(
-                TOKEN_NAME,     user.getName().value(),
+                TOKEN_FIRSTNAME,     user.getFirstName().value(),
+                TOKEN_LASTNAME,      user.getLastName().value(),
                 TOKEN_EMAIL,    user.getEmail().value(),
                 TOKEN_PASSWORD, plainPassword,
                 TOKEN_ROLE,     user.getRole().name()));
@@ -50,7 +52,8 @@ public final class EmailNotificationService {
         renderTemplate(
             template,
             Map.of(
-                TOKEN_NAME,   user.getName().value(),
+                TOKEN_FIRSTNAME,   user.getFirstName().value(),
+                TOKEN_LASTNAME,    user.getLastName().value(),
                 TOKEN_EMAIL,  user.getEmail().value(),
                 TOKEN_ROLE,   user.getRole().name(),
                 TOKEN_STATUS, user.getStatus().name()));
@@ -61,7 +64,7 @@ public final class EmailNotificationService {
   private static EmailDestinationModel buildDestination(
       final UserModel user, final String subject, final String body) {
     return new EmailDestinationModel(
-        user.getEmail().value(), user.getName().value(), subject, body);
+        user.getEmail().value(), user.getFirstName().value(), subject, body);
   }
 
   private String loadTemplate(final String templateName) {
