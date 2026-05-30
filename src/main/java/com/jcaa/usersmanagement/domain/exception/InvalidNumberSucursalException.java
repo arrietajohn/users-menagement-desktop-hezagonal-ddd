@@ -10,7 +10,7 @@ public final class InvalidNumberSucursalException extends DomainException {
     public InvalidNumberSucursalException becauseValueIsEmpty() {
         return new InvalidNumberSucursalException(MESSAGE_EMPTY);
     }
-    public InvalidNumberSucursalException becauseValueIsInvalidFormat() {
-        return new InvalidNumberSucursalException(MESSAGE_INVALIDFORMAT);
+    public InvalidNumberSucursalException becauseValueIsInvalidFormat(final String normalizedValue) {
+        return new InvalidNumberSucursalException(String.format(MESSAGE_INVALIDFORMAT, normalizedValue));
     }
 }
