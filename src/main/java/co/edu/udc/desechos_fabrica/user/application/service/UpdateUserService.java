@@ -35,8 +35,8 @@ public final class UpdateUserService implements UpdateUserUseCase {
     ensureEmailIsNotTakenByAnotherUser(newEmail, currentEmail);
 
     final UserModel userToUpdate =
-        UserApplicationMapper.fromUpdateCommandToModel(command, current.getPassword());
-    final UserModel updatedUser = updateUserPort.update(userToUpdate);
+        UserApplicationMapper.fromUpdateCommandToModel(command, current);
+    final UserModel updatedUser = updateUserPort.update(currentEmail, userToUpdate);
 
     emailNotificationService.notifyUserUpdated(updatedUser);
 
