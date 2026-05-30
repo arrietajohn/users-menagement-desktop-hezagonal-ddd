@@ -1,6 +1,6 @@
 package com.jcaa.usersmanagement.application.service;
 
-import com.jcaa.usersmanagement.domain.ports.ProyectoRepository;
+import com.jcaa.usersmanagement.domain.model.ProyectoRepository;
 import java.time.LocalDate;
 
 public class ProrrogarFechaFinService {
