@@ -30,15 +30,15 @@ public final class SessionRepositoryMySQL
 
 
     private static final String SQL_INSERT =
-            "INSERT INTO Session "
+            "INSERT INTO sessions "
                     + "(ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, ID_Charman," +
                     " Fecha, Hora_Inicio, Hora_Fin) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ? )";
 
     private static final String SQL_SELECT_BY_ID =
-            "SELECT id, salaId, investigacionId, poneneteId, charmanId, fecha, horaInicio, horaFin "
-                    + "FROM session "
-                    + "WHERE id = ? LIMIT 1";
+            "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, ID_Charman, Fecha, Hora_Inicio, Hora_Fin "
+                    + "FROM sessions "
+                    + "WHERE ID_Sesion = ? LIMIT 1";
 
     private final Connection connection;
 

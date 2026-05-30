@@ -74,19 +74,14 @@ public final class SessionManagementCli {
         console.println("    Menu Sesiones");
         console.println(MENU_BORDER);
         for (final MenuOption option : MenuOption.values()) {
-            if (option == MenuOption.CREATE_SESSION || option == MenuOption.LIST_SESSIONS || option == MenuOption.EXIT) {
-                console.printf("    [%d] %s%n", option.getNumber(), option.getDescription());
-            }
-
             if (option == MenuOption.CREATE_SESSION
                     || option == MenuOption.LIST_SESSIONS
                     || option == MenuOption.FIND_SESSION
                     || option == MenuOption.EXIT) {
                 console.printf("    [%d] %s%n", option.getNumber(), option.getDescription());
             }
-
-            console.println(MENU_BORDER);
         }
+        console.println(MENU_BORDER);
     }
 }
 

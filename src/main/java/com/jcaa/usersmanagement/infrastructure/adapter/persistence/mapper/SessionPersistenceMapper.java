@@ -39,10 +39,10 @@ public class SessionPersistenceMapper {
                 resultSet.getString("ID_Sesion"),
                 resultSet.getString("ID_Sala"),
                 resultSet.getString("ID_Investigacion"),
-                resultSet.getString("ID_Ponente"),
+                resultSet.getString("ID_Ponenete"),
                 resultSet.getString("ID_Charman"),
                 resultSet.getString("Fecha"),
-                resultSet.getString("Hora_Sesion"),
+                resultSet.getString("Hora_Inicio"),
                 resultSet.getString("Hora_Fin"));
     }
 
