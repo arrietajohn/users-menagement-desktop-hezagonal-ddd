@@ -4,7 +4,7 @@ import co.edu.udc.desechos_fabrica.user.application.service.dto.command.CreateUs
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.LoginCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
-import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByIdQuery;
+import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByEmailQuery;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.CreateUserRequest;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.LoginRequest;
@@ -19,25 +19,26 @@ public final class UserDesktopMapper {
 
   public static CreateUserCommand toCreateCommand(final CreateUserRequest request) {
     return new CreateUserCommand(
-        request.id(), request.name(), request.email(), request.password(), request.role());
+        request.firstName(), request.lastName(), request.email(), request.password(), request.role());
   }
 
   public static UpdateUserCommand toUpdateCommand(final UpdateUserRequest request) {
     return new UpdateUserCommand(
-        request.id(),
-        request.name(),
+        request.currentEmail(),
+        request.firstName(),
+        request.lastName(),
         request.email(),
         request.password(),
         request.role(),
         request.status());
   }
 
-  public static DeleteUserCommand toDeleteCommand(final String id) {
-    return new DeleteUserCommand(id);
+  public static DeleteUserCommand toDeleteCommand(final String email) {
+    return new DeleteUserCommand(email);
   }
 
-  public static GetUserByIdQuery toGetByIdQuery(final String id) {
-    return new GetUserByIdQuery(id);
+  public static GetUserByEmailQuery toGetByEmailQuery(final String email) {
+    return new GetUserByEmailQuery(email);
   }
 
   public static LoginCommand toLoginCommand(final LoginRequest request) {
@@ -46,8 +47,8 @@ public final class UserDesktopMapper {
 
   public static UserResponse toResponse(final UserModel user) {
     return new UserResponse(
-        user.getId().value(),
-        user.getName().value(),
+        user.getFirstName().value(),
+        user.getLastName().value(),
         user.getEmail().value(),
         user.getRole().name(),
         user.getStatus().name());
