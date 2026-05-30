@@ -1,23 +1,18 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.config;
 
-import co.edu.udc.desechos_fabrica.user.application.port.in.CreateUserUseCase;
-import co.edu.udc.desechos_fabrica.user.application.port.in.DeleteUserUseCase;
-import co.edu.udc.desechos_fabrica.user.application.port.in.GetAllUsersUseCase;
-import co.edu.udc.desechos_fabrica.user.application.port.in.GetUserByIdUseCase;
-import co.edu.udc.desechos_fabrica.user.application.port.in.LoginUseCase;
-import co.edu.udc.desechos_fabrica.user.application.port.in.UpdateUserUseCase;
+import co.edu.udc.desechos_fabrica.user.application.port.in.*;
 import co.edu.udc.desechos_fabrica.user.application.service.CreateUserService;
 import co.edu.udc.desechos_fabrica.user.application.service.DeleteUserService;
 import co.edu.udc.desechos_fabrica.user.application.service.EmailNotificationService;
 import co.edu.udc.desechos_fabrica.user.application.service.GetAllUsersService;
-import co.edu.udc.desechos_fabrica.user.application.service.GetUserByIdService;
+import co.edu.udc.desechos_fabrica.user.application.service.GetUserByEmailService;
 import co.edu.udc.desechos_fabrica.user.application.service.LoginService;
 import co.edu.udc.desechos_fabrica.user.application.service.UpdateUserService;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.email.JavaMailEmailSenderAdapter;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.email.SmtpConfig;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.config.DatabaseConfig;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.config.DatabaseConnectionFactory;
-import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
+import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.repository.UserRepositoryPostgreSQL;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller.UserController;
 
 import java.sql.Connection;
@@ -44,7 +39,7 @@ public final class DependencyContainer {
     final AppProperties properties = new AppProperties();
 
     final Connection connection = buildDatabaseConnection(properties);
-    final UserRepositoryMySQL userRepository = new UserRepositoryMySQL(connection);
+    final UserRepositoryPostgreSQL userRepository = new UserRepositoryPostgreSQL(connection);
 
     final JavaMailEmailSenderAdapter emailSender =
         new JavaMailEmailSenderAdapter(buildSmtpConfig(properties));
@@ -56,10 +51,10 @@ public final class DependencyContainer {
     final CreateUserUseCase createUserUseCase =
         new CreateUserService(userRepository, userRepository, emailNotification, validator);
     final UpdateUserUseCase updateUserUseCase =
-        new UpdateUserService(userRepository, userRepository, userRepository, emailNotification, validator);
+        new UpdateUserService(userRepository, userRepository, emailNotification, validator);
     final DeleteUserUseCase deleteUserUseCase =
         new DeleteUserService(userRepository, userRepository, validator);
-    final GetUserByIdUseCase getUserByIdUseCase = new GetUserByIdService(userRepository, validator);
+    final GetUserByEmailUseCase getUserByEmailUseCase = new GetUserByEmailService(userRepository, validator);
     final GetAllUsersUseCase getAllUsersUseCase = new GetAllUsersService(userRepository);
     final LoginUseCase loginUseCase = new LoginService(userRepository, validator);
 
@@ -68,7 +63,7 @@ public final class DependencyContainer {
             createUserUseCase,
             updateUserUseCase,
             deleteUserUseCase,
-            getUserByIdUseCase,
+            getUserByEmailUseCase,
             getAllUsersUseCase,
             loginUseCase);
   }
