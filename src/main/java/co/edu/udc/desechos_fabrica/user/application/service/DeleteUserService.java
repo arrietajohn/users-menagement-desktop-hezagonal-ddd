@@ -2,11 +2,11 @@ package co.edu.udc.desechos_fabrica.user.application.service;
 
 import co.edu.udc.desechos_fabrica.user.application.port.in.DeleteUserUseCase;
 import co.edu.udc.desechos_fabrica.user.application.port.out.DeleteUserPort;
-import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByIdPort;
+import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.mapper.UserApplicationMapper;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -18,16 +18,16 @@ import java.util.Set;
 public final class DeleteUserService implements DeleteUserUseCase {
 
   private final DeleteUserPort deleteUserPort;
-  private final GetUserByIdPort getUserByIdPort;
+  private final GetUserByEmailPort getUserByEmailPort;
   private final Validator validator;
 
   @Override
   public void execute(final DeleteUserCommand command) {
     validateCommand(command);
 
-    final UserId userId = UserApplicationMapper.fromDeleteCommandToUserId(command);
-    ensureUserExists(userId);
-    deleteUserPort.delete(userId);
+    final UserEmail userEmail = UserApplicationMapper.fromDeleteCommandToUserEmail(command);
+    ensureUserExists(userEmail);
+    deleteUserPort.delete(userEmail);
   }
 
   private void validateCommand(final DeleteUserCommand command) {
@@ -37,9 +37,9 @@ public final class DeleteUserService implements DeleteUserUseCase {
     }
   }
 
-  private void ensureUserExists(final UserId userId) {
-    getUserByIdPort
-        .getById(userId)
-        .orElseThrow(() -> UserNotFoundException.becauseIdWasNotFound(userId.value()));
+  private void ensureUserExists(final UserEmail userEmail) {
+    getUserByEmailPort
+        .getByEmail(userEmail)
+        .orElseThrow(() -> UserNotFoundException.becauseEmailWasNotFound(userEmail.value()));
   }
 }
