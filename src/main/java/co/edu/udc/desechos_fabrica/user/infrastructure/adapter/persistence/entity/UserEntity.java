@@ -1,8 +1,8 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.entity;
 
 public record UserEntity(
-    String id,
-    String name,
+    String firstName,
+    String lastName,
     String email,
     String password,
     String role,
