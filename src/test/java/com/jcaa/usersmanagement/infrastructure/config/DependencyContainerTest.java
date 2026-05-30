@@ -7,7 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.exception.PersistenceException;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
+import com.jcaa.usersmanagement.infrastructure.desktop.controller.UserController;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

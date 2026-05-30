@@ -16,6 +16,7 @@ import com.jcaa.usersmanagement.infrastructure.adapter.persistence.entity.UserEn
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
