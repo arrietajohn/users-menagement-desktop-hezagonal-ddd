@@ -31,3 +31,15 @@ VALUES (
     'ACTIVE'
 );
 
+CREATE TABLE IF NOT EXISTS sessions (
+                                        ID_Sesion        VARCHAR(36) NOT NULL PRIMARY KEY,
+    ID_Sala          VARCHAR(36) NOT NULL,
+    ID_Investigacion VARCHAR(36) NOT NULL,
+    ID_Ponenete      VARCHAR(36) NOT NULL,
+    ID_Charman       VARCHAR(36) NOT NULL,
+    Fecha            DATE        NOT NULL,
+    Hora_Inicio      TIME        NOT NULL,
+    Hora_Fin         TIME        NOT NULL
+    );
+
+
