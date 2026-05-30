@@ -5,9 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record CreateUserCommand(
-    @NotBlank(message = "name must not be blank")
-        @Size(min = 3, message = "name must have at least 3 characters")
-        String name,
+    @NotBlank(message = "first name must not be blank")
+        @Size(min = 3, message = "first name must have at least 3 characters")
+        String firstName,
+    @NotBlank(message = "last name must not be blank")
+        @Size(min = 3, message = "last name must have at least 3 characters")
+        String lastName,
     @NotBlank(message = "email must not be blank")
         @Email(message = "email must be a valid email address")
         String email,
