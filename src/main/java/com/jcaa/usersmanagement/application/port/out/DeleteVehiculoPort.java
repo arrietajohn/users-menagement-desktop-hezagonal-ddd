@@ -1,4 +1,5 @@
 package com.jcaa.usersmanagement.application.port.out;
 
-public class DeleteVehiculoPort {
+public interface DeleteVehiculoPort {
+    void delete(Integer idBastidor);
 }

@@ -1,4 +1,8 @@
 package com.jcaa.usersmanagement.application.port.out;
 
-public class GetAllVehiculosPort {
+import com.jcaa.usersmanagement.domain.model.Vehiculomodel;
+import java.util.List;
+
+public interface GetAllVehiculosPort {
+    List<Vehiculomodel> getAll();
 }

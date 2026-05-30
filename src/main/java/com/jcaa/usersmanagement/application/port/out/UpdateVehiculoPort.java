@@ -1,4 +1,7 @@
 package com.jcaa.usersmanagement.application.port.out;
 
-public class UpdateVehiculoPort {
+import com.jcaa.usersmanagement.domain.model.Vehiculomodel;
+
+public interface UpdateVehiculoPort {
+    Vehiculomodel update(Vehiculomodel vehiculo);
 }
