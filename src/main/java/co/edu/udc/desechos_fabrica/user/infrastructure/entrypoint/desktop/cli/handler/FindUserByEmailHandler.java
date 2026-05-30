@@ -8,7 +8,7 @@ import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.Us
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public final class FindUserByIdHandler implements OperationHandler {
+public final class FindUserByEmailHandler implements OperationHandler {
 
   private final UserController userController;
   private final ConsoleIO console;
@@ -16,9 +16,9 @@ public final class FindUserByIdHandler implements OperationHandler {
 
   @Override
   public void handle() {
-    final String id = console.readRequired("User ID: ");
+    final String email = console.readRequired("User Email: ");
     try {
-      final UserResponse user = userController.findUserById(id);
+      final UserResponse user = userController.findUserByEmail(email);
       printer.print(user);
     } catch (final UserNotFoundException exception) {
       console.println("  Not found: " + exception.getMessage());
