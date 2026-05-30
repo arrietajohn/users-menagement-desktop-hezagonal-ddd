@@ -1,17 +1,26 @@
 package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli;
 
+import com.jcaa.usersmanagement.application.port.in.RegistrarExamenMedicoUseCase;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.CreateEspecieHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.CreateUserHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.DeleteEspecieHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.DeleteUserHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.FindEspecieByIdHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.FindUserByIdHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.ListEspeciesHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.ListUsersHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.LoginHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.RegistrarExamenMedicoHandler;  
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.UpdateEspecieHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.UpdateUserHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io.UserResponsePrinter;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.menu.MenuOption;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.EspecieController;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
 import jakarta.validation.ConstraintViolationException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +37,7 @@ public final class UserManagementCli {
   private static final String MENU_BORDER = "  ==========================================";
 
   private final UserController userController;
+  private final EspecieController especieController;
   private final ConsoleIO console;
 
   public void start() {
@@ -68,13 +78,22 @@ public final class UserManagementCli {
   }
 
   private Map<MenuOption, OperationHandler> buildHandlers(final UserResponsePrinter printer) {
-    return Map.of(
-        MenuOption.LIST_USERS,  new ListUsersHandler(userController, printer),
-        MenuOption.FIND_USER,   new FindUserByIdHandler(userController, console, printer),
-        MenuOption.CREATE_USER, new CreateUserHandler(userController, console, printer),
-        MenuOption.UPDATE_USER, new UpdateUserHandler(userController, console, printer),
-        MenuOption.DELETE_USER, new DeleteUserHandler(userController, console),
-        MenuOption.LOGIN,       new LoginHandler(userController, console, printer));
+    final Map<MenuOption, OperationHandler> handlers = new HashMap<>();
+    
+    handlers.put(MenuOption.LIST_USERS,     new ListUsersHandler(userController, printer));
+    handlers.put(MenuOption.FIND_USER,      new FindUserByIdHandler(userController, console, printer));
+    handlers.put(MenuOption.CREATE_USER,    new CreateUserHandler(userController, console, printer));
+    handlers.put(MenuOption.UPDATE_USER,    new UpdateUserHandler(userController, console, printer));
+    handlers.put(MenuOption.DELETE_USER,    new DeleteUserHandler(userController, console));
+    handlers.put(MenuOption.LOGIN,          new LoginHandler(userController, console, printer));
+    handlers.put(MenuOption.LIST_ESPECIES,  new ListEspeciesHandler(especieController, console));
+    handlers.put(MenuOption.FIND_ESPECIE,   new FindEspecieByIdHandler(especieController, console));
+    handlers.put(MenuOption.CREATE_ESPECIE, new CreateEspecieHandler(especieController, console));
+    handlers.put(MenuOption.UPDATE_ESPECIE, new UpdateEspecieHandler(especieController, console));
+    handlers.put(MenuOption.DELETE_ESPECIE, new DeleteEspecieHandler(especieController, console));
+   handlers.put(MenuOption.REGISTRAR_EXAMEN, new RegistrarExamenMedicoHandler(especieController, console));
+
+    return handlers;
   }
 
   private void printMenu() {

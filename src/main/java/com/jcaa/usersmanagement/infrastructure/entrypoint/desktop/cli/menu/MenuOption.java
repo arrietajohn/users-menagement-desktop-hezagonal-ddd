@@ -14,6 +14,12 @@ public enum MenuOption {
   UPDATE_USER(4, "Update user"),
   DELETE_USER(5, "Delete user"),
   LOGIN(6, "Login"),
+  LIST_ESPECIES(7, "Listar especies"),
+  FIND_ESPECIE(8, "Buscar especie por ID"),
+  CREATE_ESPECIE(9, "Registrar especie"),
+  UPDATE_ESPECIE(10, "Actualizar especie"),
+  DELETE_ESPECIE(11, "Eliminar especie"),
+  REGISTRAR_EXAMEN(12, "Registrar Examen Médico"),
   EXIT(0, "Exit");
 
   private final int number;
@@ -28,4 +34,3 @@ public enum MenuOption {
     return Optional.empty();
   }
 }
-
