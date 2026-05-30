@@ -20,6 +20,12 @@ import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.Databa
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
 
+// nuevos imports para los casos de uso
+import com.jcaa.usersmanagement.application.service.ActualizarEstadoProyectoService;
+import com.jcaa.usersmanagement.application.service.CambiarPromotorProyectoService;
+import com.jcaa.usersmanagement.application.service.ProrrogarFechaFinService;
+import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.ProyectoRepositoryMySQL;
+
 import java.sql.Connection;
 import jakarta.validation.Validator;
 
@@ -40,61 +46,87 @@ public final class DependencyContainer {
 
   private final UserController userController;
 
+  // PROPIEDADES PRIVADAS PARA LOS SERVICIOS DE PROYECTOS
+  private final ActualizarEstadoProyectoService actualizarEstadoProyectoService;
+  private final ProrrogarFechaFinService prorrogarFechaFinService;
+  private final CambiarPromotorProyectoService cambiarPromotorProyectoService;
+
   public DependencyContainer() {
     final AppProperties properties = new AppProperties();
 
     final Connection connection = buildDatabaseConnection(properties);
     final UserRepositoryMySQL userRepository = new UserRepositoryMySQL(connection);
 
+    //  INSTANCIACIÓN DEL NUEVO ADAPTADOR DE PERSISTENCIA DE PROYECTOS
+    final ProyectoRepositoryMySQL proyectoRepository = new ProyectoRepositoryMySQL(connection);
+
     final JavaMailEmailSenderAdapter emailSender =
-        new JavaMailEmailSenderAdapter(buildSmtpConfig(properties));
+            new JavaMailEmailSenderAdapter(buildSmtpConfig(properties));
     final EmailNotificationService emailNotification = new EmailNotificationService(emailSender);
 
-    // Construir Validator para las validaciones en la capa de aplicación
+    // Construccion Validator para las validaciones en la capa de aplicación
     final Validator validator = ValidatorProvider.buildValidator();
 
     final CreateUserUseCase createUserUseCase =
-        new CreateUserService(userRepository, userRepository, emailNotification, validator);
+            new CreateUserService(userRepository, userRepository, emailNotification, validator);
     final UpdateUserUseCase updateUserUseCase =
-        new UpdateUserService(userRepository, userRepository, userRepository, emailNotification, validator);
+            new UpdateUserService(userRepository, userRepository, userRepository, emailNotification, validator);
     final DeleteUserUseCase deleteUserUseCase =
-        new DeleteUserService(userRepository, userRepository, validator);
+            new DeleteUserService(userRepository, userRepository, validator);
     final GetUserByIdUseCase getUserByIdUseCase = new GetUserByIdService(userRepository, validator);
     final GetAllUsersUseCase getAllUsersUseCase = new GetAllUsersService(userRepository);
     final LoginUseCase loginUseCase = new LoginService(userRepository, validator);
 
     this.userController =
-        new UserController(
-            createUserUseCase,
-            updateUserUseCase,
-            deleteUserUseCase,
-            getUserByIdUseCase,
-            getAllUsersUseCase,
-            loginUseCase);
+            new UserController(
+                    createUserUseCase,
+                    updateUserUseCase,
+                    deleteUserUseCase,
+                    getUserByIdUseCase,
+                    getAllUsersUseCase,
+                    loginUseCase);
+
+    // INICIALIZACIÓN DE LOS TRES SERVICIOS CON EL REPOSITORIO
+    this.actualizarEstadoProyectoService = new ActualizarEstadoProyectoService(proyectoRepository);
+    this.prorrogarFechaFinService = new ProrrogarFechaFinService(proyectoRepository);
+    this.cambiarPromotorProyectoService = new CambiarPromotorProyectoService(proyectoRepository);
   }
 
   public UserController userController() {
     return userController;
   }
 
+  // MÉTODOS GETTERS
+  public ActualizarEstadoProyectoService getActualizarEstadoProyectoService() {
+    return actualizarEstadoProyectoService;
+  }
+
+  public ProrrogarFechaFinService getProrrogarFechaFinService() {
+    return prorrogarFechaFinService;
+  }
+
+  public CambiarPromotorProyectoService getCambiarPromotorProyectoService() {
+    return cambiarPromotorProyectoService;
+  }
+
   private static Connection buildDatabaseConnection(final AppProperties properties) {
     final DatabaseConfig config =
-        new DatabaseConfig(
-            properties.get(DB_HOST),
-            properties.getInt(DB_PORT),
-            properties.get(DB_NAME),
-            properties.get(DB_USER),
-            properties.get(DB_PASSWORD));
+            new DatabaseConfig(
+                    properties.get(DB_HOST),
+                    properties.getInt(DB_PORT),
+                    properties.get(DB_NAME),
+                    properties.get(DB_USER),
+                    properties.get(DB_PASSWORD));
     return DatabaseConnectionFactory.createConnection(config);
   }
 
   private static SmtpConfig buildSmtpConfig(final AppProperties properties) {
     return new SmtpConfig(
-        properties.get(SMTP_HOST),
-        properties.getInt(SMTP_PORT),
-        properties.get(SMTP_USER),
-        properties.get(SMTP_PASSWORD),
-        properties.get(SMTP_FROM),
-        properties.get(SMTP_FROM_NAME));
+            properties.get(SMTP_HOST),
+            properties.getInt(SMTP_PORT),
+            properties.get(SMTP_USER),
+            properties.get(SMTP_PASSWORD),
+            properties.get(SMTP_FROM),
+            properties.get(SMTP_FROM_NAME));
   }
 }
