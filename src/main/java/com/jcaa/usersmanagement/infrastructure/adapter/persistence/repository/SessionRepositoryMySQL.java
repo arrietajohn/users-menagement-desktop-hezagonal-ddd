@@ -17,11 +17,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Log
 @RequiredArgsConstructor
 public final class SessionRepositoryMySQL
-        implements SaveSessionPort, GetAllSessionsPort
+        implements SaveSessionPort, GetAllSessionsPort, GetSessionByIdPort
 {
     private static final String SQL_SELECT_ALL =
             "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
@@ -71,6 +72,20 @@ public final class SessionRepositoryMySQL
             return SessionPersistenceMapper.fromResultSetToModelList(resultSet);
         } catch (final SQLException exception) {
             throw PersistenceException.becauseFindAllFailed(exception);
+        }
+    }
+
+    @Override
+    public Optional<Session> getById(final SessionId sessionId) {
+        try (final PreparedStatement statement = connection.prepareStatement(SQL_SELECT_BY_ID)) {
+            statement.setString(1, sessionId.value());
+            final ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                return Optional.empty();
+            }
+            return Optional.of(SessionPersistenceMapper.fromResultSetToModel(resultSet));
+        } catch (final SQLException exception) {
+            throw PersistenceException.becauseFindByIdFailed(sessionId.value(), exception);
         }
     }
     }

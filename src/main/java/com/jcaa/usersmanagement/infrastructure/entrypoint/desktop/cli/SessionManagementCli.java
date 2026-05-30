@@ -64,7 +64,8 @@ public final class SessionManagementCli {
     private Map<MenuOption, OperationHandler> buildHandlers(final SessionResponsePrinter printer) {
         return Map.of(
                 MenuOption.LIST_SESSIONS,  new ListSessionHandler(sessionController, printer),
-                MenuOption.CREATE_SESSION, new CreateSessionHandler(sessionController, console, printer));
+                MenuOption.CREATE_SESSION, new CreateSessionHandler(sessionController, console, printer),
+                MenuOption.FIND_SESSION,   new FindSessionByIdHandler(sessionController, console, printer));
     }
 
     private void printMenu() {
@@ -76,9 +77,16 @@ public final class SessionManagementCli {
             if (option == MenuOption.CREATE_SESSION || option == MenuOption.LIST_SESSIONS || option == MenuOption.EXIT) {
                 console.printf("    [%d] %s%n", option.getNumber(), option.getDescription());
             }
-        }
 
-        console.println(MENU_BORDER);
+            if (option == MenuOption.CREATE_SESSION
+                    || option == MenuOption.LIST_SESSIONS
+                    || option == MenuOption.FIND_SESSION
+                    || option == MenuOption.EXIT) {
+                console.printf("    [%d] %s%n", option.getNumber(), option.getDescription());
+            }
+
+            console.println(MENU_BORDER);
+        }
     }
 }
 

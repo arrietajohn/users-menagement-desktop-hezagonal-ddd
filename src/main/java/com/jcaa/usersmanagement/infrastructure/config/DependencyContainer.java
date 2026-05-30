@@ -58,7 +58,7 @@ public final class DependencyContainer {
     final SessionRepositoryMySQL sessionRepository = new SessionRepositoryMySQL(connection);
     final CreateSessionUseCase createSessionUseCase = new CreateSessionService(sessionRepository, validator);
     final GetAllSessionUseCase getAllSessionUseCase = new GetAllSessionService(sessionRepository);
-
+    final GetSessionByIdUseCase getSessionByIdUseCase = new GetSessionByIdService(sessionRepository, validator);
 
     this.userController =
         new UserController(
@@ -71,7 +71,7 @@ public final class DependencyContainer {
 
     this.sessionController =
             new SessionController(
-                    createSessionUseCase, getAllSessionUseCase
+                    createSessionUseCase, getAllSessionUseCase, getSessionByIdUseCase
             );
   }
 

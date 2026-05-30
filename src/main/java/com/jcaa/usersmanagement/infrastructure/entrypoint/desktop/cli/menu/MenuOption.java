@@ -14,8 +14,9 @@ public enum MenuOption {
   UPDATE_USER(4, "Update user"),
   DELETE_USER(5, "Delete user"),
   LOGIN(6, "Login"),
-  CREATE_SESSION(7, "Create room session"),
+  CREATE_SESSION(7, "Create session"),
   LIST_SESSIONS(8, "List all sessions"),
+  FIND_SESSION(9, "Find session by ID"),
   EXIT(0, "Exit");
 
   private final int number;

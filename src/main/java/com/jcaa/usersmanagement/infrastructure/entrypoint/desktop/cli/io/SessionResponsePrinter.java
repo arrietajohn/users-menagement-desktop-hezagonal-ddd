@@ -1,10 +1,17 @@
 package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io;
 
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.CreateSessionHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.FindSessionByIdHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.ListSessionHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.menu.MenuOption;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.SessionController;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.SessionResponse;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public final class SessionResponsePrinter {

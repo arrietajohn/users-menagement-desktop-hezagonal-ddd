@@ -2,6 +2,7 @@ package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.mapper;
 
 import com.jcaa.usersmanagement.application.service.dto.command.CreateSessionCommand;
 import com.jcaa.usersmanagement.application.service.dto.command.CreateUserCommand;
+import com.jcaa.usersmanagement.application.service.dto.query.GetSessionByIdQuery;
 import com.jcaa.usersmanagement.domain.model.Session;
 import com.jcaa.usersmanagement.domain.model.UserModel;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.CreateSessionRequest;
@@ -53,5 +54,9 @@ public final class SessionDesktopMapper {
 
     public static List<SessionResponse> toResponseList(final List<Session> users) {
         return users.stream().map(SessionDesktopMapper::toResponse).toList();
+    }
+
+    public static GetSessionByIdQuery toGetByIdQuery(final String id) {
+        return new GetSessionByIdQuery(id);
     }
 }
