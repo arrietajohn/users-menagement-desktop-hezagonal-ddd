@@ -1,6 +1,7 @@
 package com.jcaa.usersmanagement.application.service.mapper;
 
 import com.jcaa.usersmanagement.application.service.dto.command.CreateSessionCommand;
+import com.jcaa.usersmanagement.application.service.dto.query.GetSessionByIdQuery;
 import com.jcaa.usersmanagement.domain.model.Session;
 import com.jcaa.usersmanagement.domain.valueobject.InvestigacionId;
 import com.jcaa.usersmanagement.domain.valueobject.SalaID;
@@ -25,5 +26,9 @@ public class SessionApplicationMapper {
                 LocalTime.from(command.horaInicio()),
                 LocalTime.from(command.horaFin())
         );
+    }
+
+    public static SessionId fromGetSessionByIdQueryToSessionId(final GetSessionByIdQuery query) {
+        return new SessionId(query.id());
     }
 }

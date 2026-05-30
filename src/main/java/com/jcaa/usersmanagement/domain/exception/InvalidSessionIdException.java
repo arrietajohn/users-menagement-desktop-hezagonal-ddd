@@ -11,4 +11,7 @@ public final class InvalidSessionIdException extends DomainException {
     public static InvalidSessionIdException becauseValueIsEmpty() {
         return new InvalidSessionIdException(MESSAGE_EMPTY);
     }
+    public static InvalidSessionIdException becauseIdWasNotFound(final String id) {
+        return new InvalidSessionIdException("The session with id " + id + " was not found.");
+    }
 }
