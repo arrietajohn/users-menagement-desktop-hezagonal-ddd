@@ -40,3 +40,7 @@ build/
 .idea/
 *.log
 
+### Application Specific ###
+# Ignore local properties files that may contain sensitive data or environment-specific settings
+application-local.properties
+application-dev.properties
