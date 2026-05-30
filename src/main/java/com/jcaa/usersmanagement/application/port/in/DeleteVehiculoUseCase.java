@@ -1,4 +1,5 @@
 package com.jcaa.usersmanagement.application.port.in;
 
-public class DeleteVehiculoUseCase {
+public interface DeleteVehiculoUseCase {
+    void execute(Integer idBastidor);
 }

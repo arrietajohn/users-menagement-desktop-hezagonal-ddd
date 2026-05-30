@@ -1,4 +1,7 @@
 package com.jcaa.usersmanagement.application.port.in;
 
-public class GetVehiculoByIdUseCase {
+import com.jcaa.usersmanagement.domain.model.Vehiculomodel;
+
+public interface GetVehiculoByIdUseCase {
+    Vehiculomodel execute(Integer idBastidor);
 }

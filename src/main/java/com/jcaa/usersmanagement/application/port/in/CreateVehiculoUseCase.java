@@ -1,4 +1,9 @@
 package com.jcaa.usersmanagement.application.port.in;
 
-public class CreateVehiculoUseCase {
+import com.jcaa.usersmanagement.domain.model.Vehiculomodel;
+
+public interface CreateVehiculoUseCase {
+    Vehiculomodel execute(Integer idBastidor, java.math.BigDecimal precio,
+                          String cilindrada, String potencia, String estado,
+                          Integer idModelo, Integer idServicio);
 }
