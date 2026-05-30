@@ -1,5 +1,8 @@
 package com.jcaa.usersmanagement.domain.model;
 
+import com.jcaa.usersmanagement.domain.exception.InvalidNumberSucursalException;
+import com.jcaa.usersmanagement.domain.exception.InvalidUserEmailException;
+
 import java.util.Objects;
 
 public record NumeroSucursal(String value) {
@@ -13,17 +16,15 @@ public record NumeroSucursal(String value) {
         value = normalized;
     }
 
-    private static void validateNotEmpty(String value) {
+    private static void validateNotEmpty(final String value) {
         if (value.isEmpty()) {
-//            throw new InvalidNumeroSucursalException("El número de sucursal no puede estar vacío");
+            throw InvalidUserEmailException.becauseValueIsEmpty();
         }
     }
 
     private static void validateFormat(String value) {
         if (!value.matches("\\d+")) {
-//            throw new InvalidNumeroSucursalException(
-//                    "El número de sucursal solo puede contener dígitos, valor recibido: " + value
-//            );
+            throw InvalidUserEmailException.becauseFormatIsInvalid(value);
         }
     }
 
