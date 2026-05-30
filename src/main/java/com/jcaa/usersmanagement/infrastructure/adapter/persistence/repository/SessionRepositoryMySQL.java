@@ -2,21 +2,30 @@ package com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository;
 
 import com.jcaa.usersmanagement.application.port.out.*;
 import com.jcaa.usersmanagement.domain.model.Session;
+import com.jcaa.usersmanagement.domain.model.UserModel;
+import com.jcaa.usersmanagement.domain.valueobject.SessionId;
+import com.jcaa.usersmanagement.domain.valueobject.UserId;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.dto.SessionPersistenceDto;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.exception.PersistenceException;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.mapper.SessionPersistenceMapper;
+import com.jcaa.usersmanagement.infrastructure.adapter.persistence.mapper.UserPersistenceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Log
 @RequiredArgsConstructor
 public final class SessionRepositoryMySQL
-        implements SaveSessionPort
+        implements SaveSessionPort, GetAllSessionsPort
 {
+    private static final String SQL_SELECT_ALL =
+            "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
+                    "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions";
 
 
     private static final String SQL_INSERT =
@@ -24,6 +33,11 @@ public final class SessionRepositoryMySQL
                     + "(ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, ID_Charman," +
                     " Fecha, Hora_Inicio, Hora_Fin) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ? )";
+
+    private static final String SQL_SELECT_BY_ID =
+            "SELECT id, salaId, investigacionId, poneneteId, charmanId, fecha, horaInicio, horaFin "
+                    + "FROM session "
+                    + "WHERE id = ? LIMIT 1";
 
     private final Connection connection;
 
@@ -47,6 +61,16 @@ public final class SessionRepositoryMySQL
             statement.executeUpdate();
         } catch (final SQLException exception) {
             throw PersistenceException.becauseSaveFailed(dto.id(), exception);
+        }
+    }
+
+    @Override
+    public List<Session> getAll() {
+        try (final PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL)) {
+            final ResultSet resultSet = statement.executeQuery();
+            return SessionPersistenceMapper.fromResultSetToModelList(resultSet);
+        } catch (final SQLException exception) {
+            throw PersistenceException.becauseFindAllFailed(exception);
         }
     }
     }

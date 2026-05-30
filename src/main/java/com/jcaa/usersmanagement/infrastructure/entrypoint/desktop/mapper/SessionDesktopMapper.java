@@ -6,6 +6,7 @@ import com.jcaa.usersmanagement.domain.model.Session;
 import com.jcaa.usersmanagement.domain.model.UserModel;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.CreateSessionRequest;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.SessionResponse;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UserResponse;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -48,5 +49,9 @@ public final class SessionDesktopMapper {
                 session.getHoraInicio() != null ? session.getHoraInicio().toString() : null,
                 session.getHoraFin() != null ? session.getHoraFin().toString() : null
         );
+    }
+
+    public static List<SessionResponse> toResponseList(final List<Session> users) {
+        return users.stream().map(SessionDesktopMapper::toResponse).toList();
     }
 }
