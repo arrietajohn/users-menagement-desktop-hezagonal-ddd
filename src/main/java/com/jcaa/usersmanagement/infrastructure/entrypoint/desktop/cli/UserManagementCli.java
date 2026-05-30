@@ -10,6 +10,7 @@ import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.Up
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.io.UserResponsePrinter;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.menu.MenuOption;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.ResidenciaController;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Map;
@@ -20,14 +21,15 @@ import lombok.RequiredArgsConstructor;
 public final class UserManagementCli {
 
   private static final String BANNER =
-      """
-      ==========================================
-           Users Management System
-      ==========================================""";
+          """
+          ==========================================
+               Users Management System
+          ==========================================""";
 
   private static final String MENU_BORDER = "  ==========================================";
 
   private final UserController userController;
+  private final ResidenciaController residenciaController;
   private final ConsoleIO console;
 
   public void start() {
@@ -48,6 +50,8 @@ public final class UserManagementCli {
       } else if (option.get() == MenuOption.EXIT) {
         console.println("\n  Goodbye!\n");
         running = false;
+      } else if (option.get() == MenuOption.RESIDENCIAS) {
+        new ResidenciaCli(residenciaController, console).start();
       } else {
         executeHandler(handlers, option.get());
       }
@@ -55,13 +59,13 @@ public final class UserManagementCli {
   }
 
   private void executeHandler(
-      final Map<MenuOption, OperationHandler> handlers, final MenuOption option) {
+          final Map<MenuOption, OperationHandler> handlers, final MenuOption option) {
     try {
       handlers.get(option).handle();
     } catch (final ConstraintViolationException exception) {
       console.println("  Validation errors:");
       exception.getConstraintViolations()
-          .forEach(violation -> console.println("    - " + violation.getMessage()));
+              .forEach(violation -> console.println("    - " + violation.getMessage()));
     } catch (final RuntimeException exception) {
       console.println("  Unexpected error: " + exception.getMessage());
     }
@@ -69,12 +73,12 @@ public final class UserManagementCli {
 
   private Map<MenuOption, OperationHandler> buildHandlers(final UserResponsePrinter printer) {
     return Map.of(
-        MenuOption.LIST_USERS,  new ListUsersHandler(userController, printer),
-        MenuOption.FIND_USER,   new FindUserByIdHandler(userController, console, printer),
-        MenuOption.CREATE_USER, new CreateUserHandler(userController, console, printer),
-        MenuOption.UPDATE_USER, new UpdateUserHandler(userController, console, printer),
-        MenuOption.DELETE_USER, new DeleteUserHandler(userController, console),
-        MenuOption.LOGIN,       new LoginHandler(userController, console, printer));
+            MenuOption.LIST_USERS,  new ListUsersHandler(userController, printer),
+            MenuOption.FIND_USER,   new FindUserByIdHandler(userController, console, printer),
+            MenuOption.CREATE_USER, new CreateUserHandler(userController, console, printer),
+            MenuOption.UPDATE_USER, new UpdateUserHandler(userController, console, printer),
+            MenuOption.DELETE_USER, new DeleteUserHandler(userController, console),
+            MenuOption.LOGIN,       new LoginHandler(userController, console, printer));
   }
 
   private void printMenu() {
