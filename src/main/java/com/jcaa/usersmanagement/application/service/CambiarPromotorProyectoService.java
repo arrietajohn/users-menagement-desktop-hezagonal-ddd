@@ -1,6 +1,6 @@
 package com.jcaa.usersmanagement.application.service;
 
-import com.jcaa.usersmanagement.domain.ports.ProyectoRepository;
+import com.jcaa.usersmanagement.domain.model.ProyectoRepository;
 
 public class CambiarPromotorProyectoService {
     private final ProyectoRepository repository;
