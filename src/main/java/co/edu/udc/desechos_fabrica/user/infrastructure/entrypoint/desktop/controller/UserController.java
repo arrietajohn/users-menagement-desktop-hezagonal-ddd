@@ -1,11 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller;
 
-import co.edu.udc.desechos_fabrica.user.application.port.in.CreateUserUseCase;
-import co.edu.udc.desechos_fabrica.user.application.port.in.DeleteUserUseCase;
-import co.edu.udc.desechos_fabrica.user.application.port.in.GetAllUsersUseCase;
-import co.edu.udc.desechos_fabrica.user.application.port.in.GetUserByIdUseCase;
-import co.edu.udc.desechos_fabrica.user.application.port.in.LoginUseCase;
-import co.edu.udc.desechos_fabrica.user.application.port.in.UpdateUserUseCase;
+import co.edu.udc.desechos_fabrica.user.application.port.in.*;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.CreateUserRequest;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.LoginRequest;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.UpdateUserRequest;
@@ -21,7 +16,7 @@ public final class UserController {
   private final CreateUserUseCase createUserUseCase;
   private final UpdateUserUseCase updateUserUseCase;
   private final DeleteUserUseCase deleteUserUseCase;
-  private final GetUserByIdUseCase getUserByIdUseCase;
+  private final GetUserByEmailUseCase getUserByEmailUseCase;
   private final GetAllUsersUseCase getAllUsersUseCase;
   private final LoginUseCase loginUseCase;
 
@@ -30,9 +25,9 @@ public final class UserController {
     return UserDesktopMapper.toResponseList(users);
   }
 
-  public UserResponse findUserById(final String id) {
-    final var query = UserDesktopMapper.toGetByIdQuery(id);
-    final var user = getUserByIdUseCase.execute(query);
+  public UserResponse findUserByEmail(final String email) {
+    final var query = UserDesktopMapper.toGetByEmailQuery(email);
+    final var user = getUserByEmailUseCase.execute(query);
     return UserDesktopMapper.toResponse(user);
   }
 
@@ -48,8 +43,8 @@ public final class UserController {
     return UserDesktopMapper.toResponse(user);
   }
 
-  public void deleteUser(final String id) {
-    final var command = UserDesktopMapper.toDeleteCommand(id);
+  public void deleteUser(final String email) {
+    final var command = UserDesktopMapper.toDeleteCommand(email);
     deleteUserUseCase.execute(command);
   }
 
