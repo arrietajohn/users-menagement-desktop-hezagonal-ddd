@@ -16,7 +16,7 @@ public record CreateSessionCommand(
         @NotBlank(message = "chairmanId must not be blank") String chairmanId,
         @NotNull(message = "fecha must not be blank")LocalDate fecha,
         @NotNull(message = "horaInicio must not be blank") LocalTime horaInicio,
-        @NotNull(message = "horaFin must not be blank")LocalDate horaFin
+        @NotNull(message = "horaFin must not be blank")LocalTime horaFin
 )
 {
 
