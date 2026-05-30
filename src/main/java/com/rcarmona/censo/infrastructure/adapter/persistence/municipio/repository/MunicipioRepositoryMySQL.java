@@ -89,7 +89,7 @@ public final class MunicipioRepositoryMySQL implements
 
     @Override
     public Optional<MunicipioModel> findById(MunicipioId id) {
-        String sql = "SELECT id_municipio as id, nombre_municipio as nombre, id_provincia as provincia_id FROM municipio WHERE id_municipio = ?";
+        String sql = "SELECT id_municipio, nombre_municipio, id_provincia FROM municipio WHERE id_municipio = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id.value());
             try (ResultSet rs = stmt.executeQuery()) {
@@ -106,7 +106,7 @@ public final class MunicipioRepositoryMySQL implements
 
     @Override
     public List<MunicipioModel> findAll() {
-        String sql = "SELECT id_municipio as id, nombre_municipio as nombre, id_provincia as provincia_id FROM municipio";
+        String sql = "SELECT id_municipio, nombre_municipio, id_provincia FROM municipio";
         List<MunicipioModel> list = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -134,7 +134,7 @@ public final class MunicipioRepositoryMySQL implements
 
     @Override
     public List<MunicipioModel> findByProvinciaId(Integer provinciaId) {
-        String sql = "SELECT id_municipio as id, nombre_municipio as nombre, id_provincia as provincia_id FROM municipio WHERE id_provincia = ?";
+        String sql = "SELECT id_municipio, nombre_municipio, id_provincia FROM municipio WHERE id_provincia = ?";
         List<MunicipioModel> list = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, provinciaId);
@@ -152,7 +152,7 @@ public final class MunicipioRepositoryMySQL implements
 
     @Override
     public List<MunicipioModel> searchByName(String partialName) {
-        String sql = "SELECT id_municipio as id, nombre_municipio as nombre, id_provincia as provincia_id FROM municipio WHERE nombre_municipio LIKE ?";
+        String sql = "SELECT id_municipio, nombre_municipio, id_provincia FROM municipio WHERE nombre_municipio LIKE ?";
         List<MunicipioModel> list = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, "%" + partialName + "%");
