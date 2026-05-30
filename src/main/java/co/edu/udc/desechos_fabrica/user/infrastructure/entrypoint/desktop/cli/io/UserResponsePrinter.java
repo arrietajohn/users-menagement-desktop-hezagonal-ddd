@@ -14,8 +14,8 @@ public final class UserResponsePrinter {
 
   public void print(final UserResponse response) {
     console.println(SEPARATOR);
-    console.printf(ROW_FORMAT, "ID",     response.id());
-    console.printf(ROW_FORMAT, "Name",   response.name());
+    console.printf(ROW_FORMAT, "First Name",     response.firstName());
+    console.printf(ROW_FORMAT, "Last Name",   response.lastName());
     console.printf(ROW_FORMAT, "Email",  response.email());
     console.printf(ROW_FORMAT, "Role",   response.role());
     console.printf(ROW_FORMAT, "Status", response.status());
