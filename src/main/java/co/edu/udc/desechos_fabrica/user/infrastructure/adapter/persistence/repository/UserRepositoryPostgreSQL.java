@@ -63,10 +63,10 @@ public final class UserRepositoryPostgreSQL
   }
 
   @Override
-  public UserModel update(final UserModel user) {
-    final UserPersistenceDto dto = UserPersistenceMapper.fromModelToDto(user);
-    executeUpdate(dto);
-    return findByEmailOrFail(user.getEmail());
+  public UserModel update(final UserEmail currentEmail, final UserModel userToUpdate) {
+    final UserPersistenceDto dto = UserPersistenceMapper.fromModelToDto(userToUpdate);
+    executeUpdate(currentEmail, dto);
+    return findByEmailOrFail(userToUpdate.getEmail());
   }
 
   @Override
@@ -117,7 +117,7 @@ public final class UserRepositoryPostgreSQL
     }
   }
 
-  private void executeUpdate(final UserPersistenceDto dto) {
+  private void executeUpdate(final UserEmail currentEmail, final UserPersistenceDto dto) {
     try (final PreparedStatement statement = connection.prepareStatement(SQL_UPDATE)) {
       statement.setString(1, dto.firstName());
       statement.setString(2, dto.lastName());
@@ -125,9 +125,10 @@ public final class UserRepositoryPostgreSQL
       statement.setString(4, dto.password());
       statement.setString(5, dto.role());
       statement.setString(6, dto.status());
+      statement.setString(7, currentEmail.value());
       statement.executeUpdate();
     } catch (final SQLException exception) {
-      throw PersistenceException.becauseUpdateFailed(dto.email(), exception);
+      throw PersistenceException.becauseUpdateFailed(currentEmail.value(), exception);
     }
   }
 
