@@ -3,10 +3,7 @@ package co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.mapp
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.*;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.dto.UserPersistenceDto;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.entity.UserEntity;
 import lombok.experimental.UtilityClass;
@@ -21,8 +18,8 @@ public class UserPersistenceMapper {
 
   public UserPersistenceDto fromModelToDto(final UserModel user) {
     return new UserPersistenceDto(
-        user.getId().value(),
-        user.getName().value(),
+        user.getFirstName().value(),
+        user.getLastName().value(),
         user.getEmail().value(),
         user.getPassword().value(),
         user.getRole().name(),
@@ -33,8 +30,8 @@ public class UserPersistenceMapper {
 
   public UserEntity fromResultSetToEntity(final ResultSet resultSet) throws SQLException {
     return new UserEntity(
-        resultSet.getString("id"),
-        resultSet.getString("name"),
+        resultSet.getString("first_name"),
+        resultSet.getString("last_name"),
         resultSet.getString("email"),
         resultSet.getString("password"),
         resultSet.getString("role"),
@@ -45,8 +42,8 @@ public class UserPersistenceMapper {
 
   public UserModel fromEntityToModel(final UserEntity entity) {
     return new UserModel(
-        new UserId(entity.id()),
-        new UserFirstName(entity.name()),
+        new UserFirstName(entity.firstName()),
+        new UserLastName(entity.lastName()),
         new UserEmail(entity.email()),
         UserPassword.fromHash(entity.password()),
         UserRole.fromString(entity.role()),
