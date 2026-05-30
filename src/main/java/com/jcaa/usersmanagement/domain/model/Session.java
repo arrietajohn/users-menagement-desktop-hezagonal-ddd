@@ -1,11 +1,9 @@
-package com.jcaa.usersmanagement.domain.session.model;
+package com.jcaa.usersmanagement.domain.model;
 
-import com.jcaa.usersmanagement.domain.model.UserModel;
 import com.jcaa.usersmanagement.domain.valueobject.InvestigacionId;
 import com.jcaa.usersmanagement.domain.valueobject.SalaID;
 import com.jcaa.usersmanagement.domain.valueobject.SessionId;
 import com.jcaa.usersmanagement.domain.valueobject.UserId;
-import jakarta.validation.constraints.Negative;
 import lombok.Value;
 
 import java.time.LocalDate;
@@ -26,7 +24,7 @@ public class Session {
 
     // Esta parte permitira que el administrador/organizador pueda registar /crear una sesion
 
-    public static Session registrar (
+    public static Session registrar(
             final SessionId id,
             final SalaID salaID,
             final InvestigacionId investigacionId,
