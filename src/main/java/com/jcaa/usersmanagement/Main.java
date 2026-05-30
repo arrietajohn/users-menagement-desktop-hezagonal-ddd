@@ -15,7 +15,27 @@ public final class Main {
     log.info("Starting Users Management System...");
     final DependencyContainer container = new DependencyContainer();
     try (final Scanner scanner = new Scanner(System.in)) {
-      new UserManagementCli(container.userController(), new ConsoleIO(scanner, System.out)).start();
+      boolean running = true;
+      while (running) {
+        System.out.println("\n========================================");
+        System.out.println("         Sistema de Gestión");
+        System.out.println("========================================");
+        System.out.println("[1] Gestión de Usuarios");
+        System.out.println("[2] Gestión de Vehículos");
+        System.out.println("[0] Salir");
+        System.out.println("========================================");
+        System.out.print("Opción: ");
+        final String option = scanner.nextLine().trim();
+
+        switch (option) {
+          case "1" -> new UserManagementCli(
+                  container.userController(),
+                  new ConsoleIO(scanner, System.out)).start();
+          case "2" -> container.vehiculoController().menu(scanner);
+          case "0" -> running = false;
+          default -> System.out.println("Opción no válida.");
+        }
+      }
     }
   }
 }
