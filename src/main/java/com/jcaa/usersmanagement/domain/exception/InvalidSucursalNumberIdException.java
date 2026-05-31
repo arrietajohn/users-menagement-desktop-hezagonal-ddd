@@ -6,7 +6,7 @@ public final class InvalidSucursalNumberIdException extends RuntimeException {
         super(message);
     }
 
-    public static InvalidSucursalNumberIdException becauseNumberWasNotFound(){
+    public static InvalidSucursalNumberIdException becauseValueIsEmpty() {
         return new InvalidSucursalNumberIdException(MESSAGE_EMPTY);
     }
 }
