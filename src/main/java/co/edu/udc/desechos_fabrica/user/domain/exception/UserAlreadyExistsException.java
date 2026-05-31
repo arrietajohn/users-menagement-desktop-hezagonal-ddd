@@ -1,5 +1,7 @@
 package co.edu.udc.desechos_fabrica.user.domain.exception;
 
+import co.edu.udc.desechos_fabrica.shared.DomainException;
+
 public final class UserAlreadyExistsException extends DomainException {
 
   private static final String MESSAGE_EMAIL_EXISTS = "A user with email '%s' already exists.";

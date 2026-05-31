@@ -1,5 +1,7 @@
 package co.edu.udc.desechos_fabrica.user.domain.exception;
 
+import co.edu.udc.desechos_fabrica.shared.DomainException;
+
 public final class EmailSenderException extends DomainException {
 
   private static final String DEFAULT_MESSAGE = "La notificación por correo no pudo ser enviada.";

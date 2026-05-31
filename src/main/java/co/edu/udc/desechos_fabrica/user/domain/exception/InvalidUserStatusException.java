@@ -1,5 +1,7 @@
 package co.edu.udc.desechos_fabrica.user.domain.exception;
 
+import co.edu.udc.desechos_fabrica.shared.DomainException;
+
 public final class InvalidUserStatusException extends DomainException {
 
   private static final String MESSAGE_INVALID = "The user status '%s' is not valid.";

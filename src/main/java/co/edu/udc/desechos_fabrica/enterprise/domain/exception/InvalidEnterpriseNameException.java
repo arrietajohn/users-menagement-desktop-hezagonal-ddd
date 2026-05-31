@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.enterprise.domain.exception;
 
-import co.edu.udc.desechos_fabrica.user.domain.exception.DomainException;
+import co.edu.udc.desechos_fabrica.shared.DomainException;
 
 public final class InvalidEnterpriseNameException extends DomainException {
 
