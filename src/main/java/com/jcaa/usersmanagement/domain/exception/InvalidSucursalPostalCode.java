@@ -1,6 +1,6 @@
 package com.jcaa.usersmanagement.domain.exception;
 
-public class InvalidSucursalPostalCode extends RuntimeException {
+public final class InvalidSucursalPostalCode extends RuntimeException {
     private static final String MESSAGE_EMPTY = "El código postal no puede ir vacío";
     public InvalidSucursalPostalCode(String message) {
         super(message);
