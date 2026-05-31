@@ -1,7 +1,6 @@
 package com.jcaa.usersmanagement.domain.valueobject;
 
-import com.jcaa.usersmanagement.domain.exception.InvalidSucursalDirectionException;
-import com.jcaa.usersmanagement.domain.exception.InvalidSucursalPostalCode;
+import com.jcaa.usersmanagement.domain.exception.InvalidSucursalPostalCodeException;
 
 import java.util.Objects;
 
@@ -15,7 +14,7 @@ public record SucursalPostalCode(String value) {
 
     public static void InvalidSucursalPostalCode(final String normalizedValue) {
         if(normalizedValue.isEmpty()) {
-            throw InvalidSucursalPostalCode.becauseValueIsEmpty();
+            throw InvalidSucursalPostalCodeException.becauseValueIsEmpty();
         }
     }
 
