@@ -7,6 +7,7 @@ import java.util.Objects;
 public record SucursaId(String value) {
     public SucursaId{
         final String normalizedValue = Objects.requireNonNull(value, "SucursalId no puede ser nula").trim();
+        validateNotEmpty(normalizedValue);
         value = normalizedValue;
     }
 
