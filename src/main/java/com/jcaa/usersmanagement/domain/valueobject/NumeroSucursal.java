@@ -1,7 +1,6 @@
 package com.jcaa.usersmanagement.domain.model;
 
-import com.jcaa.usersmanagement.domain.exception.InvalidNumberSucursalException;
-import com.jcaa.usersmanagement.domain.exception.InvalidUserEmailException;
+import com.jcaa.usersmanagement.domain.exception.InvalidSucursalNumberException;
 
 import java.util.Objects;
 
@@ -18,13 +17,13 @@ public record NumeroSucursal(String value) {
 
     private static void validateNotEmpty(final String value) {
         if (value.isEmpty()) {
-            throw InvalidUserEmailException.becauseValueIsEmpty();
+            throw InvalidSucursalNumberException.becauseValueIsEmpty();
         }
     }
 
     private static void validateFormat(String value) {
         if (!value.matches("\\d+")) {
-            throw InvalidUserEmailException.becauseFormatIsInvalid(value);
+            throw InvalidSucursalNumberException.becauseValueIsInvalidFormat(value);
         }
     }
 
