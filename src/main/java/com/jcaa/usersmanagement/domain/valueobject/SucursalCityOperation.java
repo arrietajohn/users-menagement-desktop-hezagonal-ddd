@@ -15,4 +15,7 @@ public record SucursalCityOperation(String value) {
     public static void validateIsNotEmpty(final String normalizedValue){
     throw InvalidSucursalCityOperationException.becauseValueIsEmpty();
     }
+
+    @Override
+    public String toString(){return value;}
 }
