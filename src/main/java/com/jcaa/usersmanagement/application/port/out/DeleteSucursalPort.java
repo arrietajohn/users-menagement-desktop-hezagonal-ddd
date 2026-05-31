@@ -1,6 +1,6 @@
 package com.jcaa.usersmanagement.application.port.out;
-import com.jcaa.usersmanagement.domain.valueobject.SucursalNumber;
+import com.jcaa.usersmanagement.domain.valueobject.SucursaId;
 
 public interface DeleteSucursalPort {
-    void delete(SucursalNumber sucursalNumber);
+    void delete(SucursaId id);
 }

@@ -6,8 +6,8 @@ public final class SucursalNotFoundException extends DomainException {
         super(message);
     }
 
-    public static SucursalNotFoundException becauseNumberWasNotFound(final Integer number){
-        return new SucursalNotFoundException(String.format(MESSAGE_BY_NUMBER, number));
+    public static SucursalNotFoundException becauseIdWasNotFound(final String id){
+        return new SucursalNotFoundException(String.format(MESSAGE_BY_NUMBER, id));
 
     }
 }
