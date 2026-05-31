@@ -14,7 +14,7 @@ public record UpdateSucursalCommand(
         @NotBlank(message = "La ciudad no puede estar vacía")
         String ciudad,
         @NotNull(message = "El ID del banco no puede ser nulo")
-        Integer bancoId
+        String bancoId
 ) {
 
 }
