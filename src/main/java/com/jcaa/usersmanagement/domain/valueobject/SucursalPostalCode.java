@@ -7,12 +7,12 @@ import java.util.Objects;
 public record SucursalPostalCode(String value) {
     public SucursalPostalCode{
         final String normalizedValue = Objects.requireNonNullElse(value, "SucursalPostalCode no puede ir vacío").toUpperCase();
-
+        validateValueIsEmpty(normalizedValue);
         value = normalizedValue;
 
     }
 
-    public static void InvalidSucursalPostalCode(final String normalizedValue) {
+    public static void validateValueIsEmpty(final String normalizedValue) {
         if(normalizedValue.isEmpty()) {
             throw InvalidSucursalPostalCodeException.becauseValueIsEmpty();
         }

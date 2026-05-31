@@ -9,6 +9,7 @@ public record SucursalDirection(String value) {
 
     public SucursalDirection {
         final String normalizedValue = Objects.requireNonNull(value, "SucursalDirection no puede ser nula").trim();
+        validateIsNotEmpty(normalizedValue);
         value = normalizedValue;
     }
 
