@@ -7,10 +7,10 @@ public final class InvalidSucursalNumberException extends DomainException {
         super(message);
     }
 
-    public InvalidSucursalNumberException becauseValueIsEmpty() {
+    public static InvalidSucursalNumberException becauseValueIsEmpty() {
         return new InvalidSucursalNumberException(MESSAGE_EMPTY);
     }
-    public InvalidSucursalNumberException becauseValueIsInvalidFormat(final String normalizedValue) {
+    public static InvalidSucursalNumberException becauseValueIsInvalidFormat(final String normalizedValue) {
         return new InvalidSucursalNumberException(String.format(MESSAGE_INVALIDFORMAT, normalizedValue));
     }
 }
