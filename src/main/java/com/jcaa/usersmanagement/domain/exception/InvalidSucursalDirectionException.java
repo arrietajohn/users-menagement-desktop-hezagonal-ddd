@@ -1,6 +1,6 @@
 package com.jcaa.usersmanagement.domain.exception;
 
-public final class InvalidSucursalDirectionException extends RuntimeException {
+public final class InvalidSucursalDirectionException extends DomainException {
     private static final String MESSAGE_EMPTY = "La dirección no puede ser vacía";
     public InvalidSucursalDirectionException(String message) {
         super(message);
