@@ -9,6 +9,8 @@ import com.jcaa.usersmanagement.domain.valueobject.UserPassword;
 import lombok.Value;
 
 @Value
+
+
 public class UserModel {
 
   UserId id;
