@@ -15,6 +15,18 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.CandidatoController;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.CreateCandidatoHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.DeleteCandidatoHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.FindCandidatoByIdHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.ListCandidatosHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.UpdateCandidatoHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.RepresentanteController;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.CreateRepresentanteHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.DeleteRepresentanteHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.FindRepresentanteByIdHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.ListRepresentantesHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.UpdateRepresentanteHandler;
 
 @RequiredArgsConstructor
 public final class UserManagementCli {
@@ -28,6 +40,8 @@ public final class UserManagementCli {
   private static final String MENU_BORDER = "  ==========================================";
 
   private final UserController userController;
+  private final CandidatoController candidatoController;
+  private final RepresentanteController representanteController;
   private final ConsoleIO console;
 
   public void start() {
@@ -68,13 +82,23 @@ public final class UserManagementCli {
   }
 
   private Map<MenuOption, OperationHandler> buildHandlers(final UserResponsePrinter printer) {
-    return Map.of(
-        MenuOption.LIST_USERS,  new ListUsersHandler(userController, printer),
-        MenuOption.FIND_USER,   new FindUserByIdHandler(userController, console, printer),
-        MenuOption.CREATE_USER, new CreateUserHandler(userController, console, printer),
-        MenuOption.UPDATE_USER, new UpdateUserHandler(userController, console, printer),
-        MenuOption.DELETE_USER, new DeleteUserHandler(userController, console),
-        MenuOption.LOGIN,       new LoginHandler(userController, console, printer));
+    return Map.ofEntries(
+            Map.entry(MenuOption.LIST_USERS,        new ListUsersHandler(userController, printer)),
+            Map.entry(MenuOption.FIND_USER,         new FindUserByIdHandler(userController, console, printer)),
+            Map.entry(MenuOption.CREATE_USER,       new CreateUserHandler(userController, console, printer)),
+            Map.entry(MenuOption.UPDATE_USER,       new UpdateUserHandler(userController, console, printer)),
+            Map.entry(MenuOption.DELETE_USER,       new DeleteUserHandler(userController, console)),
+            Map.entry(MenuOption.LOGIN,             new LoginHandler(userController, console, printer)),
+            Map.entry(MenuOption.LIST_CANDIDATOS,   new ListCandidatosHandler(candidatoController, console)),
+            Map.entry(MenuOption.FIND_CANDIDATO,    new FindCandidatoByIdHandler(candidatoController, console)),
+            Map.entry(MenuOption.CREATE_CANDIDATO,  new CreateCandidatoHandler(candidatoController, console)),
+            Map.entry(MenuOption.UPDATE_CANDIDATO,  new UpdateCandidatoHandler(candidatoController, console)),
+            Map.entry(MenuOption.DELETE_CANDIDATO,  new DeleteCandidatoHandler(candidatoController, console)),
+            Map.entry(MenuOption.LIST_REPRESENTANTES,   new ListRepresentantesHandler(representanteController, console)),
+            Map.entry(MenuOption.FIND_REPRESENTANTE,    new FindRepresentanteByIdHandler(representanteController, console)),
+            Map.entry(MenuOption.CREATE_REPRESENTANTE,  new CreateRepresentanteHandler(representanteController, console)),
+            Map.entry(MenuOption.UPDATE_REPRESENTANTE,  new UpdateRepresentanteHandler(representanteController, console)),
+            Map.entry(MenuOption.DELETE_REPRESENTANTE,  new DeleteRepresentanteHandler(representanteController, console)));
   }
 
   private void printMenu() {

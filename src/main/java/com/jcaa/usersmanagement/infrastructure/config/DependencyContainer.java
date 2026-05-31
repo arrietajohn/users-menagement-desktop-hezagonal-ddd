@@ -20,6 +20,32 @@ import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.Databa
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
 
+
+import com.jcaa.usersmanagement.application.port.in.CreateCandidatoUseCase;
+import com.jcaa.usersmanagement.application.port.in.DeleteCandidatoUseCase;
+import com.jcaa.usersmanagement.application.port.in.GetAllCandidatosUseCase;
+import com.jcaa.usersmanagement.application.port.in.GetCandidatoByIdUseCase;
+import com.jcaa.usersmanagement.application.port.in.UpdateCandidatoUseCase;
+import com.jcaa.usersmanagement.application.service.CreateCandidatoService;
+import com.jcaa.usersmanagement.application.service.DeleteCandidatoService;
+import com.jcaa.usersmanagement.application.service.GetAllCandidatosService;
+import com.jcaa.usersmanagement.application.service.GetCandidatoByIdService;
+import com.jcaa.usersmanagement.application.service.UpdateCandidatoService;
+import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.CandidatoRepositoryMySQL;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.CandidatoController;
+import com.jcaa.usersmanagement.application.port.in.CreateRepresentanteUseCase;
+import com.jcaa.usersmanagement.application.port.in.DeleteRepresentanteUseCase;
+import com.jcaa.usersmanagement.application.port.in.GetAllRepresentantesUseCase;
+import com.jcaa.usersmanagement.application.port.in.GetRepresentanteByIdUseCase;
+import com.jcaa.usersmanagement.application.port.in.UpdateRepresentanteUseCase;
+import com.jcaa.usersmanagement.application.service.CreateRepresentanteService;
+import com.jcaa.usersmanagement.application.service.DeleteRepresentanteService;
+import com.jcaa.usersmanagement.application.service.GetAllRepresentantesService;
+import com.jcaa.usersmanagement.application.service.GetRepresentanteByIdService;
+import com.jcaa.usersmanagement.application.service.UpdateRepresentanteService;
+import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.RepresentanteRepositoryMySQL;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.RepresentanteController;
+
 import java.sql.Connection;
 import jakarta.validation.Validator;
 
@@ -39,6 +65,10 @@ public final class DependencyContainer {
   private static final String SMTP_FROM_NAME = "smtp.from.name";
 
   private final UserController userController;
+
+  private final CandidatoController candidatoController;
+
+  private final RepresentanteController representanteController;
 
   public DependencyContainer() {
     final AppProperties properties = new AppProperties();
@@ -71,11 +101,48 @@ public final class DependencyContainer {
             getUserByIdUseCase,
             getAllUsersUseCase,
             loginUseCase);
+
+    final CandidatoRepositoryMySQL candidatoRepository = new CandidatoRepositoryMySQL(connection);
+
+    final CreateCandidatoUseCase createCandidatoUseCase = new CreateCandidatoService(candidatoRepository);
+    final GetAllCandidatosUseCase getAllCandidatosUseCase2 = new GetAllCandidatosService(candidatoRepository);
+    final GetCandidatoByIdUseCase getCandidatoByIdUseCase = new GetCandidatoByIdService(candidatoRepository);
+    final UpdateCandidatoUseCase updateCandidatoUseCase = new UpdateCandidatoService(candidatoRepository, candidatoRepository);
+    final DeleteCandidatoUseCase deleteCandidatoUseCase = new DeleteCandidatoService(candidatoRepository, candidatoRepository);
+
+    this.candidatoController = new CandidatoController(
+            createCandidatoUseCase,
+            getAllCandidatosUseCase2,
+            getCandidatoByIdUseCase,
+            updateCandidatoUseCase,
+            deleteCandidatoUseCase);
+
+    final RepresentanteRepositoryMySQL representanteRepository = new RepresentanteRepositoryMySQL(connection);
+
+    final CreateRepresentanteUseCase createRepresentanteUseCase = new CreateRepresentanteService(representanteRepository);
+    final GetAllRepresentantesUseCase getAllRepresentantesUseCase = new GetAllRepresentantesService(representanteRepository);
+    final GetRepresentanteByIdUseCase getRepresentanteByIdUseCase = new GetRepresentanteByIdService(representanteRepository);
+    final UpdateRepresentanteUseCase updateRepresentanteUseCase = new UpdateRepresentanteService(representanteRepository, representanteRepository);
+    final DeleteRepresentanteUseCase deleteRepresentanteUseCase = new DeleteRepresentanteService(representanteRepository, representanteRepository);
+
+    this.representanteController = new RepresentanteController(
+            createRepresentanteUseCase,
+            getAllRepresentantesUseCase,
+            getRepresentanteByIdUseCase,
+            updateRepresentanteUseCase,
+            deleteRepresentanteUseCase);
   }
 
   public UserController userController() {
     return userController;
   }
+
+
+  public CandidatoController candidatoController() {
+    return candidatoController;
+  }
+
+  public RepresentanteController representanteController() { return representanteController; }
 
   private static Connection buildDatabaseConnection(final AppProperties properties) {
     final DatabaseConfig config =
