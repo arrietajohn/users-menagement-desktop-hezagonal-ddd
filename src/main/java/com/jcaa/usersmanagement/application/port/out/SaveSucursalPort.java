@@ -1,6 +1,6 @@
 package com.jcaa.usersmanagement.application.port.out;
-import com.jcaa.usersmanagement.domain.model.UserModel;
+import com.jcaa.usersmanagement.domain.model.SucursalModel;
 
 public interface SaveSucursalPort {
-    UserModel save(UserModel user);
+    SucursalModel save(SucursalModel sucursalModel);
 }
