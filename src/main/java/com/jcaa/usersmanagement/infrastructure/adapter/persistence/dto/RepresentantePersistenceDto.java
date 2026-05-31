@@ -1,4 +1,9 @@
 package com.jcaa.usersmanagement.infrastructure.adapter.persistence.dto;
 
-public class RepresentantePersistenceDto {
+public record RepresentantePersistenceDto(
+        Integer idRepresentante,
+        String nombre,
+        String telefono,
+        String direccion
+) {
 }
