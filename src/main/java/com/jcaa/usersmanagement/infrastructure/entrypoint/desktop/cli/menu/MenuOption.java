@@ -19,6 +19,11 @@ public enum MenuOption {
   CREATE_CANDIDATO(9, "Create candidato"),
   UPDATE_CANDIDATO(10, "Update candidato"),
   DELETE_CANDIDATO(11, "Delete candidato"),
+  LIST_REPRESENTANTES(12, "List all representantes"),
+  FIND_REPRESENTANTE(13, "Find representante by ID"),
+  CREATE_REPRESENTANTE(14, "Create representante"),
+  UPDATE_REPRESENTANTE(15, "Update representante"),
+  DELETE_REPRESENTANTE(16, "Delete representante"),
   EXIT(0, "Exit");
 
   private final int number;
