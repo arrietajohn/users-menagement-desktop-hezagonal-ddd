@@ -12,7 +12,7 @@ public final class Main {
   private static final Logger log = LoggerFactory.getLogger(Main.class);
 
   public static void main(final String[] args) {
-    log.info("Starting Users Management System...");
+    log.info("Iniciando Sistema de Gestión de Usuarios...");
     final DependencyContainer container = new DependencyContainer();
     try (final Scanner scanner = new Scanner(System.in)) {
       new UserManagementCli(container.userController(), new ConsoleIO(scanner, System.out)).start();

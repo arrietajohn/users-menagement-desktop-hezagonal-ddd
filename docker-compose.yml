@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # Contenedor de Base de Datos MySQL
+  mysql-db:
+    image: mysql:8.0
+    container_name: db_usuarios_censo
+    environment:
+      MYSQL_ROOT_PASSWORD: R1234
+      MYSQL_DATABASE: 7502523003_9_censo_nacional
+    ports:
+      - "3306:3306"
+    volumes:
+      # Persistencia de datos
+      - db_data:/var/lib/mysql
+      # Script de inicialización (Crea las tablas automáticamente)
+      - ./src/main/resources/censo_schema.sql:/docker-entrypoint-initdb.d/1_censo_schema.sql
+    restart: unless-stopped
+
+  # Contenedor de la Aplicación CLI (Opcional)
+  app:
+    build: .
+    container_name: app_censo
+    depends_on:
+      - mysql-db
+    environment:
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_NAME=7502523003_9_censo_nacional
+      - DB_USERNAME=root
+      - DB_PASSWORD=R1234
+    # Configuraciones vitales para aplicaciones interactivas de terminal
+    stdin_open: true 
+    tty: true
+
+volumes:
+  db_data:

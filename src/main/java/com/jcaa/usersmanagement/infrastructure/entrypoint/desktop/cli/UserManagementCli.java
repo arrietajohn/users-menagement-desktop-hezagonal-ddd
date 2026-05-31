@@ -22,13 +22,15 @@ public final class UserManagementCli {
   private static final String BANNER =
       """
       ==========================================
-           Users Management System
+           Sistema de Gestión de Usuarios
       ==========================================""";
 
   private static final String MENU_BORDER = "  ==========================================";
 
   private final UserController userController;
   private final ConsoleIO console;
+
+
 
   public void start() {
     console.println(BANNER);
@@ -40,13 +42,13 @@ public final class UserManagementCli {
     boolean running = true;
     while (running) {
       printMenu();
-      final int choice = console.readInt("\n  Option: ");
+      final int choice = console.readInt("\n  Opción: ");
       final Optional<MenuOption> option = MenuOption.fromNumber(choice);
 
       if (option.isEmpty()) {
-        console.println("  Invalid option. Please try again.");
+        console.println("  Opción inválida. Por favor, inténtalo de nuevo.");
       } else if (option.get() == MenuOption.EXIT) {
-        console.println("\n  Goodbye!\n");
+        console.println("\n  ¡Adiós!\n");
         running = false;
       } else {
         executeHandler(handlers, option.get());
@@ -59,11 +61,11 @@ public final class UserManagementCli {
     try {
       handlers.get(option).handle();
     } catch (final ConstraintViolationException exception) {
-      console.println("  Validation errors:");
+      console.println("  Errores de validación:");
       exception.getConstraintViolations()
           .forEach(violation -> console.println("    - " + violation.getMessage()));
     } catch (final RuntimeException exception) {
-      console.println("  Unexpected error: " + exception.getMessage());
+      console.println("  Error inesperado: " + exception.getMessage());
     }
   }
 
@@ -80,7 +82,7 @@ public final class UserManagementCli {
   private void printMenu() {
     console.println();
     console.println(MENU_BORDER);
-    console.println("    Main Menu");
+    console.println("    Menú Principal");
     console.println(MENU_BORDER);
     for (final MenuOption option : MenuOption.values()) {
       console.printf("    [%d] %s%n", option.getNumber(), option.getDescription());
