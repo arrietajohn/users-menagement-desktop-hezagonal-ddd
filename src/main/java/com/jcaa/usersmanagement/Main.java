@@ -13,9 +13,9 @@ public final class Main {
 
   public static void main(final String[] args) {
     log.info("Starting Users Management System...");
-    final DependencyContainer container = new DependencyContainer();
-    try (final Scanner scanner = new Scanner(System.in)) {
-      new UserManagementCli(container.userController(), new ConsoleIO(scanner, System.out)).start();
+    final DependencyContainer container = new DependencyContainer(); //Se aplica el principio de Dependency Injection manual - se crean todas la implementaciones concretas (adaptadores)
+    try (final Scanner scanner = new Scanner(System.in)) {           //Y se inyectan hacía antentro a trabés de las interfaces (puertos)
+      new UserManagementCli(container.userController(), container.sucursalController(), new ConsoleIO(scanner, System.out)).start();
     }
   }
 }
