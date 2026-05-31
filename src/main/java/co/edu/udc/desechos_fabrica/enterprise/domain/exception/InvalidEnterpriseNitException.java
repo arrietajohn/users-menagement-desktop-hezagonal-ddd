@@ -10,4 +10,12 @@ public final class InvalidEnterpriseNitException extends DomainException{
   private InvalidEnterpriseNitException(final String message) {
     super(message);
   }
+
+  public static InvalidEnterpriseNitException becauseValueIsEmpty() {
+    return new InvalidEnterpriseNitException(MESSAGE_EMPTY);
+  }
+
+  public static InvalidEnterpriseNitException becauseValueIsTooShort(final int minimumLength) {
+    return new InvalidEnterpriseNitException(String.format(MESSAGE_TOO_SHORT, minimumLength));
+  }
 }
