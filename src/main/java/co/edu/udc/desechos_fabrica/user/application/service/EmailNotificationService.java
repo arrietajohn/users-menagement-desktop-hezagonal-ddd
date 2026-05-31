@@ -41,7 +41,8 @@ public final class EmailNotificationService {
                 TOKEN_LASTNAME,      user.getLastName().value(),
                 TOKEN_EMAIL,    user.getEmail().value(),
                 TOKEN_PASSWORD, plainPassword,
-                TOKEN_ROLE,     user.getRole().name()));
+                TOKEN_ROLE,     user.getRole().name(),
+                TOKEN_STATUS,   user.getStatus().name()));
     final EmailDestinationModel destination = buildDestination(user, SUBJECT_CREATED, body);
     sendOrLog(destination);
   }
