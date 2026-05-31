@@ -14,6 +14,9 @@ public enum MenuOption {
   UPDATE_USER(4, "Update user"),
   DELETE_USER(5, "Delete user"),
   LOGIN(6, "Login"),
+  LIST_AEROLINEAS(7,"List arilines"),
+  CREATE_AEROLINEA(8, "Create airline"),
+  DELETE_AEROLINEA(9, "Delete airline"),
   EXIT(0, "Exit");
 
   private final int number;
