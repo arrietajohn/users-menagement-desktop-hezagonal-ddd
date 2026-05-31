@@ -13,14 +13,14 @@ import static org.mockito.Mockito.when;
 import co.edu.udc.desechos_fabrica.user.application.port.in.CreateUserUseCase;
 import co.edu.udc.desechos_fabrica.user.application.port.in.DeleteUserUseCase;
 import co.edu.udc.desechos_fabrica.user.application.port.in.GetAllUsersUseCase;
-import co.edu.udc.desechos_fabrica.user.application.port.in.GetUserByIdUseCase;
+import co.edu.udc.desechos_fabrica.user.application.port.in.GetUserByEmailUseCase;
 import co.edu.udc.desechos_fabrica.user.application.port.in.LoginUseCase;
 import co.edu.udc.desechos_fabrica.user.application.port.in.UpdateUserUseCase;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.CreateUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.LoginCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
-import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByIdQuery;
+import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByEmailQuery;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.exception.InvalidCredentialsException;
@@ -28,8 +28,8 @@ import co.edu.udc.desechos_fabrica.user.domain.exception.UserAlreadyExistsExcept
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.CreateUserRequest;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.LoginRequest;
@@ -61,7 +61,7 @@ class UserControllerTest {
   @Mock private CreateUserUseCase createUserUseCase;
   @Mock private UpdateUserUseCase updateUserUseCase;
   @Mock private DeleteUserUseCase deleteUserUseCase;
-  @Mock private GetUserByIdUseCase getUserByIdUseCase;
+  @Mock private GetUserByEmailUseCase getUserByEmailUseCase;
   @Mock private GetAllUsersUseCase getAllUsersUseCase;
   @Mock private LoginUseCase loginUseCase;
 
@@ -70,14 +70,14 @@ class UserControllerTest {
   // ── helpers
 
   private static UserModel buildUser(
-      final String id,
-      final String name,
+      final String firstName,
+      final String lastName,
       final String email,
       final UserRole role,
       final UserStatus status) {
     return new UserModel(
-        new UserId(id),
-        new UserFirstName(name),
+        new UserFirstName(firstName),
+        new UserLastName(lastName),
         new UserEmail(email),
         UserPassword.fromHash(BCRYPT_HASH),
         role,
@@ -91,7 +91,7 @@ class UserControllerTest {
             createUserUseCase,
             updateUserUseCase,
             deleteUserUseCase,
-            getUserByIdUseCase,
+            getUserByEmailUseCase,
             getAllUsersUseCase,
             loginUseCase);
   }
@@ -104,7 +104,7 @@ class UserControllerTest {
   void listAllUsers_returnsMappedResponseList_whenUsersExist() {
     // Arrange
     final UserModel user =
-        buildUser("u-001", "Alice Smith", "alice@example.com", UserRole.ADMIN, UserStatus.ACTIVE);
+        buildUser("Alice", "Smith", "alice@example.com", UserRole.ADMIN, UserStatus.ACTIVE);
     when(getAllUsersUseCase.execute()).thenReturn(List.of(user));
 
     // Act
@@ -114,8 +114,8 @@ class UserControllerTest {
     assertAll(
         "single-user list mapping",
         () -> assertEquals(1, result.size(), "list must contain exactly one element"),
-        () -> assertEquals("u-001", result.get(0).id(), "id must match"),
-        () -> assertEquals("Alice Smith", result.get(0).name(), "name must match"),
+        () -> assertEquals("Alice", result.get(0).firstName(), "first name must match"),
+        () -> assertEquals("Smith", result.get(0).lastName(), "last name must match"),
         () -> assertEquals("alice@example.com", result.get(0).email(), "email must match"),
         () -> assertEquals("ADMIN", result.get(0).role(), "role must match enum name"),
         () -> assertEquals("ACTIVE", result.get(0).status(), "status must match enum name"));
@@ -136,42 +136,44 @@ class UserControllerTest {
     verify(getAllUsersUseCase).execute();
   }
 
-  // ── findUserById
+  // ── findUserByEmail
 
   @Test
   @DisplayName(
-      "findUserById() builds a GetUserByIdQuery with the given id and returns the mapped response")
-  void findUserById_returnsMappedResponse_whenUserExists() {
+      "findUserByEmail() builds a GetUserByIdQuery with the given id and returns the mapped response")
+  void findUserByEmail_returnsMappedResponse_whenUserExists() {
     // Arrange
+    final String email = "bob@example.com";
     final UserModel user =
-        buildUser("u-002", "Bob Jones", "bob@example.com", UserRole.MEMBER, UserStatus.ACTIVE);
-    when(getUserByIdUseCase.execute(new GetUserByIdQuery("u-002"))).thenReturn(user);
+        buildUser("Bob", "Jones", email, UserRole.MEMBER, UserStatus.ACTIVE);
+    when(getUserByEmailUseCase.execute(any(GetUserByEmailQuery.class))).thenReturn(user);
 
     // Act
-    final UserResponse result = controller.findUserById("u-002");
+    final UserResponse result = controller.findUserByEmail(email);
 
     // Assert
     assertAll(
-        "findUserById response mapping",
-        () -> assertEquals("u-002", result.id(), "id must match"),
-        () -> assertEquals("Bob Jones", result.name(), "name must match"),
-        () -> assertEquals("bob@example.com", result.email(), "email must match"),
+        "findUserByEmail response mapping",
+        () -> assertEquals("Bob", result.firstName(), "first name must match"),
+        () -> assertEquals("Jones", result.lastName(), "last name must match"),
+        () -> assertEquals(email, result.email(), "email must match"),
         () -> assertEquals("MEMBER", result.role(), "role must match enum name"),
         () -> assertEquals("ACTIVE", result.status(), "status must match enum name"));
   }
 
   @Test
   @DisplayName(
-      "findUserById() propagates UserNotFoundException when the use case cannot find the user")
-  void findUserById_propagatesUserNotFoundException_whenUserDoesNotExist() {
+      "findUserByEmail() propagates UserNotFoundException when the use case cannot find the user")
+  void findUserByEmail_propagatesUserNotFoundException_whenUserDoesNotExist() {
     // Arrange
-    when(getUserByIdUseCase.execute(new GetUserByIdQuery("u-999")))
-        .thenThrow(UserNotFoundException.becauseIdWasNotFound("u-999"));
+    final String email = "bob@example.com";
+    when(getUserByEmailUseCase.execute(any(GetUserByEmailQuery.class)))
+        .thenThrow(UserNotFoundException.becauseEmailWasNotFound(email));
 
     // Act & Assert
     assertThrows(
         UserNotFoundException.class,
-        () -> controller.findUserById("u-999"),
+        () -> controller.findUserByEmail(email),
         "UserNotFoundException must propagate without being wrapped");
   }
 
@@ -183,10 +185,10 @@ class UserControllerTest {
   void createUser_delegatesCorrectCommandAndReturnsMappedResponse_whenCreationSucceeds() {
     // Arrange
     final CreateUserRequest request =
-        new CreateUserRequest("u-003", "Carol White", "carol@example.com", "Pass1234", "REVIEWER");
+        new CreateUserRequest("Carol", "White", "carol@example.com", "Pass1234", "ADMIN");
     final UserModel createdUser =
         buildUser(
-            "u-003", "Carol White", "carol@example.com", UserRole.REVIEWER, UserStatus.PENDING);
+            "Carol", "White", "carol@example.com", UserRole.ADMIN, UserStatus.PENDING);
     final ArgumentCaptor<CreateUserCommand> captor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
     when(createUserUseCase.execute(captor.capture())).thenReturn(createdUser);
@@ -197,10 +199,12 @@ class UserControllerTest {
     // Assert
     assertAll(
         "createUser command delegation and response mapping",
-        () -> assertEquals("u-003", captor.getValue().id(), "command id must match request id"),
         () ->
             assertEquals(
-                "Carol White", captor.getValue().name(), "command name must match request name"),
+                "Carol", captor.getValue().firstName(), "command firstName name must match request first name"),
+        () ->
+            assertEquals(
+                "White", captor.getValue().lastName(), "command lastName must match request last name"),
         () ->
             assertEquals(
                 "carol@example.com",
@@ -213,12 +217,7 @@ class UserControllerTest {
                 "command password must match request password"),
         () ->
             assertEquals(
-                "REVIEWER", captor.getValue().role(), "command role must match request role"),
-        () ->
-            assertEquals(
-                "u-003",
-                result.id(),
-                "response id must come from the domain model returned by use case"),
+                "ADMIN", captor.getValue().role(), "command role must match request role"),
         () ->
             assertEquals(
                 "PENDING",
@@ -232,7 +231,7 @@ class UserControllerTest {
   void createUser_propagatesUserAlreadyExistsException_whenEmailIsDuplicated() {
     // Arrange
     final CreateUserRequest request =
-        new CreateUserRequest("u-004", "Dave Brown", "dave@example.com", "Pass5678", "MEMBER");
+        new CreateUserRequest("Dave", "Brown", "dave@example.com", "Pass5678", "MEMBER");
     when(createUserUseCase.execute(any()))
         .thenThrow(UserAlreadyExistsException.becauseEmailAlreadyExists("dave@example.com"));
 
@@ -252,9 +251,9 @@ class UserControllerTest {
     // Arrange
     final UpdateUserRequest request =
         new UpdateUserRequest(
-            "u-005", "Eve Martinez", "eve@example.com", "NewPass9!", "ADMIN", "ACTIVE");
+                "eve2@example.com", "Eve", "Martinez", "eve@example.com", "NewPass9!", "ADMIN", "ACTIVE");
     final UserModel updatedUser =
-        buildUser("u-005", "Eve Martinez", "eve@example.com", UserRole.ADMIN, UserStatus.ACTIVE);
+        buildUser("Eve", "Martinez", "eve@example.com", UserRole.ADMIN, UserStatus.ACTIVE);
     final ArgumentCaptor<UpdateUserCommand> captor =
         ArgumentCaptor.forClass(UpdateUserCommand.class);
     when(updateUserUseCase.execute(captor.capture())).thenReturn(updatedUser);
@@ -265,10 +264,12 @@ class UserControllerTest {
     // Assert
     assertAll(
         "updateUser command delegation and response mapping",
-        () -> assertEquals("u-005", captor.getValue().id(), "command id must match request id"),
         () ->
             assertEquals(
-                "Eve Martinez", captor.getValue().name(), "command name must match request name"),
+                "Eve", captor.getValue().firstName(), "command firstName must match request first name"),
+        () ->
+            assertEquals(
+                "Martinez", captor.getValue().lastName(), "command lastName must match request last name"),
         () ->
             assertEquals(
                 "eve@example.com",
@@ -286,11 +287,6 @@ class UserControllerTest {
                 "ACTIVE", captor.getValue().status(), "command status must match request status"),
         () ->
             assertEquals(
-                "u-005",
-                result.id(),
-                "response id must come from the domain model returned by use case"),
-        () ->
-            assertEquals(
                 "ADMIN", result.role(), "response role must reflect the domain model role"));
   }
 
@@ -301,9 +297,9 @@ class UserControllerTest {
     // Arrange
     final UpdateUserRequest request =
         new UpdateUserRequest(
-            "u-999", "Ghost User", "ghost@example.com", "Pass9999!", "MEMBER", "INACTIVE");
+            "ghost2@example.com","Ghost", "User", "ghost@example.com", "Pass9999!", "MEMBER", "INACTIVE");
     when(updateUserUseCase.execute(any()))
-        .thenThrow(UserNotFoundException.becauseIdWasNotFound("u-999"));
+        .thenThrow(UserNotFoundException.becauseEmailWasNotFound("ghost@example.com"));
 
     // Act & Assert
     assertThrows(
@@ -323,10 +319,10 @@ class UserControllerTest {
     doNothing().when(deleteUserUseCase).execute(captor.capture());
 
     // Act
-    controller.deleteUser("u-006");
+    controller.deleteUser("ghost@example.com");
 
     // Assert
-    assertEquals("u-006", captor.getValue().id(), "delete command id must match the provided id");
+    assertEquals("ghost@example.com", captor.getValue().email(), "delete command id must match the provided id");
   }
 
   @Test
@@ -334,14 +330,14 @@ class UserControllerTest {
       "deleteUser() propagates UserNotFoundException when the use case cannot find the user")
   void deleteUser_propagatesUserNotFoundException_whenUserDoesNotExist() {
     // Arrange
-    doThrow(UserNotFoundException.becauseIdWasNotFound("u-999"))
+    doThrow(UserNotFoundException.becauseEmailWasNotFound("ghost@example.com"))
         .when(deleteUserUseCase)
         .execute(any());
 
     // Act & Assert
     assertThrows(
         UserNotFoundException.class,
-        () -> controller.deleteUser("u-999"),
+        () -> controller.deleteUser("ghost@example.com"),
         "UserNotFoundException must propagate without being wrapped");
   }
 
@@ -354,7 +350,7 @@ class UserControllerTest {
     // Arrange
     final LoginRequest request = new LoginRequest("frank@example.com", "Pass1234!");
     final UserModel loggedUser =
-        buildUser("u-007", "Frank Green", "frank@example.com", UserRole.MEMBER, UserStatus.ACTIVE);
+        buildUser("Frank", "Green", "frank@example.com", UserRole.MEMBER, UserStatus.ACTIVE);
     final ArgumentCaptor<LoginCommand> captor = ArgumentCaptor.forClass(LoginCommand.class);
     when(loginUseCase.execute(captor.capture())).thenReturn(loggedUser);
 
@@ -374,11 +370,6 @@ class UserControllerTest {
                 "Pass1234!",
                 captor.getValue().password(),
                 "command password must match request password"),
-        () ->
-            assertEquals(
-                "u-007",
-                result.id(),
-                "response id must come from the domain model returned by use case"),
         () ->
             assertEquals(
                 "frank@example.com",

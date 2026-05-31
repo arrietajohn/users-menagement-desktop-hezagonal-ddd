@@ -11,8 +11,8 @@ import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.exception.InvalidCredentialsException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -59,11 +59,11 @@ class LoginServiceTest {
 
     final UserModel activeUser =
         new UserModel(
-            new UserId("u-001"),
-            new UserFirstName("John Arrieta"),
+            new UserFirstName("John"),
+            new UserLastName("Arrieta"),
             new UserEmail(EMAIL),
             UserPassword.fromPlainText(PASSWORD),
-            UserRole.ADMIN,
+            UserRole.REVIEWER,
             UserStatus.ACTIVE);
 
     when(getUserByEmailPort.getByEmail(any())).thenReturn(Optional.of(activeUser));
@@ -99,8 +99,8 @@ class LoginServiceTest {
 
     final UserModel user =
         new UserModel(
-            new UserId("u-001"),
-            new UserFirstName("John Arrieta"),
+            new UserFirstName("John"),
+            new UserLastName("Arrieta"),
             new UserEmail(EMAIL),
             UserPassword.fromPlainText(PASSWORD),
             UserRole.MEMBER,
@@ -122,8 +122,8 @@ class LoginServiceTest {
 
     final UserModel pendingUser =
         new UserModel(
-            new UserId("u-001"),
-            new UserFirstName("John Arrieta"),
+            new UserFirstName("John"),
+            new UserLastName("Arrieta"),
             new UserEmail(EMAIL),
             UserPassword.fromPlainText(PASSWORD),
             UserRole.MEMBER,

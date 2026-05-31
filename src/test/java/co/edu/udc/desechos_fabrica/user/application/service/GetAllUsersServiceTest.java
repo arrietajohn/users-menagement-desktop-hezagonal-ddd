@@ -8,8 +8,8 @@ import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,11 +45,11 @@ class GetAllUsersServiceTest {
     // Arrange
     final UserModel user =
         new UserModel(
-            new UserId("u-001"),
-            new UserFirstName("John Arrieta"),
+            new UserFirstName("John"),
+            new UserLastName("Arrieta"),
             new UserEmail("john@example.com"),
             UserPassword.fromHash("$2a$12$abcdefghijklmnopqrstuO"),
-            UserRole.ADMIN,
+            UserRole.REVIEWER,
             UserStatus.ACTIVE);
 
     when(getAllUsersPort.getAll()).thenReturn(List.of(user));

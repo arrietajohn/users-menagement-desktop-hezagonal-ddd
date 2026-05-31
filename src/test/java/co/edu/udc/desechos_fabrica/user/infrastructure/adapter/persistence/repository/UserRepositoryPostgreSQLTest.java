@@ -9,8 +9,8 @@ import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.exception.PersistenceException;
 import java.sql.Connection;
@@ -31,16 +31,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * Tests for UserRepositoryMySQL.
  *
  * <p>Covers all public methods with their branches: save() — happy path, INSERT failure, user not
- * found after insert (orElseThrow); update() — happy path, UPDATE failure; getById() — found, not
+ * found after insert (orElseThrow); update() — happy path, UPDATE failure; getByEmail() — found, not
  * found, SQLException; getByEmail() — found, not found, SQLException; getAll() — happy path,
  * SQLException; delete() — happy path, SQLException.
  */
-@DisplayName("UserRepositoryMySQL")
+@DisplayName("UserRepositoryPostgreSQL")
 @ExtendWith(MockitoExtension.class)
-class UserRepositoryMySQLTest {
+class UserRepositoryPostgreSQLTest {
 
-  private static final String ID = "u-001";
-  private static final String NAME = "John Doe";
+  private static final String FIRST_NAME = "Miguel";
+  private static final String LAST_NAME = "Jal";
   private static final String EMAIL = "john@example.com";
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
   private static final String ROLE = "ADMIN";
@@ -52,23 +52,21 @@ class UserRepositoryMySQLTest {
   @Mock private PreparedStatement statement;
   @Mock private ResultSet resultSet;
 
-  private UserRepositoryMySQL repository;
+  private UserRepositoryPostgreSQL repository;
   private UserModel userModel;
-  private UserId userId;
   private UserEmail userEmail;
 
   @BeforeEach
   void setUp() {
-    repository = new UserRepositoryMySQL(connection);
-    userId = new UserId(ID);
+    repository = new UserRepositoryPostgreSQL(connection);
     userEmail = new UserEmail(EMAIL);
     userModel =
         new UserModel(
-            userId,
-            new UserFirstName(NAME),
+            new UserFirstName(FIRST_NAME),
+            new UserLastName(LAST_NAME),
             userEmail,
             UserPassword.fromHash(HASH),
-            UserRole.ADMIN,
+            UserRole.REVIEWER,
             UserStatus.ACTIVE);
   }
 
@@ -80,8 +78,8 @@ class UserRepositoryMySQLTest {
 
   // Helper: configure resultSet to return one full user row
   private void configureResultSetRow() throws SQLException {
-    when(resultSet.getString("id")).thenReturn(ID);
-    when(resultSet.getString("name")).thenReturn(NAME);
+    when(resultSet.getString("first_name")).thenReturn(FIRST_NAME);
+    when(resultSet.getString("last_name")).thenReturn(LAST_NAME);
     when(resultSet.getString("email")).thenReturn(EMAIL);
     when(resultSet.getString("password")).thenReturn(HASH);
     when(resultSet.getString("role")).thenReturn(ROLE);
@@ -94,7 +92,7 @@ class UserRepositoryMySQLTest {
 
   @Test
   @DisplayName("save() executes INSERT and returns the persisted user fetched by id")
-  void shouldSaveUserAndReturnById() throws SQLException {
+  void shouldSaveUserAndReturnByEmail() throws SQLException {
     // Arrange
     configureStatementAndResultSet();
     when(resultSet.next()).thenReturn(true);
@@ -106,8 +104,8 @@ class UserRepositoryMySQLTest {
     // Assert
     assertAll(
         "save() happy path",
-        () -> assertEquals(ID, result.getId().value(), "id"),
-        () -> assertEquals(NAME, result.getName().value(), "name"),
+        () -> assertEquals(FIRST_NAME, result.getFirstName().value(), "firstName"),
+        () -> assertEquals(LAST_NAME, result.getLastName().value(), "lastName"),
         () -> assertEquals(EMAIL, result.getEmail().value(), "email"));
   }
 
@@ -127,7 +125,7 @@ class UserRepositoryMySQLTest {
         "must throw PersistenceException when INSERT raises SQLException");
   }
 
-  // ── save() → findByIdOrFail — user not found after insert → UserNotFoundException
+  // ── save() → findByEmailOrFail — user not found after insert → UserNotFoundException
 
   @Test
   @DisplayName("save() throws UserNotFoundException when the saved user cannot be found")
@@ -146,18 +144,18 @@ class UserRepositoryMySQLTest {
   // ── update() — happy path
 
   @Test
-  @DisplayName("update() executes UPDATE and returns the refreshed user fetched by id")
-  void shouldUpdateUserAndReturnById() throws SQLException {
+  @DisplayName("update() executes UPDATE and returns the refreshed user fetched by email")
+  void shouldUpdateUserAndReturnByEmail() throws SQLException {
     // Arrange
     configureStatementAndResultSet();
     when(resultSet.next()).thenReturn(true);
     configureResultSetRow();
 
     // Act
-    final UserModel result = repository.update(userModel);
+    final UserModel result = repository.update(userEmail, userModel);
 
     // Assert
-    assertEquals(ID, result.getId().value(), "id must match the updated user");
+    assertEquals(EMAIL, result.getEmail().value(), "email must match the updated user");
   }
 
   // ── update() — UPDATE fails → PersistenceException
@@ -172,14 +170,14 @@ class UserRepositoryMySQLTest {
     // Act + Assert
     assertThrows(
         PersistenceException.class,
-        () -> repository.update(userModel),
+        () -> repository.update(userEmail, userModel),
         "must throw PersistenceException when UPDATE raises SQLException");
   }
 
-  // ── getById() — row found → Optional.of(user)
+  // ── getByEmail() — row found → Optional.of(user)
 
   @Test
-  @DisplayName("getById() returns Optional.of(user) when a matching row exists")
+  @DisplayName("getByEmail() returns Optional.of(user) when a matching row exists")
   void shouldReturnUserWhenFound() throws SQLException {
     // Arrange
     configureStatementAndResultSet();
@@ -187,79 +185,29 @@ class UserRepositoryMySQLTest {
     configureResultSetRow();
 
     // Act
-    final Optional<UserModel> result = repository.getById(userId);
+    final Optional<UserModel> result = repository.getByEmail(userEmail);
 
     // Assert
     assertAll(
-        "getById() found",
+        "getByEmail() found",
         () -> assertTrue(result.isPresent(), "must be present"),
-        () -> assertEquals(ID, result.get().getId().value(), "id"));
+        () -> assertEquals(EMAIL, result.get().getEmail().value(), "email"));
   }
 
-  // ── getById() — no row → Optional.empty()
+  // ── getByEmail() — no row → Optional.empty()
 
   @Test
-  @DisplayName("getById() returns Optional.empty() when no matching row exists")
+  @DisplayName("getByEmail() returns Optional.empty() when no matching row exists")
   void shouldReturnEmptyWhenNotFound() throws SQLException {
     // Arrange
     configureStatementAndResultSet();
     when(resultSet.next()).thenReturn(false);
 
     // Act
-    final Optional<UserModel> result = repository.getById(userId);
+    final Optional<UserModel> result = repository.getByEmail(userEmail);
 
     // Assert
     assertTrue(result.isEmpty(), "must return Optional.empty() when no row matches the id");
-  }
-
-  // ── getById() — SQLException → PersistenceException (from prepareStatement)
-
-  @Test
-  @DisplayName("getById() throws PersistenceException when prepareStatement raises SQLException")
-  void shouldThrowPersistenceExceptionOnGetByIdFailure() throws SQLException {
-    // Arrange
-    when(connection.prepareStatement(anyString())).thenThrow(new SQLException("Query failed"));
-
-    // Act + Assert
-    assertThrows(
-        PersistenceException.class,
-        () -> repository.getById(userId),
-        "must throw PersistenceException when prepareStatement raises SQLException");
-  }
-
-  // ── getById() — SQLException → PersistenceException (from executeQuery, inside try body)
-
-  @Test
-  @DisplayName("getById() throws PersistenceException when executeQuery raises SQLException")
-  void shouldThrowPersistenceExceptionWhenGetByIdExecuteQueryFails() throws SQLException {
-    // Arrange
-    when(connection.prepareStatement(anyString())).thenReturn(statement);
-    when(statement.executeQuery()).thenThrow(new SQLException("Execute query failed"));
-
-    // Act + Assert
-    assertThrows(
-        PersistenceException.class,
-        () -> repository.getById(userId),
-        "must throw PersistenceException when executeQuery raises SQLException inside the try block");
-  }
-
-  // ── getById() — SQLException → PersistenceException (from statement.close() after normal exit)
-
-  @Test
-  @DisplayName(
-      "getById() throws PersistenceException when PreparedStatement.close() raises SQLException")
-  void shouldThrowPersistenceExceptionWhenGetByIdStatementCloseFails() throws SQLException {
-    // Arrange
-    when(connection.prepareStatement(anyString())).thenReturn(statement);
-    when(statement.executeQuery()).thenReturn(resultSet);
-    when(resultSet.next()).thenReturn(false);
-    doThrow(new SQLException("Close failed")).when(statement).close();
-
-    // Act + Assert
-    assertThrows(
-        PersistenceException.class,
-        () -> repository.getById(userId),
-        "must throw PersistenceException when PreparedStatement.close() raises SQLException after normal body exit");
   }
 
   // ── getByEmail() — row found → Optional.of(user)
@@ -366,7 +314,7 @@ class UserRepositoryMySQLTest {
     assertAll(
         "getAll() happy path",
         () -> assertEquals(1, result.size(), "list size"),
-        () -> assertEquals(ID, result.get(0).getId().value(), "first user id"));
+        () -> assertEquals(EMAIL, result.get(0).getEmail().value(), "first user id"));
   }
 
   // ── getAll() — SQLException → PersistenceException
@@ -394,7 +342,7 @@ class UserRepositoryMySQLTest {
 
     // Act + Assert
     assertDoesNotThrow(
-        () -> repository.delete(userId),
+        () -> repository.delete(userEmail),
         "delete() must not throw when DELETE executes successfully");
   }
 
@@ -409,7 +357,7 @@ class UserRepositoryMySQLTest {
     // Act + Assert
     assertThrows(
         PersistenceException.class,
-        () -> repository.delete(userId),
+        () -> repository.delete(userEmail),
         "must throw PersistenceException when DELETE raises SQLException");
   }
 }

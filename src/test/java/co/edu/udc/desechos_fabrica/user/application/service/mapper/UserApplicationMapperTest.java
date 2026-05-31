@@ -5,12 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.CreateUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
-import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByIdQuery;
-import co.edu.udc.desechos_fabrica.user.application.service.mapper.UserApplicationMapper;
+import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByEmailQuery;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,12 +25,12 @@ import org.junit.jupiter.api.Test;
 @DisplayName("UserApplicationMapper")
 class UserApplicationMapperTest {
 
-  private static final String ID       = "u-001";
-  private static final String NAME     = "John Arrieta";
-  private static final String EMAIL    = "john@example.com";
-  private static final String PASSWORD = "SecurePass1";
-  private static final String ROLE     = "ADMIN";
-  private static final String STATUS   = "ACTIVE";
+  private static final String FIRST_NAME  = "John";
+  private static final String LAST_NAME   = "Arrieta";
+  private static final String EMAIL       = "john@example.com";
+  private static final String PASSWORD    = "SecurePass1";
+  private static final String ROLE        = "ADMIN";
+  private static final String STATUS      = "ACTIVE";
 
   // ── fromCreateCommandToModel()
 
@@ -37,7 +38,7 @@ class UserApplicationMapperTest {
   @DisplayName("fromCreateCommandToModel() mapea todos los campos y fija status PENDING")
   void shouldMapCreateCommandToModelWithPendingStatus() {
     // Arrange
-    final CreateUserCommand command = new CreateUserCommand(ID, NAME, EMAIL, PASSWORD, ROLE);
+    final CreateUserCommand command = new CreateUserCommand(FIRST_NAME,  LAST_NAME, EMAIL, PASSWORD, ROLE);
 
     // Act
     final UserModel result = UserApplicationMapper.fromCreateCommandToModel(command);
@@ -45,8 +46,8 @@ class UserApplicationMapperTest {
     // Assert
     assertAll(
         "fromCreateCommandToModel()",
-        () -> assertEquals(ID,              result.getId().value(),    "id"),
-        () -> assertEquals(NAME,            result.getName().value(),  "name"),
+        () -> assertEquals(FIRST_NAME,      result.getFirstName().value(),    "id"),
+        () -> assertEquals(LAST_NAME,       result.getLastName().value(),  "name"),
         () -> assertEquals(EMAIL,           result.getEmail().value(), "email"),
         () -> assertEquals(UserRole.ADMIN,  result.getRole(),          "role"),
         () -> assertEquals(UserStatus.PENDING, result.getStatus(),     "status debe ser PENDING"),
@@ -61,18 +62,25 @@ class UserApplicationMapperTest {
     // Arrange
     final String newPassword = "NuevoPass99";
     final UserPassword currentPassword = UserPassword.fromPlainText(PASSWORD);
+    final UserModel currentUser = new UserModel(
+            new UserFirstName(FIRST_NAME),
+            new UserLastName(LAST_NAME),
+            new UserEmail(EMAIL),
+            currentPassword,
+            UserRole.valueOf(ROLE),
+            UserStatus.valueOf(STATUS));
     final UpdateUserCommand command =
-        new UpdateUserCommand(ID, NAME, EMAIL, newPassword, ROLE, STATUS);
+        new UpdateUserCommand(EMAIL, FIRST_NAME, LAST_NAME, EMAIL, newPassword, ROLE, STATUS);
 
     // Act
     final UserModel result =
-        UserApplicationMapper.fromUpdateCommandToModel(command, currentPassword);
+        UserApplicationMapper.fromUpdateCommandToModel(command, currentUser);
 
     // Assert
     assertAll(
         "fromUpdateCommandToModel() con nueva contraseña",
-        () -> assertEquals(ID,              result.getId().value(),    "id"),
-        () -> assertEquals(NAME,            result.getName().value(),  "name"),
+        () -> assertEquals(FIRST_NAME,      result.getFirstName().value(),    "firstName"),
+        () -> assertEquals(LAST_NAME,       result.getLastName().value(),  "lastName"),
         () -> assertEquals(EMAIL,           result.getEmail().value(), "email"),
         () -> assertEquals(UserRole.ADMIN,  result.getRole(),          "role"),
         () -> assertEquals(UserStatus.ACTIVE, result.getStatus(),      "status"),
@@ -85,14 +93,20 @@ class UserApplicationMapperTest {
   @Test
   @DisplayName("fromUpdateCommandToModel() conserva la contraseña actual cuando la nueva es null")
   void shouldKeepCurrentPasswordWhenNewPasswordIsNull() {
-    // Arrange
     final UserPassword currentPassword = UserPassword.fromPlainText(PASSWORD);
+    final UserModel currentUser = new UserModel(
+            new UserFirstName(FIRST_NAME),
+            new UserLastName(LAST_NAME),
+            new UserEmail(EMAIL),
+            currentPassword,
+            UserRole.valueOf(ROLE),
+            UserStatus.valueOf(STATUS));
     final UpdateUserCommand command =
-        new UpdateUserCommand(ID, NAME, EMAIL, null, ROLE, STATUS);
+        new UpdateUserCommand(EMAIL, FIRST_NAME, LAST_NAME, EMAIL, null, ROLE, STATUS);
 
     // Act
     final UserModel result =
-        UserApplicationMapper.fromUpdateCommandToModel(command, currentPassword);
+        UserApplicationMapper.fromUpdateCommandToModel(command, currentUser);
 
     // Assert
     assertSame(currentPassword, result.getPassword(),
@@ -104,48 +118,53 @@ class UserApplicationMapperTest {
   @Test
   @DisplayName("fromUpdateCommandToModel() conserva la contraseña actual cuando la nueva está en blanco")
   void shouldKeepCurrentPasswordWhenNewPasswordIsBlank() {
-    // Arrange
     final UserPassword currentPassword = UserPassword.fromPlainText(PASSWORD);
+    final UserModel currentUser = new UserModel(
+            new UserFirstName(FIRST_NAME),
+            new UserLastName(LAST_NAME),
+            new UserEmail(EMAIL),
+            currentPassword,
+            UserRole.valueOf(ROLE),
+            UserStatus.valueOf(STATUS));
     final UpdateUserCommand command =
-        new UpdateUserCommand(ID, NAME, EMAIL, "   ", ROLE, STATUS);
+        new UpdateUserCommand(EMAIL, FIRST_NAME, LAST_NAME, EMAIL, "   ", ROLE, STATUS);
 
     // Act
     final UserModel result =
-        UserApplicationMapper.fromUpdateCommandToModel(command, currentPassword);
+        UserApplicationMapper.fromUpdateCommandToModel(command, currentUser);
 
     // Assert
     assertSame(currentPassword, result.getPassword(),
         "debe conservar la instancia exacta de la contraseña actual");
   }
 
-  // ── fromGetUserByIdQueryToUserId()
+  // ── fromGetUserByEmailQueryToUserEmail()
 
   @Test
-  @DisplayName("fromGetUserByIdQueryToUserId() extrae el UserId del query")
-  void shouldExtractUserIdFromQuery() {
+  @DisplayName("fromGetUserByEmailQueryToUserEmail() extrae el UserEmail del query")
+  void shouldExtractUserEmailFromQuery() {
     // Arrange
-    final GetUserByIdQuery query = new GetUserByIdQuery(ID);
+    final GetUserByEmailQuery query = new GetUserByEmailQuery(EMAIL);
 
     // Act
-    final UserId result = UserApplicationMapper.fromGetUserByIdQueryToUserId(query);
+    final UserEmail result = UserApplicationMapper.fromGetUserByEmailQueryToUserEmail(query);
 
     // Assert
-    assertEquals(ID, result.value(), "id debe coincidir con el del query");
+    assertEquals(EMAIL, result.value(), "id debe coincidir con el del query");
   }
 
-  // ── fromDeleteCommandToUserId()
+  // ── fromDeleteCommandToUserEmail()
 
   @Test
-  @DisplayName("fromDeleteCommandToUserId() extrae el UserId del command")
-  void shouldExtractUserIdFromDeleteCommand() {
+  @DisplayName("fromDeleteCommandToUserEmail() extrae el UserEmail del command")
+  void shouldExtractUserEmailFromDeleteCommand() {
     // Arrange
-    final DeleteUserCommand command = new DeleteUserCommand(ID);
+    final DeleteUserCommand command = new DeleteUserCommand(EMAIL);
 
     // Act
-    final UserId result = UserApplicationMapper.fromDeleteCommandToUserId(command);
+    final UserEmail result = UserApplicationMapper.fromDeleteCommandToUserEmail(command);
 
     // Assert
-    assertEquals(ID, result.value(), "id debe coincidir con el del command");
+    assertEquals(EMAIL, result.value(), "id debe coincidir con el del command");
   }
 }
-

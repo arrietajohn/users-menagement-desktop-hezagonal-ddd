@@ -4,15 +4,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByIdPort;
-import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByIdQuery;
+import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
+import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByEmailQuery;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -32,16 +32,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @DisplayName("GetUserByIdService")
 @ExtendWith(MockitoExtension.class)
-class GetUserByIdServiceTest {
+class GetUserByEmailServiceTest {
 
-  @Mock private GetUserByIdPort getUserByIdPort;
+  @Mock private GetUserByEmailPort getUserByEmailPort;
 
-  private GetUserByIdService service;
+  private GetUserByEmailService service;
 
   @BeforeEach
   void setUp() {
     try (final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()) {
-      service = new GetUserByIdService(getUserByIdPort, validatorFactory.getValidator());
+      service = new GetUserByEmailService(getUserByEmailPort, validatorFactory.getValidator());
     }
   }
 
@@ -51,18 +51,18 @@ class GetUserByIdServiceTest {
   @DisplayName("execute() retorna el usuario cuando el id existe")
   void shouldReturnUserWhenFound() {
     // Arrange
-    final GetUserByIdQuery query = new GetUserByIdQuery("u-001");
+    final GetUserByEmailQuery query = new GetUserByEmailQuery("john@example.com");
 
     final UserModel expected =
         new UserModel(
-            new UserId("u-001"),
-            new UserFirstName("John Arrieta"),
+            new UserFirstName("John"),
+            new UserLastName("Arrieta"),
             new UserEmail("john@example.com"),
             UserPassword.fromHash("$2a$12$abcdefghijklmnopqrstuO"),
-            UserRole.ADMIN,
+            UserRole.REVIEWER,
             UserStatus.ACTIVE);
 
-    when(getUserByIdPort.getById(any())).thenReturn(Optional.of(expected));
+    when(getUserByEmailPort.getByEmail(any())).thenReturn(Optional.of(expected));
 
     // Act
     final UserModel result = service.execute(query);
@@ -77,9 +77,9 @@ class GetUserByIdServiceTest {
   @DisplayName("execute() lanza UserNotFoundException cuando el id no existe")
   void shouldThrowWhenUserNotFound() {
     // Arrange
-    final GetUserByIdQuery query = new GetUserByIdQuery("no-existe");
+    final GetUserByEmailQuery query = new GetUserByEmailQuery("non-existent-user@example.com");
 
-    when(getUserByIdPort.getById(any())).thenReturn(Optional.empty());
+    when(getUserByEmailPort.getByEmail(any())).thenReturn(Optional.empty());
 
     // Act & Assert
     assertThrows(UserNotFoundException.class, () -> service.execute(query));
@@ -91,10 +91,10 @@ class GetUserByIdServiceTest {
   @DisplayName("execute() lanza ConstraintViolationException cuando el id está en blanco")
   void shouldThrowWhenQueryIsInvalid() {
     // Arrange
-    final GetUserByIdQuery query = new GetUserByIdQuery("");
+    final GetUserByEmailQuery query = new GetUserByEmailQuery("");
 
     // Act & Assert
     assertThrows(ConstraintViolationException.class, () -> service.execute(query));
-    verifyNoInteractions(getUserByIdPort);
+    verifyNoInteractions(getUserByEmailPort);
   }
 }
