@@ -85,11 +85,11 @@ public final class SucursalRepositoryMySQL
     private void executeSave(final SucursalPersistenceDto dto) {
         try (final PreparedStatement statement = connection.prepareStatement(SQL_INSERT)) {
             statement.setString(1, dto.id());
-            statement.setString(2, dto.numero());
+            statement.setInt(2, Integer.parseInt(dto.numero()));
             statement.setString(3, dto.direccion());
             statement.setString(4, dto.codigoPostal());
             statement.setString(5, dto.ciudad());
-            statement.setString(6, dto.bancoId());
+            statement.setInt(6, Integer.parseInt(dto.bancoId()));
             statement.executeUpdate();
         } catch (final SQLException exception) {
             throw PersistenceException.becauseSaveFailed(dto.id(), exception);
@@ -98,11 +98,11 @@ public final class SucursalRepositoryMySQL
 
     private void executeUpdate(final SucursalPersistenceDto dto) {
         try (final PreparedStatement statement = connection.prepareStatement(SQL_UPDATE)) {
-            statement.setString(1, dto.numero());
+            statement.setInt(1, Integer.parseInt(dto.numero()));
             statement.setString(2, dto.direccion());
             statement.setString(3, dto.codigoPostal());
             statement.setString(4, dto.ciudad());
-            statement.setString(5, dto.bancoId());
+            statement.setInt(5, Integer.parseInt(dto.bancoId()));
             statement.setString(6, dto.id());
             statement.executeUpdate();
         } catch (final SQLException exception) {

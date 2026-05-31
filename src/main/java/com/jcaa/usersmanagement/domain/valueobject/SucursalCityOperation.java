@@ -12,8 +12,10 @@ public record SucursalCityOperation(String value) {
         value = normalizedValue;
     }
 
-    public static void validateIsNotEmpty(final String normalizedValue){
-    throw InvalidSucursalCityOperationException.becauseValueIsEmpty();
+    public static void validateIsNotEmpty(final String normalizedValue) {
+        if (normalizedValue.isEmpty()) {
+            throw InvalidSucursalCityOperationException.becauseValueIsEmpty();
+        }
     }
 
     @Override

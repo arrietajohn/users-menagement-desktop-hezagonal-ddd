@@ -5,19 +5,26 @@ import com.jcaa.usersmanagement.domain.exception.InvalidSucursalPostalCodeExcept
 import java.util.Objects;
 
 public record SucursalPostalCode(String value) {
-    public SucursalPostalCode{
-        final String normalizedValue = Objects.requireNonNullElse(value, "SucursalPostalCode no puede ir vacío").toUpperCase();
+    public SucursalPostalCode {
+        Objects.requireNonNull(value, "El código postal no puede ser nulo");
+        final String normalizedValue = value.trim();
         validateIsNotEmpty(normalizedValue);
+        validateFormat(normalizedValue);
         value = normalizedValue;
-
     }
 
-    public static void validateIsNotEmpty(final String normalizedValue) {
-        if(normalizedValue.isEmpty()) {
+    private static void validateIsNotEmpty(final String value) {
+        if (value.isEmpty()) {
             throw InvalidSucursalPostalCodeException.becauseValueIsEmpty();
         }
     }
 
+    private static void validateFormat(final String value) {
+        if (!value.matches("\\d{6}")) {
+            throw InvalidSucursalPostalCodeException.becauseFormatIsInvalid(value);
+        }
+    }
+
     @Override
-    public String toString() {return  value;}
+    public String toString() { return value; }
 }
