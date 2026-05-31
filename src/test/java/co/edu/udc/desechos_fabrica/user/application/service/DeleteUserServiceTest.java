@@ -5,15 +5,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import co.edu.udc.desechos_fabrica.user.application.port.out.DeleteUserPort;
-import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByIdPort;
+import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUserCommand;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -36,7 +36,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class DeleteUserServiceTest {
 
   @Mock private DeleteUserPort deleteUserPort;
-  @Mock private GetUserByIdPort getUserByIdPort;
+  @Mock private GetUserByEmailPort getUserByEmailPort;
 
   private DeleteUserService service;
 
@@ -44,7 +44,7 @@ class DeleteUserServiceTest {
   void setUp() {
     try (final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()) {
       service =
-          new DeleteUserService(deleteUserPort, getUserByIdPort, validatorFactory.getValidator());
+          new DeleteUserService(deleteUserPort, getUserByEmailPort, validatorFactory.getValidator());
     }
   }
 
@@ -54,24 +54,25 @@ class DeleteUserServiceTest {
   @DisplayName("execute() invoca deleteUserPort cuando el usuario existe")
   void shouldDeleteWhenUserExists() {
     // Arrange
-    final DeleteUserCommand command = new DeleteUserCommand("u-001");
+    final String validEmail = "user-to-delete@example.com";
+    final DeleteUserCommand command = new DeleteUserCommand(validEmail);
 
     final UserModel existing =
         new UserModel(
-            new UserId("u-001"),
-            new UserFirstName("John Arrieta"),
-            new UserEmail("john@example.com"),
+            new UserFirstName("John"),
+            new UserLastName("Arrieta"),
+            new UserEmail(validEmail),
             UserPassword.fromHash("$2a$12$abcdefghijklmnopqrstuO"),
-            UserRole.ADMIN,
+            UserRole.REVIEWER,
             UserStatus.ACTIVE);
 
-    when(getUserByIdPort.getById(any())).thenReturn(Optional.of(existing));
+    when(getUserByEmailPort.getByEmail(any(UserEmail.class))).thenReturn(Optional.of(existing));
 
     // Act
     service.execute(command);
 
     // Assert
-    verify(deleteUserPort).delete(new UserId("u-001"));
+    verify(deleteUserPort).delete(new UserEmail(validEmail));
   }
 
   // ── usuario no encontrado
@@ -80,9 +81,10 @@ class DeleteUserServiceTest {
   @DisplayName("execute() lanza UserNotFoundException cuando el id no existe")
   void shouldThrowWhenUserNotFound() {
     // Arrange
-    final DeleteUserCommand command = new DeleteUserCommand("no-existe");
+    final String nonExistentEmail = "non-existent-user@example.com";
+    final DeleteUserCommand command = new DeleteUserCommand(nonExistentEmail);
 
-    when(getUserByIdPort.getById(any())).thenReturn(Optional.empty());
+    when(getUserByEmailPort.getByEmail(any(UserEmail.class))).thenReturn(Optional.empty());
 
     // Act & Assert
     assertThrows(UserNotFoundException.class, () -> service.execute(command));
@@ -99,6 +101,6 @@ class DeleteUserServiceTest {
 
     // Act & Assert
     assertThrows(ConstraintViolationException.class, () -> service.execute(command));
-    verifyNoInteractions(deleteUserPort, getUserByIdPort);
+    verifyNoInteractions(deleteUserPort, getUserByEmailPort);
   }
 }

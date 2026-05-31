@@ -12,8 +12,8 @@ import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserAlreadyExistsException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserId;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
+import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -60,15 +60,15 @@ class CreateUserServiceTest {
   void shouldSaveUserAndNotifyWhenEmailIsNew() {
     // Arrange
     final CreateUserCommand command =
-        new CreateUserCommand("u-01", "John Arrieta", "john@example.com", "Pass1234", "ADMIN");
+        new CreateUserCommand("John", "Arrieta", "john@example.com", "Pass1234", "ADMIN");
 
     final UserModel savedUser =
         new UserModel(
-            new UserId("u-01"),
-            new UserFirstName("John Arrieta"),
+            new UserFirstName("John"),
+            new UserLastName("Arrieta"),
             new UserEmail("john@example.com"),
             UserPassword.fromPlainText("Pass1234"),
-            UserRole.ADMIN,
+            UserRole.REVIEWER,
             UserStatus.PENDING);
 
     when(getUserByEmailPort.getByEmail(any())).thenReturn(Optional.empty());
@@ -81,7 +81,7 @@ class CreateUserServiceTest {
     assertAll(
         "flujo feliz de CreateUserService",
         () -> assertNotNull(result, "resultado no debe ser null"),
-        () -> assertEquals("u-01", result.getId().value(), "id del usuario guardado"));
+        () -> assertEquals("john@example.com", result.getEmail().value(), "id del usuario guardado"));
 
     verify(saveUserPort).save(any(UserModel.class));
     verify(emailNotificationService).notifyUserCreated(savedUser, "Pass1234");
@@ -94,12 +94,12 @@ class CreateUserServiceTest {
   void shouldThrowWhenEmailAlreadyExists() {
     // Arrange
     final CreateUserCommand command =
-        new CreateUserCommand("u-02", "Jane Doe", "jane@example.com", "Pass5678", "MEMBER");
+        new CreateUserCommand("Jane", "Doe", "jane@example.com", "Pass5678", "MEMBER");
 
     final UserModel existing =
         new UserModel(
-            new UserId("u-99"),
-            new UserFirstName("Jane Doe"),
+            new UserFirstName("Jane"),
+            new UserLastName("Doe"),
             new UserEmail("jane@example.com"),
             UserPassword.fromPlainText("OtraPass1"),
             UserRole.MEMBER,
@@ -121,7 +121,7 @@ class CreateUserServiceTest {
   void shouldThrowWhenCommandIsInvalid() {
     // Arrange — id en blanco y email inválido
     final CreateUserCommand command =
-        new CreateUserCommand("", "Jo", "not-an-email", "short", "ADMIN");
+        new CreateUserCommand("Jo", "Ar", "not-an-email", "short", "ADMIN");
 
     // Act & Assert
     assertThrows(ConstraintViolationException.class, () -> service.execute(command));
