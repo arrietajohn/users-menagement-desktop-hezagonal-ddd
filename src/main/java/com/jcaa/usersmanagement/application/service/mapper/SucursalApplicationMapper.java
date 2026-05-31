@@ -8,7 +8,7 @@ import com.jcaa.usersmanagement.domain.valueobject.BancoId;
 import com.jcaa.usersmanagement.domain.valueobject.SucursalCityOperation;
 import com.jcaa.usersmanagement.domain.valueobject.SucursalPostalCode;
 import com.jcaa.usersmanagement.domain.valueobject.SucursalDirection;
-import com.jcaa.usersmanagement.domain.valueobject.NumeroSucursal;
+import com.jcaa.usersmanagement.domain.valueobject.SucursalNumber;
 import com.jcaa.usersmanagement.domain.valueobject.SucursaId;
 import lombok.experimental.UtilityClass;
 
@@ -18,7 +18,7 @@ public class SucursalApplicationMapper {
     public SucursalModel fromCreateCommandToModel(final CreateSucursalCommand command) {
         return SucursalModel.create(
                 new SucursaId(command.id()),
-                new NumeroSucursal(command.numero()),
+                new SucursalNumber(command.numero()),
                 new SucursalDirection(command.direccion()),
                 new SucursalPostalCode(command.codigoPostal()),
                 new SucursalCityOperation(command.ciudad()),
@@ -29,7 +29,7 @@ public class SucursalApplicationMapper {
     public SucursalModel fromUpdateCommandToModel(final UpdateSucursalCommand command) {
         return new SucursalModel(
                 new SucursaId(command.id()),
-                new NumeroSucursal(command.numero()),
+                new SucursalNumber(command.numero()),
                 new SucursalDirection(command.direccion()),
                 new SucursalPostalCode(command.codigoPostal()),
                 new SucursalCityOperation(command.ciudad()),

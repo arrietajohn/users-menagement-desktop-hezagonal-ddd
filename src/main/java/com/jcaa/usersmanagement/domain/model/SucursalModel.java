@@ -4,7 +4,7 @@ import com.jcaa.usersmanagement.domain.valueobject.BancoId;
 import com.jcaa.usersmanagement.domain.valueobject.SucursalCityOperation;
 import com.jcaa.usersmanagement.domain.valueobject.SucursalPostalCode;
 import com.jcaa.usersmanagement.domain.valueobject.SucursalDirection;
-import com.jcaa.usersmanagement.domain.valueobject.NumeroSucursal;
+import com.jcaa.usersmanagement.domain.valueobject.SucursalNumber;
 import com.jcaa.usersmanagement.domain.valueobject.SucursaId;
 import lombok.Value;
 
@@ -12,7 +12,7 @@ import lombok.Value;
 public class SucursalModel {
 
     SucursaId id;
-    NumeroSucursal numero;
+    SucursalNumber numero;
     SucursalDirection direccion;
     SucursalPostalCode codigoPostal;
     SucursalCityOperation ciudad;
@@ -20,7 +20,7 @@ public class SucursalModel {
 
     public static SucursalModel create(
             final SucursaId id,
-            final NumeroSucursal numero,
+            final SucursalNumber numero,
             final SucursalDirection direccion,
             final SucursalPostalCode codigoPostal,
             final SucursalCityOperation ciudad,
