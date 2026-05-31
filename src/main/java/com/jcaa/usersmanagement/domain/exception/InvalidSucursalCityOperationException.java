@@ -1,7 +1,7 @@
 package com.jcaa.usersmanagement.domain.exception;
 
 public class InvalidSucursalCityOperationException extends DomainException {
-    private static final String MESSAGE_EMPTY = "El código postal no puede ir vacío";
+    private static final String MESSAGE_EMPTY = "La ciudad donde opera la sucursal no puede ir vacía";
     public InvalidSucursalCityOperationException(String message) {
         super(message);
     }
