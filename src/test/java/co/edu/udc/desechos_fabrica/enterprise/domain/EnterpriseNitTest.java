@@ -24,4 +24,22 @@ public class EnterpriseNitTest {
         assertThrows(InvalidEnterpriseNitException.class, () -> new EnterpriseNit(invalidNit));
     }
 
+    @Test
+    @DisplayName("Should throw InvalidEnterpriseNitException with null input")
+    public void testNullEnterpriseNitCreation() {
+        assertThrows(NullPointerException.class, () -> new EnterpriseNit(null));
+    }
+
+    @Test
+    @DisplayName("Should throw InvalidEnterpriseNitException with empty input")
+    public void testEmptyEnterpriseNitCreation() {
+        assertThrows(InvalidEnterpriseNitException.class, () -> new EnterpriseNit("   "));
+    }
+
+    @Test
+    @DisplayName("Should throw InvalidEnterpriseNitException with non numeric input")
+    public void testNonNumericEnterpriseNitCreation() {
+        assertThrows(InvalidEnterpriseNitException.class, () -> new EnterpriseNit("1234567HJM"));
+    }
+
 }
