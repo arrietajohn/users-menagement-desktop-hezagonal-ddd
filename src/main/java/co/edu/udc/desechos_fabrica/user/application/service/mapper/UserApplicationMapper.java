@@ -1,5 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.application.service.mapper;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.CreateUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
@@ -25,24 +26,19 @@ public class UserApplicationMapper {
   }
 
   public UserModel fromUpdateCommandToModel(
-      final UpdateUserCommand command, final UserModel currentUser) {
+    final UpdateUserCommand command, final UserModel currentUser) {
 
-    final UserPassword passwordToUse = resolvePassword(command.password(), currentUser.getPassword());
-    final UserRole roleToUse = (command.role() != null)
-            ? UserRole.fromString(command.role())
-            : currentUser.getRole();
+      final UserFirstName newFirstName = new UserFirstName(command.firstName());
+      final UserLastName newLastName = new UserLastName(command.lastName());
+      final UserEmail newEmail = new UserEmail(command.email());
+      final UserPassword newPassword = resolvePassword(command.password(), currentUser.getPassword());
+      final UserRole newRole = UserRole.fromString(command.role());
+      final UserStatus newStatus = UserStatus.fromString(command.status());
+      final EnterpriseNit newEnterpriseNit = command.nit() != null ? new EnterpriseNit(command.nit()) : null;
 
-    final UserStatus statusToUse = (command.status() != null)
-            ? UserStatus.fromString(command.status())
-            : currentUser.getStatus();
-
-    return new UserModel(
-        new UserFirstName(command.firstName()),
-        new UserLastName(command.lastName()),
-        new UserEmail(command.email()),
-        passwordToUse,
-        roleToUse,
-        statusToUse);
+    return currentUser.updateWith(
+        newFirstName, newLastName, newEmail, newPassword, newRole, newStatus, newEnterpriseNit
+    );
   }
 
   public UserEmail fromGetUserByEmailQueryToUserEmail(final GetUserByEmailQuery query) {

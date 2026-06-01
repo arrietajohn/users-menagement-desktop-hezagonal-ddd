@@ -5,6 +5,7 @@ public record UserPersistenceDto(
     String lastName,
     String email,
     String password,
+    String nit,
     String role,
     String status,
     String createdAt,

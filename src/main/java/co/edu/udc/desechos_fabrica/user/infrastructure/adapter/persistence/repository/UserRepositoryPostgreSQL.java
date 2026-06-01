@@ -36,7 +36,7 @@ public final class UserRepositoryPostgreSQL
       + "VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
   private static final String SQL_UPDATE =
-      "UPDATE \"user\" SET first_name = ?, last_name = ?, email = ?, password = ?, role = ?, status = ?, updated_at = NOW() "
+      "UPDATE \"user\" SET first_name = ?, last_name = ?, email = ?, password = ?, role = ?, status = ?, updated_at = NOW(), enterprise_id = (SELECT id FROM enterprise WHERE nit = ?) "
       + "WHERE email = ?";
 
   private static final String SQL_SELECT_BY_EMAIL =
@@ -125,7 +125,8 @@ public final class UserRepositoryPostgreSQL
       statement.setString(4, dto.password());
       statement.setString(5, dto.role());
       statement.setString(6, dto.status());
-      statement.setString(7, currentEmail.value());
+      statement.setString(7, dto.nit());
+      statement.setString(8, currentEmail.value());
       statement.executeUpdate();
     } catch (final SQLException exception) {
       throw PersistenceException.becauseUpdateFailed(currentEmail.value(), exception);

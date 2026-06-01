@@ -17,6 +17,7 @@ public record UpdateUserCommand(
     @NotBlank(message = "email must not be blank")
         @Email(message = "email must be a valid email address")
         String email,
+    String nit,
     String password,
     @NotBlank(message = "role must not be blank") String role,
     @NotBlank(message = "status must not be blank") String status)
