@@ -2,6 +2,7 @@ package co.edu.udc.desechos_fabrica.user.application.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.CreateUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
@@ -27,7 +28,9 @@ class UserApplicationMapperTest {
 
   private static final String FIRST_NAME  = "John";
   private static final String LAST_NAME   = "Arrieta";
+  private static final String ACTOR_EMAIL = "admin@ecoresiduos.com";
   private static final String EMAIL       = "john@example.com";
+  private static final String NIT         = "123456789";
   private static final String PASSWORD    = "SecurePass1";
   private static final String ROLE        = "ADMIN";
   private static final String STATUS      = "ACTIVE";
@@ -66,11 +69,12 @@ class UserApplicationMapperTest {
             new UserFirstName(FIRST_NAME),
             new UserLastName(LAST_NAME),
             new UserEmail(EMAIL),
+            new EnterpriseNit(NIT),
             currentPassword,
             UserRole.valueOf(ROLE),
             UserStatus.valueOf(STATUS));
     final UpdateUserCommand command =
-        new UpdateUserCommand(EMAIL, FIRST_NAME, LAST_NAME, EMAIL, newPassword, ROLE, STATUS);
+        new UpdateUserCommand(ACTOR_EMAIL,EMAIL, FIRST_NAME, LAST_NAME, EMAIL, newPassword, ROLE, STATUS,NIT);
 
     // Act
     final UserModel result =
@@ -98,11 +102,12 @@ class UserApplicationMapperTest {
             new UserFirstName(FIRST_NAME),
             new UserLastName(LAST_NAME),
             new UserEmail(EMAIL),
+            new EnterpriseNit(NIT),
             currentPassword,
             UserRole.valueOf(ROLE),
             UserStatus.valueOf(STATUS));
     final UpdateUserCommand command =
-        new UpdateUserCommand(EMAIL, FIRST_NAME, LAST_NAME, EMAIL, null, ROLE, STATUS);
+        new UpdateUserCommand(ACTOR_EMAIL, EMAIL, FIRST_NAME, LAST_NAME, EMAIL, null, ROLE, STATUS, NIT);
 
     // Act
     final UserModel result =
@@ -123,11 +128,12 @@ class UserApplicationMapperTest {
             new UserFirstName(FIRST_NAME),
             new UserLastName(LAST_NAME),
             new UserEmail(EMAIL),
+            new EnterpriseNit(NIT),
             currentPassword,
             UserRole.valueOf(ROLE),
             UserStatus.valueOf(STATUS));
     final UpdateUserCommand command =
-        new UpdateUserCommand(EMAIL, FIRST_NAME, LAST_NAME, EMAIL, "   ", ROLE, STATUS);
+        new UpdateUserCommand(ACTOR_EMAIL, EMAIL, FIRST_NAME, LAST_NAME, EMAIL, "   ", ROLE, STATUS, NIT);
 
     // Act
     final UserModel result =
@@ -159,7 +165,7 @@ class UserApplicationMapperTest {
   @DisplayName("fromDeleteCommandToUserEmail() extrae el UserEmail del command")
   void shouldExtractUserEmailFromDeleteCommand() {
     // Arrange
-    final DeleteUserCommand command = new DeleteUserCommand(EMAIL);
+    final DeleteUserCommand command = new DeleteUserCommand(ACTOR_EMAIL, EMAIL);
 
     // Act
     final UserEmail result = UserApplicationMapper.fromDeleteCommandToUserEmail(command);

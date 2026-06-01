@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.port.out.UpdateUserPort;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
@@ -12,6 +13,7 @@ import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserAlreadyExistsException;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
+import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManager;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
@@ -40,9 +42,11 @@ class UpdateUserServiceTest {
   @Mock private UpdateUserPort updateUserPort;
   @Mock private GetUserByEmailPort getUserByEmailPort;
   @Mock private EmailNotificationService emailNotificationService;
+  @Mock private UserRoleManager userRoleManager;
 
   private UpdateUserService service;
-  
+
+  private static final String ACTOR_EMAIL = "admin@ecoresiduos.com";
   private static final String EMAIL = "john@example.com";
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
 
@@ -56,7 +60,8 @@ class UpdateUserServiceTest {
               updateUserPort,
               getUserByEmailPort,
               emailNotificationService,
-              validatorFactory.getValidator());
+              validatorFactory.getValidator(),
+              userRoleManager);
     }
 
     existingUser =
@@ -64,6 +69,7 @@ class UpdateUserServiceTest {
             new UserFirstName("John"),
             new UserLastName("Arrieta"),
             new UserEmail(EMAIL),
+            new EnterpriseNit("123456789"),
             UserPassword.fromHash(HASH),
             UserRole.MEMBER,
             UserStatus.ACTIVE);
@@ -77,7 +83,7 @@ class UpdateUserServiceTest {
     // Arrange
     final String newEmail = "new.john@example.com";
     final UpdateUserCommand command =
-        new UpdateUserCommand(EMAIL, "John", "Updated", newEmail, null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name());
+        new UpdateUserCommand(ACTOR_EMAIL, EMAIL,"John", "Updated", newEmail, null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(), "123456789");
 
     when(getUserByEmailPort.getByEmail(new UserEmail(EMAIL))).thenReturn(Optional.of(existingUser));
     when(getUserByEmailPort.getByEmail(new UserEmail(newEmail))).thenReturn(Optional.empty()); // El nuevo email no debe existir
@@ -101,7 +107,7 @@ class UpdateUserServiceTest {
     // Arrange
     final String nonExistentEmail = "no-existe@example.com";
     final UpdateUserCommand command =
-        new UpdateUserCommand(nonExistentEmail, "firstName", "lastName", "new@example.com", null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name());
+        new UpdateUserCommand(ACTOR_EMAIL, nonExistentEmail,"firstName", "lastName", "new@example.com", null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(), "");
 
     when(getUserByEmailPort.getByEmail(new UserEmail(nonExistentEmail))).thenReturn(Optional.empty());
 
@@ -118,13 +124,14 @@ class UpdateUserServiceTest {
     // Arrange
     final String newEmail = "other@example.com";
     final UpdateUserCommand command =
-        new UpdateUserCommand(EMAIL, "John", "Arrieta", newEmail, null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name());
+        new UpdateUserCommand(ACTOR_EMAIL, EMAIL, "John", "Arrieta", newEmail, null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(), "123456789");
 
     final UserModel otherUser =
         new UserModel(
             new UserFirstName("Other"),
             new UserLastName("User"),
             new UserEmail(newEmail),
+            new EnterpriseNit("987654321"),
             UserPassword.fromHash(HASH),
             UserRole.MEMBER,
             UserStatus.ACTIVE);
@@ -142,7 +149,7 @@ class UpdateUserServiceTest {
   void shouldAllowKeepingOwnEmail() {
     // Arrange
     final UpdateUserCommand command =
-        new UpdateUserCommand(EMAIL, "John", "Updated", EMAIL, null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name());
+        new UpdateUserCommand(ACTOR_EMAIL, EMAIL, "John", "Updated", EMAIL, null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(), "123456789");
 
     when(getUserByEmailPort.getByEmail(new UserEmail(EMAIL))).thenReturn(Optional.of(existingUser));
     when(updateUserPort.update(any(UserEmail.class), any(UserModel.class))).thenAnswer(invocation -> invocation.getArgument(1));
@@ -157,7 +164,7 @@ class UpdateUserServiceTest {
   void shouldThrowWhenCommandIsInvalid() {
     // Arrange
     final UpdateUserCommand command =
-        new UpdateUserCommand("", "", "Jo", "no-es-email", null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name());
+        new UpdateUserCommand(ACTOR_EMAIL,"", "", "Jo", "no-es-email", null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(),"12345");
 
     // Act & Assert
     assertThrows(ConstraintViolationException.class, () -> service.execute(command));

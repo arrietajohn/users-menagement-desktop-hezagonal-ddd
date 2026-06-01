@@ -2,6 +2,7 @@ package co.edu.udc.desechos_fabrica.user.domain.event;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
@@ -27,6 +28,7 @@ class UserUpdatedDomainEventTest {
   private static final String FIRST_NAME = "Jane";
   private static final String LAST_NAME = "Doe";
   private static final String EMAIL = "jane.doe@example.com";
+  private static final String NIT = "123456789";
   // fromHash() acepta cualquier string no-null: evita el coste de BCrypt en tests
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
 
@@ -39,6 +41,7 @@ class UserUpdatedDomainEventTest {
             new UserFirstName(FIRST_NAME),
             new UserLastName(LAST_NAME),
             new UserEmail(EMAIL),
+            new EnterpriseNit(NIT),
             UserPassword.fromHash(HASH),
             UserRole.ADMIN,
             UserStatus.INACTIVE);

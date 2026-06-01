@@ -9,6 +9,7 @@ import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import java.time.LocalDateTime;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,7 @@ class UserCreatedDomainEventTest {
   private static final String FIRST_NAME = "John";
   private static final String LAST_NAME = "Arrieta";
   private static final String EMAIL = "john.arrieta@gmail.com";
+  private static final String NIT = "123456789";
   // fromHash() acepta cualquier string no-null: evitamos el coste de BCrypt en tests
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
 
@@ -41,6 +43,7 @@ class UserCreatedDomainEventTest {
             new UserFirstName(FIRST_NAME),
             new UserLastName(LAST_NAME),
             new UserEmail(EMAIL),
+            new EnterpriseNit(NIT),
             UserPassword.fromHash(HASH),
             UserRole.MEMBER,
             UserStatus.ACTIVE);

@@ -10,6 +10,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.port.in.CreateUserUseCase;
 import co.edu.udc.desechos_fabrica.user.application.port.in.DeleteUserUseCase;
 import co.edu.udc.desechos_fabrica.user.application.port.in.GetAllUsersUseCase;
@@ -73,12 +74,14 @@ class UserControllerTest {
       final String firstName,
       final String lastName,
       final String email,
+      final String nit,
       final UserRole role,
       final UserStatus status) {
     return new UserModel(
         new UserFirstName(firstName),
         new UserLastName(lastName),
         new UserEmail(email),
+        new EnterpriseNit(nit),
         UserPassword.fromHash(BCRYPT_HASH),
         role,
         status);
@@ -104,7 +107,7 @@ class UserControllerTest {
   void listAllUsers_returnsMappedResponseList_whenUsersExist() {
     // Arrange
     final UserModel user =
-        buildUser("Alice", "Smith", "alice@example.com", UserRole.ADMIN, UserStatus.ACTIVE);
+        buildUser("Alice", "Smith", "alice@example.com", "1234567890", UserRole.ADMIN, UserStatus.ACTIVE);
     when(getAllUsersUseCase.execute()).thenReturn(List.of(user));
 
     // Act
@@ -145,7 +148,7 @@ class UserControllerTest {
     // Arrange
     final String email = "bob@example.com";
     final UserModel user =
-        buildUser("Bob", "Jones", email, UserRole.MEMBER, UserStatus.ACTIVE);
+        buildUser("Bob", "Jones", email, "123456789", UserRole.MEMBER, UserStatus.ACTIVE);
     when(getUserByEmailUseCase.execute(any(GetUserByEmailQuery.class))).thenReturn(user);
 
     // Act
@@ -185,10 +188,10 @@ class UserControllerTest {
   void createUser_delegatesCorrectCommandAndReturnsMappedResponse_whenCreationSucceeds() {
     // Arrange
     final CreateUserRequest request =
-        new CreateUserRequest("Carol", "White", "carol@example.com", "Pass1234", "ADMIN");
+        new CreateUserRequest("Carol", "White", "carol@example.com", "Pass1234", UserRole.ADMIN);
     final UserModel createdUser =
         buildUser(
-            "Carol", "White", "carol@example.com", UserRole.ADMIN, UserStatus.PENDING);
+            "Carol", "White", "carol@example.com", "123456789", UserRole.ADMIN, UserStatus.PENDING);
     final ArgumentCaptor<CreateUserCommand> captor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
     when(createUserUseCase.execute(captor.capture())).thenReturn(createdUser);
@@ -231,7 +234,7 @@ class UserControllerTest {
   void createUser_propagatesUserAlreadyExistsException_whenEmailIsDuplicated() {
     // Arrange
     final CreateUserRequest request =
-        new CreateUserRequest("Dave", "Brown", "dave@example.com", "Pass5678", "MEMBER");
+        new CreateUserRequest("Dave", "Brown", "dave@example.com", "Pass5678", UserRole.MEMBER);
     when(createUserUseCase.execute(any()))
         .thenThrow(UserAlreadyExistsException.becauseEmailAlreadyExists("dave@example.com"));
 
@@ -251,9 +254,9 @@ class UserControllerTest {
     // Arrange
     final UpdateUserRequest request =
         new UpdateUserRequest(
-                "eve2@example.com", "Eve", "Martinez", "eve@example.com", "NewPass9!", "ADMIN", "ACTIVE");
+                "admin@ecoresiduos.com","eve2@example.com", "Eve", "Martinez", "eve@example.com", "NewPass9!", "ADMIN", "ACTIVE", "123456789");
     final UserModel updatedUser =
-        buildUser("Eve", "Martinez", "eve@example.com", UserRole.ADMIN, UserStatus.ACTIVE);
+        buildUser("Eve", "Martinez", "eve@example.com", "123456789", UserRole.ADMIN, UserStatus.ACTIVE);
     final ArgumentCaptor<UpdateUserCommand> captor =
         ArgumentCaptor.forClass(UpdateUserCommand.class);
     when(updateUserUseCase.execute(captor.capture())).thenReturn(updatedUser);
@@ -266,14 +269,14 @@ class UserControllerTest {
         "updateUser command delegation and response mapping",
         () ->
             assertEquals(
-                "Eve", captor.getValue().firstName(), "command firstName must match request first name"),
+                "Eve", captor.getValue().newFirstName(), "command firstName must match request first name"),
         () ->
             assertEquals(
-                "Martinez", captor.getValue().lastName(), "command lastName must match request last name"),
+                "Martinez", captor.getValue().newLastName(), "command lastName must match request last name"),
         () ->
             assertEquals(
                 "eve@example.com",
-                captor.getValue().email(),
+                captor.getValue().newEmail(),
                 "command email must match request email"),
         () ->
             assertEquals(
@@ -297,7 +300,7 @@ class UserControllerTest {
     // Arrange
     final UpdateUserRequest request =
         new UpdateUserRequest(
-            "ghost2@example.com","Ghost", "User", "ghost@example.com", "Pass9999!", "MEMBER", "INACTIVE");
+            "admin@ecoresiduos.com","ghost2@example.com","Ghost", "User", "ghost@example.com", "Pass9999!", "MEMBER", "INACTIVE", "123456789");
     when(updateUserUseCase.execute(any()))
         .thenThrow(UserNotFoundException.becauseEmailWasNotFound("ghost@example.com"));
 
@@ -319,7 +322,7 @@ class UserControllerTest {
     doNothing().when(deleteUserUseCase).execute(captor.capture());
 
     // Act
-    controller.deleteUser("ghost@example.com");
+    controller.deleteUser("admin@ecoresiduos.com","ghost@example.com");
 
     // Assert
     assertEquals("ghost@example.com", captor.getValue().email(), "delete command id must match the provided id");
@@ -337,7 +340,7 @@ class UserControllerTest {
     // Act & Assert
     assertThrows(
         UserNotFoundException.class,
-        () -> controller.deleteUser("ghost@example.com"),
+        () -> controller.deleteUser("admin@ecoresiduos.com","ghost@example.com"),
         "UserNotFoundException must propagate without being wrapped");
   }
 
@@ -350,7 +353,7 @@ class UserControllerTest {
     // Arrange
     final LoginRequest request = new LoginRequest("frank@example.com", "Pass1234!");
     final UserModel loggedUser =
-        buildUser("Frank", "Green", "frank@example.com", UserRole.MEMBER, UserStatus.ACTIVE);
+        buildUser("Frank", "Green", "frank@example.com", "123456789", UserRole.MEMBER, UserStatus.ACTIVE);
     final ArgumentCaptor<LoginCommand> captor = ArgumentCaptor.forClass(LoginCommand.class);
     when(loginUseCase.execute(captor.capture())).thenReturn(loggedUser);
 

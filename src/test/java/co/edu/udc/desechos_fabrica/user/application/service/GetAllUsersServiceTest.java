@@ -3,6 +3,7 @@ package co.edu.udc.desechos_fabrica.user.application.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetAllUsersPort;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
@@ -48,6 +49,7 @@ class GetAllUsersServiceTest {
             new UserFirstName("John"),
             new UserLastName("Arrieta"),
             new UserEmail("john@example.com"),
+            new EnterpriseNit("123456789"),
             UserPassword.fromHash("$2a$12$abcdefghijklmnopqrstuO"),
             UserRole.REVIEWER,
             UserStatus.ACTIVE);

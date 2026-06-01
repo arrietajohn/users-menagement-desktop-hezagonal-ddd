@@ -3,7 +3,6 @@ package co.edu.udc.desechos_fabrica.user.domain.valueobject;
 import static org.junit.jupiter.api.Assertions.*;
 
 import co.edu.udc.desechos_fabrica.user.domain.exception.InvalidUserEmailException;
-import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByEmailQuery;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
@@ -58,6 +59,7 @@ class GetUserByEmailServiceTest {
             new UserFirstName("John"),
             new UserLastName("Arrieta"),
             new UserEmail("john@example.com"),
+            new EnterpriseNit("123456789"),
             UserPassword.fromHash("$2a$12$abcdefghijklmnopqrstuO"),
             UserRole.REVIEWER,
             UserStatus.ACTIVE);

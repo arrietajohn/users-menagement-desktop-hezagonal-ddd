@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.*;
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ class UserModelTest {
   private UserFirstName userFirstName;
   private UserLastName userLastName;
   private UserEmail userEmail;
+  private EnterpriseNit enterpriseNit;
   private UserPassword password;
 
   @BeforeEach
@@ -32,6 +34,7 @@ class UserModelTest {
     userFirstName = new UserFirstName("Alice");
     userLastName = new UserLastName("Smith");
     userEmail = new UserEmail("alice@example.com");
+    enterpriseNit = new EnterpriseNit("123456789");
     password = UserPassword.fromHash(HASH);
   }
 
@@ -82,7 +85,7 @@ class UserModelTest {
   void shouldDeactivateAndPreserveOtherFields() {
     // Arrange
     final UserModel active =
-        new UserModel(userFirstName, userLastName, userEmail, password, UserRole.REVIEWER, UserStatus.ACTIVE);
+        new UserModel(userFirstName, userLastName, userEmail, enterpriseNit, password, UserRole.REVIEWER, UserStatus.ACTIVE);
 
     // Act
     final UserModel deactivated = active.deactivate();

@@ -12,6 +12,7 @@ import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.exception.PersistenceException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,6 +43,7 @@ class UserRepositoryPostgreSQLTest {
   private static final String FIRST_NAME = "Miguel";
   private static final String LAST_NAME = "Jal";
   private static final String EMAIL = "john@example.com";
+  private static final String NIT = "123456789";
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
   private static final String ROLE = "ADMIN";
   private static final String STATUS = "ACTIVE";
@@ -65,6 +67,7 @@ class UserRepositoryPostgreSQLTest {
             new UserFirstName(FIRST_NAME),
             new UserLastName(LAST_NAME),
             userEmail,
+            new EnterpriseNit("123456789"),
             UserPassword.fromHash(HASH),
             UserRole.REVIEWER,
             UserStatus.ACTIVE);

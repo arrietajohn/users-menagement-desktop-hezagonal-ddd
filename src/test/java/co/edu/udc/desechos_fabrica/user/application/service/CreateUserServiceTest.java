@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.port.out.SaveUserPort;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.CreateUserCommand;
@@ -67,6 +68,7 @@ class CreateUserServiceTest {
             new UserFirstName("John"),
             new UserLastName("Arrieta"),
             new UserEmail("john@example.com"),
+            new EnterpriseNit("123456789"),
             UserPassword.fromPlainText("Pass1234"),
             UserRole.REVIEWER,
             UserStatus.PENDING);
@@ -101,6 +103,7 @@ class CreateUserServiceTest {
             new UserFirstName("Jane"),
             new UserLastName("Doe"),
             new UserEmail("jane@example.com"),
+            new EnterpriseNit("987654321"),
             UserPassword.fromPlainText("OtraPass1"),
             UserRole.MEMBER,
             UserStatus.ACTIVE);

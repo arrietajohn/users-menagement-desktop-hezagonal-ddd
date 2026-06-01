@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.port.out.EmailSenderPort;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
@@ -44,6 +45,7 @@ class EmailNotificationServiceTest {
   private static final String EMAIL = "john@example.com";
   private static final String FIRST_NAME = "John";
   private static final String LAST_NAME = "Arrieta";
+  private static final String NIT = "123456789";
   private static final String PASSWORD = "SecurePass1";
   private static final String TEMPLATE_CONTENT =
       "<html>{{firstName}} {{lastName}} {{email}} {{password}} {{role}} {{status}}</html>";
@@ -60,6 +62,7 @@ class EmailNotificationServiceTest {
             new UserFirstName(FIRST_NAME),
             new UserLastName(LAST_NAME),
             new UserEmail(EMAIL),
+            new EnterpriseNit(NIT),
             UserPassword.fromPlainText(PASSWORD),
             UserRole.REVIEWER,
             UserStatus.ACTIVE);
