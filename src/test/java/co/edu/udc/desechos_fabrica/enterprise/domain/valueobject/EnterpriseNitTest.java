@@ -1,6 +1,5 @@
-package co.edu.udc.desechos_fabrica.enterprise.domain;
+package co.edu.udc.desechos_fabrica.enterprise.domain.valueobject;
 
-import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.enterprise.domain.exception.InvalidEnterpriseNitException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
