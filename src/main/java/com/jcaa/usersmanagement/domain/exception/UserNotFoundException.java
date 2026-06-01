@@ -8,7 +8,7 @@ public final class UserNotFoundException extends DomainException {
     super(message);
   }
 
-  public static UserNotFoundException becauseIdWasNotFound(final String userId) {
-    return new UserNotFoundException(String.format(MESSAGE_BY_ID, userId));
+  public static UserNotFoundException becauseIdWasNotFound(final String id_cliente) {
+    return new UserNotFoundException(String.format(MESSAGE_BY_ID, id_cliente));
   }
 }
