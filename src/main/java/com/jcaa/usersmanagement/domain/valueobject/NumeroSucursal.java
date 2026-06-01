@@ -1,4 +1,4 @@
-package com.jcaa.usersmanagement.domain.model;
+package com.jcaa.usersmanagement.domain.valueobject;
 
 import com.jcaa.usersmanagement.domain.exception.InvalidSucursalNumberException;
 
