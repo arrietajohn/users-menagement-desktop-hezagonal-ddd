@@ -20,7 +20,7 @@ public class OfertaEmpleoMySQLRepository implements OfertaEmpleoRepositoryPort {
 
     @Override
     public void save(OfertaEmpleoModel oferta) {
-        String sql = "INSERT INTO ofertas_empleo VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ofertas_empleo (id, titulo, descripcion, empresa, ubicacion, salario, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             OfertaEmpleoEntity entity =
