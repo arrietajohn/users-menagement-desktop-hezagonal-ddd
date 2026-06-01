@@ -28,9 +28,9 @@ public class UserApplicationMapper {
   public UserModel fromUpdateCommandToModel(
     final UpdateUserCommand command, final UserModel currentUser) {
 
-      final UserFirstName newFirstName = new UserFirstName(command.firstName());
-      final UserLastName newLastName = new UserLastName(command.lastName());
-      final UserEmail newEmail = new UserEmail(command.email());
+      final UserFirstName newFirstName = new UserFirstName(command.newFirstName());
+      final UserLastName newLastName = new UserLastName(command.newLastName());
+      final UserEmail newEmail = new UserEmail(command.newEmail());
       final UserPassword newPassword = resolvePassword(command.password(), currentUser.getPassword());
       final UserRole newRole = UserRole.fromString(command.role());
       final UserStatus newStatus = UserStatus.fromString(command.status());

@@ -8,6 +8,7 @@ import co.edu.udc.desechos_fabrica.user.application.service.mapper.UserApplicati
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserAlreadyExistsException;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
+import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManager;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -23,20 +24,25 @@ public final class UpdateUserService implements UpdateUserUseCase {
   private final GetUserByEmailPort getUserByEmailPort;
   private final EmailNotificationService emailNotificationService;
   private final Validator validator;
+  private final UserRoleManager userRoleManager;
 
   @Override
   public UserModel execute(final UpdateUserCommand command) {
     validateCommand(command);
 
-    final UserEmail currentEmail = new UserEmail(command.currentEmail());
-    final UserModel current = findExistingUserOrFail(currentEmail);
-    final UserEmail newEmail = new UserEmail(command.email());
+    final UserModel actor = findExistingUserOrFail(new UserEmail(command.actorEmail()));
+    final UserModel targetUser = findExistingUserOrFail(new UserEmail(command.targetEmail()));
+    
+    userRoleManager.checkUpdatePermissions(actor, targetUser, null);
 
-    ensureEmailIsNotTakenByAnotherUser(newEmail, currentEmail);
+    final UserEmail newEmail = new UserEmail(command.newEmail());
+    if (!newEmail.equals(targetUser.getEmail())) {
+      ensureEmailIsNotTakenByAnotherUser(newEmail);
+    }
 
     final UserModel userToUpdate =
-        UserApplicationMapper.fromUpdateCommandToModel(command, current);
-    final UserModel updatedUser = updateUserPort.update(currentEmail, userToUpdate);
+        UserApplicationMapper.fromUpdateCommandToModel(command, targetUser);
+    final UserModel updatedUser = updateUserPort.update(targetUser.getEmail(), userToUpdate);
 
     emailNotificationService.notifyUserUpdated(updatedUser);
 
@@ -50,23 +56,18 @@ public final class UpdateUserService implements UpdateUserUseCase {
     }
   }
 
-  private UserModel findExistingUserOrFail(final UserEmail currentEmail) {
+  private UserModel findExistingUserOrFail(final UserEmail email) {
     return getUserByEmailPort
-        .getByEmail(currentEmail)
-        .orElseThrow(() -> UserNotFoundException.becauseEmailWasNotFound(currentEmail.value()));
+        .getByEmail(email)
+        .orElseThrow(() -> UserNotFoundException.becauseEmailWasNotFound(email.value()));
   }
 
-  private void ensureEmailIsNotTakenByAnotherUser(final UserEmail newEmail, final UserEmail currentEmail) {
-    if (newEmail.equals(currentEmail)) {
-      return;
-    }
+  private void ensureEmailIsNotTakenByAnotherUser(final UserEmail newEmail) {
     getUserByEmailPort
         .getByEmail(newEmail)
         .ifPresent(
-            found -> {
-              if (!found.getEmail().equals(currentEmail)) {
-                throw UserAlreadyExistsException.becauseEmailAlreadyExists(newEmail.value());
-              }
+            foundUser -> {
+              throw UserAlreadyExistsException.becauseEmailAlreadyExists(newEmail.value());
             });
   }
 }

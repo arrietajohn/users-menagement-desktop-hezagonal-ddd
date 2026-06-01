@@ -2,8 +2,12 @@ package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.h
 
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
+import co.edu.udc.desechos_fabrica.user.domain.exception.PermissionDeniedException;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserAlreadyExistsException;
+import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
+import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManager;
+import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManagerService;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.UserResponsePrinter;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.util.UserMenuHandler;
@@ -21,46 +25,45 @@ public final class UpdateUserHandler implements OperationHandler {
 
   @Override
   public void handle() {
-
-    final String actorEmail = console.readRequired("Enter your administrator email to proceed: ");
-    final UserResponse actor = userController.findUserByEmail(actorEmail);
-    final UserRole actorRole = UserRole.fromString(actor.role());
-
-    final String currentEmail = console.readRequired("Current email of user to update           : ");
-    final String firstName = console.readRequired("New first name                               : ");
-    final String lastName = console.readRequired("New last name                                 : ");
-    final String newEmail = console.readRequired("New email                                     : ");
-    final String password = console.readOptional("New password (leave blank to keep current)    : ");
-
-    final UserMenuHandler userMenuHandler = new UserMenuHandler(console);
-    UserRole role = null;
-    UserStatus status = null;
-
-    if (actorRole == UserRole.ADMIN || actorRole == UserRole.REVIEWER) {
-      role = userMenuHandler.selectRoleFromConsole();
-      status = userMenuHandler.selectStatusFromConsole();
-    } else if (actorRole == UserRole.ENTERPRISE_ADMIN) {
-      console.println("\nNote: You cannot change the user role. It will remain unchanged.");
-      status = userMenuHandler.selectStatusFromConsole();
-    } else {
-      console.println("\nNote: You cannot change the user role or status. It will remain unchanged.");
-    }
-
     try {
+      final String actorEmail = console.readRequired("Enter your email (the actor) to proceed: ");
+      final String targetEmail = console.readRequired("Enter the email of the user to update (the target): ");
+
+      final UserModel actor = userController.findUserModelByEmail(actorEmail);
+      final UserModel targetUser = userController.findUserModelByEmail(targetEmail);
+      final UserRoleManager roleManager = new UserRoleManagerService();
+
+      roleManager.checkUpdatePermissions(actor, targetUser, null); // `null` para chequear permiso general
+
+      console.println("\nEnter the new data for the user:");
+      final String newFirstName = console.readRequired("New first name: ");
+      final String newLastName = console.readRequired("New last name: ");
+      final String newEmail = console.readRequired("New email: ");
+      final String newPassword = console.readOptional("New password (leave blank to keep current): ");
+      
+      final UserMenuHandler menuHandler = new UserMenuHandler(console);
+      final UserRole newRole = menuHandler.selectRoleFromConsole();
+      final UserStatus newStatus = menuHandler.selectStatusFromConsole();
+
+      roleManager.checkUpdatePermissions(actor, targetUser, newRole);
+
       final UserResponse updated = userController.updateUser(
-              new UpdateUserRequest(
-                      currentEmail,
-                      firstName,
-                      lastName,
-                      newEmail,
-                      password.isBlank() ? null : password,
-                      role != null ? role.name() : null,
-                      status != null ? status.name() : null));
+          new UpdateUserRequest(
+              actorEmail,
+              targetEmail,
+              newFirstName,
+              newLastName,
+              newEmail,
+              newPassword.isBlank() ? null : newPassword,
+              newRole.name(),
+              newStatus.name(),
+              null
+          ));
+
       console.println("\n  User updated successfully.");
       printer.print(updated);
-    } catch (final UserNotFoundException exception) {
-      console.println("  Not found: " + exception.getMessage());
-    } catch (final UserAlreadyExistsException exception) {
+
+    } catch (final UserNotFoundException | PermissionDeniedException | UserAlreadyExistsException exception) {
       console.println("  Error: " + exception.getMessage());
     }
   }

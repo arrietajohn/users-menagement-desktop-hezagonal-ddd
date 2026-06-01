@@ -8,6 +8,8 @@ import co.edu.udc.desechos_fabrica.user.application.service.GetAllUsersService;
 import co.edu.udc.desechos_fabrica.user.application.service.GetUserByEmailService;
 import co.edu.udc.desechos_fabrica.user.application.service.LoginService;
 import co.edu.udc.desechos_fabrica.user.application.service.UpdateUserService;
+import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManager;
+import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManagerService;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.email.JavaMailEmailSenderAdapter;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.email.SmtpConfig;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.config.DatabaseConfig;
@@ -45,15 +47,15 @@ public final class DependencyContainer {
         new JavaMailEmailSenderAdapter(buildSmtpConfig(properties));
     final EmailNotificationService emailNotification = new EmailNotificationService(emailSender);
 
-    // Construir Validator para las validaciones en la capa de aplicación
     final Validator validator = ValidatorProvider.buildValidator();
+    final UserRoleManager userRoleManager = new UserRoleManagerService();
 
     final CreateUserUseCase createUserUseCase =
         new CreateUserService(userRepository, userRepository, emailNotification, validator);
     final UpdateUserUseCase updateUserUseCase =
-        new UpdateUserService(userRepository, userRepository, emailNotification, validator);
+        new UpdateUserService(userRepository, userRepository, emailNotification, validator, userRoleManager);
     final DeleteUserUseCase deleteUserUseCase =
-        new DeleteUserService(userRepository, userRepository, validator);
+        new DeleteUserService(userRepository, userRepository, validator, userRoleManager);
     final GetUserByEmailUseCase getUserByEmailUseCase = new GetUserByEmailService(userRepository, validator);
     final GetAllUsersUseCase getAllUsersUseCase = new GetAllUsersService(userRepository);
     final LoginUseCase loginUseCase = new LoginService(userRepository, validator);

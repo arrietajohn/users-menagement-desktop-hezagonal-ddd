@@ -10,7 +10,6 @@ import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.ha
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.UserResponsePrinter;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.menu.MenuOption;
-import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.util.UserMenuHandler;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller.UserController;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Map;
@@ -34,8 +33,7 @@ public final class UserManagementCli {
   public void start() {
     console.println(BANNER);
     final UserResponsePrinter printer = new UserResponsePrinter(console);
-    final UserMenuHandler menuHandler = new UserMenuHandler(console);
-    runLoop(buildHandlers(printer, menuHandler));
+    runLoop(buildHandlers(printer));
   }
 
   private void runLoop(final Map<MenuOption, OperationHandler> handlers) {
@@ -69,11 +67,11 @@ public final class UserManagementCli {
     }
   }
 
-  private Map<MenuOption, OperationHandler> buildHandlers(final UserResponsePrinter printer, final UserMenuHandler menuHandler) {
+  private Map<MenuOption, OperationHandler> buildHandlers(final UserResponsePrinter printer) {
     return Map.of(
         MenuOption.LIST_USERS,  new ListUsersHandler(userController, printer),
         MenuOption.FIND_USER,   new FindUserByEmailHandler(userController, console, printer),
-        MenuOption.CREATE_USER, new CreateUserHandler(userController, console, printer, menuHandler),
+        MenuOption.CREATE_USER, new CreateUserHandler(userController, console, printer),
         MenuOption.UPDATE_USER, new UpdateUserHandler(userController, console, printer),
         MenuOption.DELETE_USER, new DeleteUserHandler(userController, console),
         MenuOption.LOGIN,       new LoginHandler(userController, console, printer));

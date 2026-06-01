@@ -1,6 +1,7 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller;
 
 import co.edu.udc.desechos_fabrica.user.application.port.in.*;
+import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.CreateUserRequest;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.LoginRequest;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.UpdateUserRequest;
@@ -31,6 +32,11 @@ public final class UserController {
     return UserDesktopMapper.toResponse(user);
   }
 
+  public UserModel findUserModelByEmail(final String email) {
+    final var query = UserDesktopMapper.toGetByEmailQuery(email);
+    return getUserByEmailUseCase.execute(query);
+  }
+
   public UserResponse createUser(final CreateUserRequest request) {
     final var command = UserDesktopMapper.toCreateCommand(request);
     final var user = createUserUseCase.execute(command);
@@ -43,8 +49,8 @@ public final class UserController {
     return UserDesktopMapper.toResponse(user);
   }
 
-  public void deleteUser(final String email) {
-    final var command = UserDesktopMapper.toDeleteCommand(email);
+  public void deleteUser(final String actorEmail, final String targetEmail) {
+    final var command = UserDesktopMapper.toDeleteCommand(actorEmail, targetEmail);
     deleteUserUseCase.execute(command);
   }
 

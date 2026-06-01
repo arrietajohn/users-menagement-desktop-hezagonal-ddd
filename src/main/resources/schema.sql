@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS "user" (
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW());
 
 -- Usuario administrador inicial (password: Admin1234!)
-INSERT INTO "user" (firstName, lastName, email, password, role, status)
+INSERT INTO "user" (first_name, last_name, email, password, role, status)
 VALUES (
     '00000000-0000-0000-0000-000000000001',
     'Administrador',
@@ -25,4 +25,6 @@ VALUES (
     'ADMIN',
     'ACTIVE'
 );
+
+TRUNCATE TABLE "user" RESTART IDENTITY;
 

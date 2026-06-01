@@ -5,6 +5,7 @@ import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUs
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.LoginCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByEmailQuery;
+import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.CreateUserRequest;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.LoginRequest;
@@ -19,22 +20,24 @@ public final class UserDesktopMapper {
 
   public static CreateUserCommand toCreateCommand(final CreateUserRequest request) {
     return new CreateUserCommand(
-        request.firstName(), request.lastName(), request.email(), request.password(), request.role());
+        request.firstName(), request.lastName(), request.email(), request.password(), UserRole.MEMBER.name());
   }
 
   public static UpdateUserCommand toUpdateCommand(final UpdateUserRequest request) {
     return new UpdateUserCommand(
-        request.currentEmail(),
-        request.firstName(),
-        request.lastName(),
-        request.email(),
+        request.actorEmail(),
+        request.targetEmail(),
+        request.newFirstName(),
+        request.newLastName(),
+        request.newEmail(),
         request.password(),
         request.role(),
-        request.status());
+        request.status(),
+        request.nit());
   }
 
-  public static DeleteUserCommand toDeleteCommand(final String email) {
-    return new DeleteUserCommand(email);
+  public static DeleteUserCommand toDeleteCommand(final String actorEmail, final String targetEmail) {
+    return new DeleteUserCommand(actorEmail, targetEmail);
   }
 
   public static GetUserByEmailQuery toGetByEmailQuery(final String email) {
