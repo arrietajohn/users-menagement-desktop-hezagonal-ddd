@@ -2,6 +2,7 @@ package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.ofertaempleo;
 
 import com.jcaa.usersmanagement.application.port.in.ofertaempleo.OfertaEmpleoUseCase;
 import com.jcaa.usersmanagement.application.service.dto.command.CreateOfertaEmpleoCommand;
+import com.jcaa.usersmanagement.application.service.dto.command.UpdateOfertaEmpleoCommand;
 import com.jcaa.usersmanagement.domain.model.OfertaEmpleoModel;
 
 import java.util.List;
@@ -26,18 +27,8 @@ public class OfertaEmpleoController {
         return useCase.getAll();
     }
 
-    public void update(CreateOfertaEmpleoCommand command) {
-        useCase.update(
-                new com.jcaa.usersmanagement.application.service.dto.command.UpdateOfertaEmpleoCommand(
-                        command.id(),
-                        command.titulo(),
-                        command.descripcion(),
-                        command.empresa(),
-                        command.ubicacion(),
-                        command.salario(),
-                        command.estado()
-                )
-        );
+    public void update(UpdateOfertaEmpleoCommand command) {
+        useCase.update(command);
     }
 
     public void delete(String id) {
