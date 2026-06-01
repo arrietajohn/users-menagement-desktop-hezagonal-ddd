@@ -19,6 +19,18 @@ import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.Databa
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConnectionFactory;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
+import com.jcaa.usersmanagement.application.port.in.CreateProgramaUseCase;
+import com.jcaa.usersmanagement.application.port.in.DeleteProgramaUseCase;
+import com.jcaa.usersmanagement.application.port.in.GetAllProgramasUseCase;
+import com.jcaa.usersmanagement.application.port.in.GetProgramaByIdUseCase;
+import com.jcaa.usersmanagement.application.port.in.UpdateProgramaUseCase;
+import com.jcaa.usersmanagement.application.service.CreateProgramaService;
+import com.jcaa.usersmanagement.application.service.DeleteProgramaService;
+import com.jcaa.usersmanagement.application.service.GetAllProgramasService;
+import com.jcaa.usersmanagement.application.service.GetProgramaByIdService;
+import com.jcaa.usersmanagement.application.service.UpdateProgramaService;
+import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.ProgramaRepositoryMySQL;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.ProgramaController;
 
 import java.sql.Connection;
 import jakarta.validation.Validator;
@@ -39,6 +51,8 @@ public final class DependencyContainer {
   private static final String SMTP_FROM_NAME = "smtp.from.name";
 
   private final UserController userController;
+  private final ProgramaController programaController;
+
 
   public DependencyContainer() {
     final AppProperties properties = new AppProperties();
@@ -71,10 +85,34 @@ public final class DependencyContainer {
             getUserByIdUseCase,
             getAllUsersUseCase,
             loginUseCase);
+
+    final ProgramaRepositoryMySQL programaRepository = new ProgramaRepositoryMySQL(connection);
+    final CreateProgramaUseCase createProgramaUseCase =
+        new CreateProgramaService(programaRepository, programaRepository, validator);
+    final UpdateProgramaUseCase updateProgramaUseCase =
+        new UpdateProgramaService(programaRepository, programaRepository, validator);
+    final DeleteProgramaUseCase deleteProgramaUseCase =
+        new DeleteProgramaService(programaRepository, programaRepository, validator);
+    final GetProgramaByIdUseCase getProgramaByIdUseCase =
+        new GetProgramaByIdService(programaRepository, validator);
+    final GetAllProgramasUseCase getAllProgramasUseCase =
+        new GetAllProgramasService(programaRepository);
+
+    this.programaController =
+        new ProgramaController(
+            createProgramaUseCase,
+            updateProgramaUseCase,
+            deleteProgramaUseCase,
+            getProgramaByIdUseCase,
+            getAllProgramasUseCase);
   }
 
   public UserController userController() {
     return userController;
+  }
+
+  public ProgramaController programaController() {
+    return programaController;
   }
 
   private static Connection buildDatabaseConnection(final AppProperties properties) {
