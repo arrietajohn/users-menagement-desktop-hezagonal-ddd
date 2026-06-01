@@ -38,10 +38,6 @@ public class UserModel {
     return new UserModel(firstName, lastName, email, this.enterpriseNit, password, role, UserStatus.INACTIVE);
   }
 
-  public UserModel assignToEnterprise(final EnterpriseNit enterpriseNit) {
-    return new UserModel(firstName, lastName, email, enterpriseNit, password, UserRole.ENTERPRISE_ADMIN, this.status);
-  }
-
   public UserModel updateWith(
           final UserFirstName newFirstName,
           final UserLastName newLastName,
