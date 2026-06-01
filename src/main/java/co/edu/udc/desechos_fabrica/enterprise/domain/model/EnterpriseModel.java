@@ -12,10 +12,10 @@ public class EnterpriseModel {
     EnterpriseName name;
     EnterpriseStatus status;
 
-    public static EnterpriseModel create(
-        final EnterpriseNit nit,
-        final EnterpriseName name) {
-        return new EnterpriseModel(nit, name, EnterpriseStatus.PENDING);
+    public EnterpriseModel(EnterpriseNit nit, EnterpriseName name, EnterpriseStatus status){
+        this.nit = nit;
+        this.name = name;
+        this.status = status;
     }
 
     public EnterpriseModel activate() {
