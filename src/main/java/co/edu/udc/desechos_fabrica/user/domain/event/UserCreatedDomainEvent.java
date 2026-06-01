@@ -1,5 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.domain.event;
 
+import co.edu.udc.desechos_fabrica.shared.DomainEvent;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import java.util.Map;
 import lombok.Getter;
