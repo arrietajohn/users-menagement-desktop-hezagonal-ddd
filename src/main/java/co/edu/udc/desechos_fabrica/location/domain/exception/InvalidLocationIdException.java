@@ -14,4 +14,8 @@ public class InvalidLocationIdException extends DomainException{
         return new InvalidLocationIdException(MESSAGE_EMPTY);
     }
 
+    public static InvalidLocationIdException becauseInvalidFormat() {
+        return new InvalidLocationIdException("The location id must contain only digits.");
+    }
+
 }

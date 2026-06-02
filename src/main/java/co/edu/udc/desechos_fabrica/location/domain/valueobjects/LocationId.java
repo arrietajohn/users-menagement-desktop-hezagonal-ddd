@@ -9,12 +9,19 @@ public record LocationId(String value){
     public LocationId{
         final String normalizedValue = Objects.requireNonNull(value, "Location Id can not be null").trim();
         validateNotEmpty(normalizedValue);
+        validateFormat(normalizedValue);
         value = normalizedValue;
     }
 
     private static void validateNotEmpty(final String normalizedValue) {
         if (normalizedValue.isEmpty()) {
             throw InvalidLocationIdException.becauseValueIsEmpty();
+        }
+    }
+
+    private static void validateFormat(final String normalizedValue) {
+        if (!normalizedValue.matches("^[0-9]+$")) {
+            throw InvalidLocationIdException.becauseInvalidFormat();
         }
     }
 
