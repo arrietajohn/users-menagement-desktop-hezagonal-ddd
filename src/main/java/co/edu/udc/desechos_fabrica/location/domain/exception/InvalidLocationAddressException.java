@@ -15,7 +15,7 @@ public class InvalidLocationAddressException extends DomainException {
         return new InvalidLocationAddressException(MESSAGE_EMPTY);
     }
 
-    public static InvalidLocationAddressException validateMinimumLength(final int minimumLength) {
+    public static InvalidLocationAddressException becauseLengthIsTooShort(final int minimumLength) {
         return new InvalidLocationAddressException(String.format(MESSAGE_TOO_SHORT, minimumLength));
     }
 }
