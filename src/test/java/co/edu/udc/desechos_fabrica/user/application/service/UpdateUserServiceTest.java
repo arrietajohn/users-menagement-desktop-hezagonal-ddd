@@ -51,6 +51,7 @@ class UpdateUserServiceTest {
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
 
   private UserModel existingUser;
+  private UserModel actorUser;
 
   @BeforeEach
   void setUp() {
@@ -73,6 +74,16 @@ class UpdateUserServiceTest {
             UserPassword.fromHash(HASH),
             UserRole.MEMBER,
             UserStatus.ACTIVE);
+
+    actorUser =
+        new UserModel(
+            new UserFirstName("Admin"),
+            new UserLastName("User"),
+            new UserEmail(ACTOR_EMAIL),
+            new EnterpriseNit("999999999"),
+            UserPassword.fromHash(HASH),
+            UserRole.ADMIN,
+            UserStatus.ACTIVE);
   }
 
   // ── flujo feliz
@@ -85,6 +96,7 @@ class UpdateUserServiceTest {
     final UpdateUserCommand command =
         new UpdateUserCommand(ACTOR_EMAIL, EMAIL,"John", "Updated", newEmail, null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(), "123456789");
 
+    when(getUserByEmailPort.getByEmail(new UserEmail(ACTOR_EMAIL))).thenReturn(Optional.of(actorUser));
     when(getUserByEmailPort.getByEmail(new UserEmail(EMAIL))).thenReturn(Optional.of(existingUser));
     when(getUserByEmailPort.getByEmail(new UserEmail(newEmail))).thenReturn(Optional.empty()); // El nuevo email no debe existir
     when(updateUserPort.update(any(), any())).thenAnswer(invocation -> invocation.getArgument(1));
@@ -109,6 +121,7 @@ class UpdateUserServiceTest {
     final UpdateUserCommand command =
         new UpdateUserCommand(ACTOR_EMAIL, nonExistentEmail,"firstName", "lastName", "new@example.com", null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(), "");
 
+    when(getUserByEmailPort.getByEmail(new UserEmail(ACTOR_EMAIL))).thenReturn(Optional.of(actorUser));
     when(getUserByEmailPort.getByEmail(new UserEmail(nonExistentEmail))).thenReturn(Optional.empty());
 
     // Act & Assert
@@ -136,6 +149,7 @@ class UpdateUserServiceTest {
             UserRole.MEMBER,
             UserStatus.ACTIVE);
 
+    when(getUserByEmailPort.getByEmail(new UserEmail(ACTOR_EMAIL))).thenReturn(Optional.of(actorUser));
     when(getUserByEmailPort.getByEmail(new UserEmail(EMAIL))).thenReturn(Optional.of(existingUser));
     when(getUserByEmailPort.getByEmail(new UserEmail(newEmail))).thenReturn(Optional.of(otherUser));
 
@@ -151,6 +165,7 @@ class UpdateUserServiceTest {
     final UpdateUserCommand command =
         new UpdateUserCommand(ACTOR_EMAIL, EMAIL, "John", "Updated", EMAIL, null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(), "123456789");
 
+    when(getUserByEmailPort.getByEmail(new UserEmail(ACTOR_EMAIL))).thenReturn(Optional.of(actorUser));
     when(getUserByEmailPort.getByEmail(new UserEmail(EMAIL))).thenReturn(Optional.of(existingUser));
     when(updateUserPort.update(any(UserEmail.class), any(UserModel.class))).thenAnswer(invocation -> invocation.getArgument(1));
 

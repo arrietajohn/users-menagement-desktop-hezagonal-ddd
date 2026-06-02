@@ -188,10 +188,10 @@ class UserControllerTest {
   void createUser_delegatesCorrectCommandAndReturnsMappedResponse_whenCreationSucceeds() {
     // Arrange
     final CreateUserRequest request =
-        new CreateUserRequest("Carol", "White", "carol@example.com", "Pass1234", UserRole.ADMIN);
+        new CreateUserRequest("Carol", "White", "carol@example.com", "Pass1234", UserRole.MEMBER);
     final UserModel createdUser =
         buildUser(
-            "Carol", "White", "carol@example.com", "123456789", UserRole.ADMIN, UserStatus.PENDING);
+            "Carol", "White", "carol@example.com", "123456789", UserRole.MEMBER, UserStatus.PENDING);
     final ArgumentCaptor<CreateUserCommand> captor =
         ArgumentCaptor.forClass(CreateUserCommand.class);
     when(createUserUseCase.execute(captor.capture())).thenReturn(createdUser);
@@ -220,7 +220,7 @@ class UserControllerTest {
                 "command password must match request password"),
         () ->
             assertEquals(
-                "ADMIN", captor.getValue().role(), "command role must match request role"),
+                "MEMBER", captor.getValue().role(), "command role must match request role"),
         () ->
             assertEquals(
                 "PENDING",
@@ -300,7 +300,7 @@ class UserControllerTest {
     // Arrange
     final UpdateUserRequest request =
         new UpdateUserRequest(
-            "admin@ecoresiduos.com","ghost2@example.com","Ghost", "User", "ghost@example.com", "Pass9999!", "MEMBER", "INACTIVE", "123456789");
+            "admin@ecoresiduos.com","ghost2@example.com","Ghost", "User", "ghost@example.com", "Pass9999!", "ADMIN", "INACTIVE", "123456789");
     when(updateUserUseCase.execute(any()))
         .thenThrow(UserNotFoundException.becauseEmailWasNotFound("ghost@example.com"));
 
@@ -325,7 +325,7 @@ class UserControllerTest {
     controller.deleteUser("admin@ecoresiduos.com","ghost@example.com");
 
     // Assert
-    assertEquals("ghost@example.com", captor.getValue().email(), "delete command id must match the provided id");
+    assertEquals("ghost@example.com", captor.getValue().email(), "delete command email must match the provided email");
   }
 
   @Test
