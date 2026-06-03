@@ -2,6 +2,9 @@ package co.edu.udc.desechos_fabrica.location.domain.event;
 
 import co.edu.udc.desechos_fabrica.shared.DomainEvent;
 
+import java.io.Serializable;
+import java.util.Map;
+
 public class LocationDeactivatedDomainEvent extends DomainEvent {
 
     private static final String EVENT_NAME = "location.deactivated";
@@ -16,7 +19,7 @@ public class LocationDeactivatedDomainEvent extends DomainEvent {
     }
 
     @Override
-    public java.util.Map<String, String> payload() {
+    public Map<String, Serializable> payload() {
         return java.util.Map.of(
                 "locationId", locationId,
                 "enterpriseId", enterpriseId
