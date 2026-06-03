@@ -4,15 +4,15 @@ import co.edu.udc.desechos_fabrica.location.domain.exception.InvalidLocationCity
 
 import java.util.Objects;
 
-public record LocationCity(String city) {
+public record LocationCity(String value) {
 
     private static final int MINIMUM_LENGTH = 3;
 
     public LocationCity {
-        final String normalizedValue = Objects.requireNonNull(city, "Location city can not be null").trim();
+        final String normalizedValue = Objects.requireNonNull(value, "Location city can not be null").trim();
         validateNotEmpty(normalizedValue);
         validateMinimumLength(normalizedValue);
-        city = normalizedValue;
+        value = normalizedValue;
     }
 
     public void validateNotEmpty(final String normalizedValue) {
@@ -29,6 +29,6 @@ public record LocationCity(String city) {
 
     @Override
     public String toString() {
-        return city;
+        return value;
     }
 }
