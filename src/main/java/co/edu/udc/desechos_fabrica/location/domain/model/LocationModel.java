@@ -11,22 +11,22 @@ public class LocationModel {
 
     LocationId id;
     @NonNull LocationName name;
-    @NonNull LocationCity city;
     @NonNull EnterpriseId enterpriseId;
-    @NonNull LocationState state;
     @NonNull LocationCountry country;
+    @NonNull LocationState state;
+    @NonNull LocationCity city;
     @NonNull LocationCoordinate coordinate;
     LocationStatus status;
 
     public static LocationModel create(
             final LocationId id,
             final LocationName name,
-            final LocationCity city,
             final EnterpriseId enterpriseId,
-            final LocationState state,
             final LocationCountry country,
+            final LocationState state,
+            final LocationCity city,
             final LocationCoordinate coordinate) {
-        return new LocationModel(id, name, city, enterpriseId, state, country, coordinate, LocationStatus.ACTIVE);
+        return new LocationModel(id, name, enterpriseId, country, state, city, coordinate, LocationStatus.ACTIVE);
     }
 
     public LocationModel updateWith(
@@ -35,15 +35,15 @@ public class LocationModel {
             final LocationState newState,
             final LocationCountry newCountry,
             final LocationCoordinate newCoordinate) {
-        return new LocationModel(id, newName, newCity, enterpriseId, newState, newCountry, newCoordinate, status);
+        return new LocationModel(id, newName, enterpriseId, newCountry, newState, newCity, newCoordinate, status);
     }
 
     public LocationModel activate() {
-        return new LocationModel(id, name, city, enterpriseId, state, country, coordinate, LocationStatus.ACTIVE);
+        return new LocationModel(id, name, enterpriseId, country, state, city, coordinate, LocationStatus.ACTIVE);
     }
 
     public LocationModel deactivate() {
-        return new LocationModel(id, name, city, enterpriseId, state, country, coordinate, LocationStatus.INACTIVE);
+        return new LocationModel(id, name, enterpriseId, country, state, city, coordinate, LocationStatus.INACTIVE);
     }
 
 }
