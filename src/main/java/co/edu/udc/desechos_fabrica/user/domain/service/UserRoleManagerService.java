@@ -49,7 +49,7 @@ public class UserRoleManagerService implements UserRoleManager {
             }
             case MEMBER -> {
                 if (actorRole == UserRole.ENTERPRISE_ADMIN &&
-                        !Objects.equals(actor.getEnterpriseNit(), targetUser.getEnterpriseNit())) {
+                        !Objects.equals(actor.getEnterpriseId(), targetUser.getEnterpriseId())) {
                     throw new PermissionDeniedException("Scope restricted to your enterprise.");
                 }
                 if (actorRole == UserRole.MEMBER)

@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.domain.model;
 
-import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
@@ -16,7 +16,7 @@ public class UserModel {
   UserFirstName firstName;
   UserLastName lastName;
   UserEmail email;
-  EnterpriseNit enterpriseNit;
+  EnterpriseId enterpriseId;
   UserPassword password;
   UserRole role;
   UserStatus status;
@@ -31,11 +31,11 @@ public class UserModel {
   }
 
   public UserModel activate() {
-    return new UserModel(firstName, lastName, email, this.enterpriseNit, password, role, UserStatus.ACTIVE);
+    return new UserModel(firstName, lastName, email, this.enterpriseId, password, role, UserStatus.ACTIVE);
   }
 
   public UserModel deactivate() {
-    return new UserModel(firstName, lastName, email, this.enterpriseNit, password, role, UserStatus.INACTIVE);
+    return new UserModel(firstName, lastName, email, this.enterpriseId, password, role, UserStatus.INACTIVE);
   }
 
   public UserModel updateWith(
@@ -45,15 +45,15 @@ public class UserModel {
           final UserPassword newPassword,
           final UserRole newRole,
           final UserStatus newStatus,
-          final EnterpriseNit newEnterpriseNit) {
+          final EnterpriseId newEnterpriseId) {
 
     UserStatus finalStatus = (newStatus != null) ? newStatus : this.status;
     UserRole finalRole = (newRole != null) ? newRole : this.role;
     
-    boolean enterpriseIsChanging = !Objects.equals(this.enterpriseNit, newEnterpriseNit);
+    boolean enterpriseIsChanging = !Objects.equals(this.enterpriseId, newEnterpriseId);
 
     if (enterpriseIsChanging) {
-      if (newEnterpriseNit != null) {
+      if (newEnterpriseId != null) {
         finalStatus = UserStatus.PENDING;
         finalRole = UserRole.ENTERPRISE_ADMIN;
       } else {
@@ -61,6 +61,6 @@ public class UserModel {
       }
     }
 
-    return new UserModel(newFirstName, newLastName, newEmail, newEnterpriseNit, newPassword, finalRole, finalStatus);
+    return new UserModel(newFirstName, newLastName, newEmail, newEnterpriseId, newPassword, finalRole, finalStatus);
   }
 }
