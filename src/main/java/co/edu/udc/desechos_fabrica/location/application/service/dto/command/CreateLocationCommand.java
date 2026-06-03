@@ -12,7 +12,6 @@ public class CreateLocationCommand {
         @Size(min = 3, message = "location name must have at least 3 characters")
         String name;
     @NotBlank(message = "enterprise id must not be blank")
-        @Size(min = 3, message = "enterprise id must have at least 3 characters")
         String enterpriseId;
     @NotBlank(message = "location country must not be blank")
         @Size(min = 3, message = "location country must have at least 3 characters")
