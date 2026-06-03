@@ -1,18 +1,18 @@
 package co.edu.udc.desechos_fabrica.location.application.service.dto.command;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
 
 public class CreateLocationCommand {
 
-    @NotBlank(message = "location id must be not blank")
-        String id;
     @NotBlank(message = "location name must not be blank")
         @Size(min = 3, message = "location name must have at least 3 characters")
         String name;
-    @NotBlank(message = "enterprise id must not be blank")
-        String enterpriseId;
+    @NotNull(message = "enterprise id must not be null")
+        @Positive(message = "enterprise id must not be greater than zero")
+        Long enterpriseId;
     @NotBlank(message = "location country must not be blank")
         @Size(min = 3, message = "location country must have at least 3 characters")
         String country;

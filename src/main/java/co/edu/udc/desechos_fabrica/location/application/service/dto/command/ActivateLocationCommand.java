@@ -1,14 +1,14 @@
 package co.edu.udc.desechos_fabrica.location.application.service.dto.command;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public class ActivateLocationCommand {
 
-    @NotBlank(message = "location id must be not blank")
-        @Positive(message = "location id must be bot a negative number")
+    @NotNull(message = "location id must not be null")
+        @Positive(message = "location id must not be greater than zero")
         Long id;
-    @NotBlank(message = "enterprise id must not be blank")
-        @Positive(message = "enterprise id must be bot a negative number")
-        String enterpriseId;
+    @NotNull(message = "enterprise id must not be null")
+        @Positive(message = "enterprise id must not be greater than zero")
+        Long enterpriseId;
 }
