@@ -10,7 +10,7 @@ public class InvalidLocationStatusException extends DomainException {
         super(message);
     }
 
-    public InvalidLocationStatusException becauseValueIsInvalid(final String status) {
+    public static InvalidLocationStatusException becauseValueIsInvalid(final String status) {
         return new InvalidLocationStatusException(String.format(MESSAGE, status));
     }
 
