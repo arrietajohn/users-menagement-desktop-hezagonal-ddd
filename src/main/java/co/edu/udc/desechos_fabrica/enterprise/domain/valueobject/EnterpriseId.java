@@ -4,29 +4,21 @@ import co.edu.udc.desechos_fabrica.enterprise.domain.exception.InvalidEnterprise
 
 import java.util.Objects;
 
-public record EnterpriseId(String value) {
+public record EnterpriseId(Long value) {
 
-    public EnterpriseId {
-        final String enterpriseId = Objects.requireNonNull(value, "Enterprise Id can not be null").trim();
-        validateNotEmpty(enterpriseId);
-        validateFormat(enterpriseId);
-        value = enterpriseId;
+    public EnterpriseId{
+        Objects.requireNonNull(value, "Location Id can not be null");
+        validateGreaterThanZero(value);
     }
 
-    public void validateNotEmpty(final String normalizedValue) {
-        if (normalizedValue.isEmpty()) {
-            throw InvalidEnterpriseIdException.becauseValueIsEmpty();
-        }
-    }
-
-    public void validateFormat(final String normalizedValue) {
-        if (!normalizedValue.matches("^[0-9]+$")) {
+    private static void validateGreaterThanZero(final Long value) {
+        if (value <= 0) {
             throw InvalidEnterpriseIdException.becauseInvalidFormat();
         }
     }
 
     @Override
     public String toString() {
-        return value;
+        return value.toString();
     }
 }
