@@ -8,13 +8,13 @@ import jakarta.validation.constraints.NotBlank;
 public class UpdateLocationCommand {
 
     @NotBlank(message = "location id must be not blank")
-        @Positive(message = "location id must not be greater than zero")
+        @Positive(message = "location id must be greater than zero")
         Long id;
     @NotBlank(message = "location name must be not blank")
         @Size(min = 3, message = "location name must have at least 3 characters")
         String newName;
     @NotBlank(message = "enterprise id must be not blank")
-        @Positive(message = "enterprise id must not be greater than zero")
+        @Positive(message = "enterprise id must be greater than zero")
         Long enterpriseId;
     @NotBlank(message = "location country must be not blank")
         @Size(min = 3, message = "location country must have at least 3 characters")
