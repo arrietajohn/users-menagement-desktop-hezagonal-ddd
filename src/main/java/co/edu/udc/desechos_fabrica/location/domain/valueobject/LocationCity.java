@@ -1,4 +1,4 @@
-package co.edu.udc.desechos_fabrica.location.domain.valueobjects;
+package co.edu.udc.desechos_fabrica.location.domain.valueobject;
 
 import co.edu.udc.desechos_fabrica.location.domain.exception.InvalidLocationCityException;
 
