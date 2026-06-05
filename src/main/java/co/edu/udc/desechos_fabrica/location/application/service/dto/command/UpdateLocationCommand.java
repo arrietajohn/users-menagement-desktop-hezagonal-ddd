@@ -1,32 +1,37 @@
 package co.edu.udc.desechos_fabrica.location.application.service.dto.command;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotBlank;
 
-public class UpdateLocationCommand {
+public record UpdateLocationCommand(
 
-    @NotBlank(message = "location id must be not blank")
+    @NotNull(message = "location id must not be null")
         @Positive(message = "location id must be greater than zero")
-        Long id;
+        Long id,
     @NotBlank(message = "location name must be not blank")
         @Size(min = 3, message = "location name must have at least 3 characters")
-        String newName;
-    @NotBlank(message = "enterprise id must be not blank")
+        String newName,
+    @NotBlank(message = "location address must be not blank")
+        @Size(min = 5, message = "location address must have at least 5 characters")
+        String newAddress,
+    @NotNull(message = "enterprise id must not be null")
         @Positive(message = "enterprise id must be greater than zero")
-        Long enterpriseId;
+        Long enterpriseId,
     @NotBlank(message = "location country must be not blank")
         @Size(min = 3, message = "location country must have at least 3 characters")
-        String newCountry;
+        String newCountry,
     @NotBlank(message = "location state must be not blank")
         @Size(min = 3, message = "location state must have at least 3 characters")
-        String newState;
+        String newState,
     @NotBlank(message = "location city must be not blank")
         @Size(min = 3, message = "location city must have at least 3 characters")
-        String newCity;
+        String newCity,
     @NotNull(message = "location coordinate must not be null")
-    CoordinateCommand newCoordinate;
+        @Valid
+        CoordinateCommand newCoordinate) {
 
     public record CoordinateCommand(
         @NotNull(message = "latitude must not be null")
