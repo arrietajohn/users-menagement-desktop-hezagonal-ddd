@@ -36,9 +36,8 @@ public class LocationModel {
             final LocationCity newCity,
             final LocationState newState,
             final LocationCountry newCountry,
-            final LocationCoordinate newCoordinate,
-            final LocationStatus newStatus) {
-        return new LocationModel(id, newName, newAddress, enterpriseId, newCountry, newState, newCity, newCoordinate, newStatus);
+            final LocationCoordinate newCoordinate) {
+        return new LocationModel(id, newName, newAddress, enterpriseId, newCountry, newState, newCity, newCoordinate, status);
     }
 
     public LocationModel activate() {
