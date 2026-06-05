@@ -17,13 +17,13 @@ import java.util.List;
 public class UserPersistenceMapper {
 
   public UserPersistenceDto fromModelToDto(final UserModel user) {
-    final String nit = user.getEnterpriseNit() != null ? user.getEnterpriseNit().value() : null;
+    final Long enterpriseId = user.getEnterpriseId() != null ? user.getEnterpriseId().value() : null;
     return new UserPersistenceDto(
         user.getFirstName().value(),
         user.getLastName().value(),
         user.getEmail().value(),
         user.getPassword().value(),
-        nit,
+        enterpriseId,
         user.getRole().name(),
         user.getStatus().name(),
         null,

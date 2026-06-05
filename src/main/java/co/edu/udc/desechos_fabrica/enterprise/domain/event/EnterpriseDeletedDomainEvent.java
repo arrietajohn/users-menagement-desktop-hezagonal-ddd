@@ -2,6 +2,8 @@ package co.edu.udc.desechos_fabrica.enterprise.domain.event;
 
 import co.edu.udc.desechos_fabrica.shared.DomainEvent;
 import co.edu.udc.desechos_fabrica.enterprise.domain.model.EnterpriseModel;
+
+import java.io.Serializable;
 import java.util.Map;
 import lombok.Getter;
 
@@ -18,7 +20,7 @@ public class EnterpriseDeletedDomainEvent extends DomainEvent {
     }
 
     @Override
-    public Map<String, String> payload() {
+    public Map<String, Serializable> payload() {
         return Map.of(
                 "nit", enterprise.getNit().value(),
                 "name", enterprise.getName().value(),

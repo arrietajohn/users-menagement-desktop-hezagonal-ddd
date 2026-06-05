@@ -1,5 +1,6 @@
 package co.edu.udc.desechos_fabrica.shared;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
 import lombok.Getter;
@@ -15,5 +16,5 @@ public abstract class DomainEvent {
     this.occurredOn = LocalDateTime.now();
   }
 
-  public abstract Map<String, String> payload();
+  public abstract Map<String, Serializable> payload();
 }

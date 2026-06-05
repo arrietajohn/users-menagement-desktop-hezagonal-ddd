@@ -1,17 +1,17 @@
-package co.edu.udc.desechos_fabrica.location.domain.valueobjects;
+package co.edu.udc.desechos_fabrica.location.domain.valueobject;
 
 import co.edu.udc.desechos_fabrica.location.domain.exception.InvalidLocationAddressException;
 import java.util.Objects;
 
-public record LocationAddress (String address) {
+public record LocationAddress (String value) {
 
     private static final int MINIMUM_LENGTH = 3;
 
     public LocationAddress {
-        final String normalizedValue = Objects.requireNonNull(address, "Location address cannot be null").trim();
+        final String normalizedValue = Objects.requireNonNull(value, "Location address cannot be null").trim();
         validateNotEmpty(normalizedValue);
         validateMinimumLength(normalizedValue);
-        address = normalizedValue;
+        value = normalizedValue;
     }
 
     public void validateNotEmpty(final String normalizedValue){
@@ -28,6 +28,6 @@ public record LocationAddress (String address) {
 
     @Override
     public String toString() {
-        return address;
+        return value;
     }
 }

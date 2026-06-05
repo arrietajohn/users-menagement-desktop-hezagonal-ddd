@@ -1,18 +1,18 @@
-package co.edu.udc.desechos_fabrica.location.domain.valueobjects;
+package co.edu.udc.desechos_fabrica.location.domain.valueobject;
 
 import co.edu.udc.desechos_fabrica.location.domain.exception.InvalidLocationNameException;
 
 import java.util.Objects;
 
-public record LocationName(String locationName) {
+public record LocationName(String value) {
 
     private static final int MINIMUM_LENGTH = 3;
 
     public LocationName {
-        final String normalizedValue = Objects.requireNonNull(locationName, "Location name can not be null").trim();
+        final String normalizedValue = Objects.requireNonNull(value, "Location name can not be null").trim();
         validateNotEmpty(normalizedValue);
         validateMinimumLength(normalizedValue);
-        locationName = normalizedValue;
+        value = normalizedValue;
     }
 
     public void validateNotEmpty(final String normalizedValue){
@@ -29,6 +29,6 @@ public record LocationName(String locationName) {
 
     @Override
     public String toString() {
-        return locationName;
+        return value;
     }
 }
