@@ -1,13 +1,9 @@
 package com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller;
 
 import com.jcaa.usersmanagement.application.port.in.*;
-import com.jcaa.usersmanagement.domain.model.Session;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.CreateSessionRequest;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.CreateUserRequest;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.SessionResponse;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.UserResponse;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.mapper.SessionDesktopMapper;
-import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.mapper.UserDesktopMapper;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -19,6 +15,7 @@ public final class SessionController {
     private final GetAllSessionUseCase getAllSessionUseCase;
     private final GetSessionByIdUseCase getSessionByIdUseCase;
     private final GetSessionsByDateUseCase getSessionsByDateUseCase;
+    private final GetSessionByChairmanUseCase getSessionBychairmanUseCase;
 
 
 
@@ -41,6 +38,11 @@ public final class SessionController {
 
     public List<SessionResponse> getSessionByDate(final String fecha) {
         final var sessions = getSessionsByDateUseCase.execute(fecha);
+        return SessionDesktopMapper.toResponseList(sessions);
+    }
+
+    public List<SessionResponse> getSessionByChairman(final String chairman) {
+        final var sessions = getSessionBychairmanUseCase.execute(chairman);
         return SessionDesktopMapper.toResponseList(sessions);
     }
 }

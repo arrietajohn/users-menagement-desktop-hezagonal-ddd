@@ -22,7 +22,7 @@ import java.util.Optional;
 @Log
 @RequiredArgsConstructor
 public final class SessionRepositoryMySQL
-        implements SaveSessionPort, GetAllSessionsPort, GetSessionByIdPort, GetSessionByDatePort {
+        implements SaveSessionPort, GetAllSessionsPort, GetSessionByIdPort, GetSessionByDatePort, GetSessionByChairmanPort {
     private static final String SQL_SELECT_ALL =
             "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
                     "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions";
@@ -38,10 +38,16 @@ public final class SessionRepositoryMySQL
             "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, ID_Charman, Fecha, Hora_Inicio, Hora_Fin "
                     + "FROM sessions "
                     + "WHERE ID_Sesion = ? LIMIT 1";
+
     private static final String SQL_SELECT_BY_DATE =
             "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
                     "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions " +
                     "WHERE Fecha = ?";
+
+    private static final String SQL_SELECT_BY_CHAIRMAN =
+            "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
+                    "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions " +
+                    "WHERE ID_Charman = ?";
 
     private final Connection connection;
 
@@ -97,6 +103,17 @@ public final class SessionRepositoryMySQL
     public List<Session> getByDate(String fecha) {
         try (final PreparedStatement statement = connection.prepareStatement(SQL_SELECT_BY_DATE)) {
             statement.setString(1, fecha);
+            final ResultSet resultSet = statement.executeQuery();
+            return SessionPersistenceMapper.fromResultSetToModelList(resultSet);
+        } catch (final SQLException exception) {
+            throw PersistenceException.becauseFindAllFailed(exception);
+        }
+    }
+
+    @Override
+    public List<Session> getByChairman(String chairmanId) {
+        try (final PreparedStatement statement = connection.prepareStatement(SQL_SELECT_BY_CHAIRMAN)) {
+            statement.setString(1, chairmanId);
             final ResultSet resultSet = statement.executeQuery();
             return SessionPersistenceMapper.fromResultSetToModelList(resultSet);
         } catch (final SQLException exception) {

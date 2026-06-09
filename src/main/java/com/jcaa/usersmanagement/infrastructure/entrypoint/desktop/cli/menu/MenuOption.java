@@ -18,6 +18,7 @@ public enum MenuOption {
   LIST_SESSIONS(8, "List all sessions"),
   FIND_SESSION(9, "Find session by ID"),
   FIND_SESSION_BY_DATE(10, "Buscar Sessiones por fecha"),
+  FIND_SESSION_BY_CHAIRMAN(11,"Buscar sessiones por chairman"),
   EXIT(0, "Exit");
 
   private final int number;
