@@ -22,7 +22,8 @@ import java.util.Optional;
 @Log
 @RequiredArgsConstructor
 public final class SessionRepositoryMySQL
-        implements SaveSessionPort, GetAllSessionsPort, GetSessionByIdPort, GetSessionByDatePort, GetSessionByChairmanPort {
+        implements SaveSessionPort, GetAllSessionsPort, GetSessionByIdPort, GetSessionByDatePort, GetSessionByChairmanPort,
+                    GetSessionOrderedByDatePort {
     private static final String SQL_SELECT_ALL =
             "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
                     "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions";
@@ -48,6 +49,11 @@ public final class SessionRepositoryMySQL
             "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
                     "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions " +
                     "WHERE ID_Charman = ?";
+
+    private static final String SQL_SELECT_BY_ORDERED_BY_DATE =
+            "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
+                    "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions " +
+                    "ORDER BY Fecha, Hora_Inicio";
 
     private final Connection connection;
 
@@ -114,6 +120,16 @@ public final class SessionRepositoryMySQL
     public List<Session> getByChairman(String chairmanId) {
         try (final PreparedStatement statement = connection.prepareStatement(SQL_SELECT_BY_CHAIRMAN)) {
             statement.setString(1, chairmanId);
+            final ResultSet resultSet = statement.executeQuery();
+            return SessionPersistenceMapper.fromResultSetToModelList(resultSet);
+        } catch (final SQLException exception) {
+            throw PersistenceException.becauseFindAllFailed(exception);
+        }
+    }
+
+    @Override
+    public List<Session> getOrderedByDate() {
+        try (final PreparedStatement statement = connection.prepareStatement(SQL_SELECT_BY_ORDERED_BY_DATE)) {
             final ResultSet resultSet = statement.executeQuery();
             return SessionPersistenceMapper.fromResultSetToModelList(resultSet);
         } catch (final SQLException exception) {

@@ -67,7 +67,8 @@ public final class SessionManagementCli {
                 MenuOption.CREATE_SESSION, new CreateSessionHandler(sessionController, console, printer),
                 MenuOption.FIND_SESSION,   new FindSessionByIdHandler(sessionController, console, printer),
                 MenuOption.FIND_SESSION_BY_DATE, new FindSessionByDateHandler(sessionController, console, printer),
-                MenuOption.FIND_SESSION_BY_CHAIRMAN, new FindSessionByChairmanHandler(sessionController, console, printer));
+                MenuOption.FIND_SESSION_BY_CHAIRMAN, new FindSessionByChairmanHandler(sessionController, console, printer),
+                MenuOption.LIST_SESSION_ORDERED_BY_DATE, new ListSessionOrderedByDateHandler(sessionController, printer));
     }
 
     private void printMenu() {
@@ -81,7 +82,8 @@ public final class SessionManagementCli {
                     || option == MenuOption.FIND_SESSION
                     || option == MenuOption.EXIT
                     || option == MenuOption.FIND_SESSION_BY_DATE
-                    || option == MenuOption.FIND_SESSION_BY_CHAIRMAN) {
+                    || option == MenuOption.FIND_SESSION_BY_CHAIRMAN
+                    || option == MenuOption.LIST_SESSION_ORDERED_BY_DATE) {
                 console.printf("    [%d] %s%n", option.getNumber(), option.getDescription());
             }
         }
