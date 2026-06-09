@@ -18,6 +18,7 @@ public final class SessionController {
     private final CreateSessionUseCase createSessionUseCase;
     private final GetAllSessionUseCase getAllSessionUseCase;
     private final GetSessionByIdUseCase getSessionByIdUseCase;
+    private final GetSessionsByDateUseCase getSessionsByDateUseCase;
 
 
 
@@ -36,5 +37,10 @@ public final class SessionController {
         final var query = SessionDesktopMapper.toGetByIdQuery(id);
         final var session = getSessionByIdUseCase.execute(query);
         return SessionDesktopMapper.toResponse(session);
+    }
+
+    public List<SessionResponse> getSessionByDate(final String fecha) {
+        final var sessions = getSessionsByDateUseCase.execute(fecha);
+        return SessionDesktopMapper.toResponseList(sessions);
     }
 }
