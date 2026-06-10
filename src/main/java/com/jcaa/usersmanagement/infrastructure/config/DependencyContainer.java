@@ -20,11 +20,18 @@ import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.Databa
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
 
-// nuevos imports para los casos de uso
+// Casos de uso para la unidad 3
 import com.jcaa.usersmanagement.application.service.ActualizarEstadoProyectoService;
 import com.jcaa.usersmanagement.application.service.CambiarPromotorProyectoService;
 import com.jcaa.usersmanagement.application.service.ProrrogarFechaFinService;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.ProyectoRepositoryMySQL;
+
+// NUEVOS IMPORTS PARA LOS CASOS DE USO DE CONSULTA - UNIDAD 4
+import com.jcaa.usersmanagement.application.service.ListarProyectosEnCursoService;
+import com.jcaa.usersmanagement.application.service.BuscarProyectosPorRangoFechasService;
+import com.jcaa.usersmanagement.application.service.ListarProyectosPorPromotorService;
+import com.jcaa.usersmanagement.application.service.FiltrarProyectosPorEstadoService;
+import com.jcaa.usersmanagement.application.service.BuscarProyectosPorDenominacionService;
 
 import java.sql.Connection;
 import jakarta.validation.Validator;
@@ -46,10 +53,17 @@ public final class DependencyContainer {
 
   private final UserController userController;
 
-  // PROPIEDADES PRIVADAS PARA LOS SERVICIOS DE PROYECTOS
+  // Propiedades privadas para los servicios de proyectos (Unidad 3)
   private final ActualizarEstadoProyectoService actualizarEstadoProyectoService;
   private final ProrrogarFechaFinService prorrogarFechaFinService;
   private final CambiarPromotorProyectoService cambiarPromotorProyectoService;
+
+  //  PROPIEDADES PRIVADAS PARA LOS NUEVOS SERVICIOS DE CONSULTA (Unidad 4)
+  private final ListarProyectosEnCursoService listarProyectosEnCursoService;
+  private final BuscarProyectosPorRangoFechasService buscarProyectosPorRangoFechasService;
+  private final ListarProyectosPorPromotorService listarProyectosPorPromotorService;
+  private final FiltrarProyectosPorEstadoService filtrarProyectosPorEstadoService;
+  private final BuscarProyectosPorDenominacionService buscarProyectosPorDenominacionService;
 
   public DependencyContainer() {
     final AppProperties properties = new AppProperties();
@@ -57,7 +71,7 @@ public final class DependencyContainer {
     final Connection connection = buildDatabaseConnection(properties);
     final UserRepositoryMySQL userRepository = new UserRepositoryMySQL(connection);
 
-    //  INSTANCIACIÓN DEL NUEVO ADAPTADOR DE PERSISTENCIA DE PROYECTOS
+    // Instanciación del adaptador de persistencia de proyectos
     final ProyectoRepositoryMySQL proyectoRepository = new ProyectoRepositoryMySQL(connection);
 
     final JavaMailEmailSenderAdapter emailSender =
@@ -86,17 +100,24 @@ public final class DependencyContainer {
                     getAllUsersUseCase,
                     loginUseCase);
 
-    // INICIALIZACIÓN DE LOS TRES SERVICIOS CON EL REPOSITORIO
+    // Inicialización de los tres servicios con el repositorio (Unidad 3)
     this.actualizarEstadoProyectoService = new ActualizarEstadoProyectoService(proyectoRepository);
     this.prorrogarFechaFinService = new ProrrogarFechaFinService(proyectoRepository);
     this.cambiarPromotorProyectoService = new CambiarPromotorProyectoService(proyectoRepository);
+
+    //  INICIALIZACIÓN DE LOS 5 SERVICIOS DE CONSULTA AVANZADA (Unidad 4)
+    this.listarProyectosEnCursoService = new ListarProyectosEnCursoService(proyectoRepository);
+    this.buscarProyectosPorRangoFechasService = new BuscarProyectosPorRangoFechasService(proyectoRepository);
+    this.listarProyectosPorPromotorService = new ListarProyectosPorPromotorService(proyectoRepository);
+    this.filtrarProyectosPorEstadoService = new FiltrarProyectosPorEstadoService(proyectoRepository);
+    this.buscarProyectosPorDenominacionService = new BuscarProyectosPorDenominacionService(proyectoRepository);
   }
 
   public UserController userController() {
     return userController;
   }
 
-  // MÉTODOS GETTERS
+  // Métodos Getters (Unidad 3)
   public ActualizarEstadoProyectoService getActualizarEstadoProyectoService() {
     return actualizarEstadoProyectoService;
   }
@@ -107,6 +128,27 @@ public final class DependencyContainer {
 
   public CambiarPromotorProyectoService getCambiarPromotorProyectoService() {
     return cambiarPromotorProyectoService;
+  }
+
+  // 🆕 MÉTODOS GETTERS PARA LOS SERVICIOS DE CONSULTA (Unidad IV)
+  public ListarProyectosEnCursoService getListarProyectosEnCursoService() {
+    return listarProyectosEnCursoService;
+  }
+
+  public BuscarProyectosPorRangoFechasService getBuscarProyectosPorRangoFechasService() {
+    return buscarProyectosPorRangoFechasService;
+  }
+
+  public ListarProyectosPorPromotorService getListarProyectosPorPromotorService() {
+    return listarProyectosPorPromotorService;
+  }
+
+  public FiltrarProyectosPorEstadoService getFiltrarProyectosPorEstadoService() {
+    return filtrarProyectosPorEstadoService;
+  }
+
+  public BuscarProyectosPorDenominacionService getBuscarProyectosPorDenominacionService() {
+    return buscarProyectosPorDenominacionService;
   }
 
   private static Connection buildDatabaseConnection(final AppProperties properties) {
