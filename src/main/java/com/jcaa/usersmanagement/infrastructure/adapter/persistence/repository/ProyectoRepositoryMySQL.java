@@ -123,6 +123,99 @@ public final class ProyectoRepositoryMySQL implements ProyectoRepository {
         }
     }
 
+    //  IMPLEMENTACIÓN DE CONSULTAS AVANZADAS - UNIDAD 4
+
+
+    @Override
+    public List<Proyecto> findProyectosEnCurso() {
+        // Consulta CEA 1: Proyectos con estado operativo Activo o En Curso
+        final List<Proyecto> proyectos = new ArrayList<>();
+        String sql = "SELECT * FROM proyectos WHERE estado = 'ACTIVO' OR estado = 'EN_CURSO' ORDER BY id_proyecto DESC";
+        try (final PreparedStatement ps = connection.prepareStatement(sql);
+             final ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                proyectos.add(mapResultSetToProyecto(rs));
+            }
+            return proyectos;
+        } catch (final SQLException exception) {
+            throw new RuntimeException("Error al consultar proyectos en curso de la empresa", exception);
+        }
+    }
+
+    @Override
+    public List<Proyecto> findProyectosCompletadosPorRangoFechas(LocalDate inicio, LocalDate fin) {
+        // Consulta CEA 7: Proyectos finalizados filtrados transaccionalmente por un rango de fechas
+        final List<Proyecto> proyectos = new ArrayList<>();
+        String sql = "SELECT * FROM proyectos WHERE (estado = 'FINALIZADO' OR estado = 'COMPLETADO') AND fecha_fin BETWEEN ? AND ? ORDER BY fecha_fin ASC";
+        try (final PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setDate(1, Date.valueOf(inicio));
+            ps.setDate(2, Date.valueOf(fin));
+            try (final ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    proyectos.add(mapResultSetToProyecto(rs));
+                }
+            }
+            return proyectos;
+        } catch (final SQLException exception) {
+            throw new RuntimeException("Error al consultar proyectos completados por rango de fechas", exception);
+        }
+    }
+
+    @Override
+    public List<Proyecto> findByPromotorId(Long idPromotor) {
+        // Consulta CEA Adaptada 3: Carga de proyectos asignados a un líder específico
+        final List<Proyecto> proyectos = new ArrayList<>();
+        String sql = "SELECT * FROM proyectos WHERE id_promotor = ? ORDER BY fecha_inicio DESC";
+        try (final PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, idPromotor);
+            try (final ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    proyectos.add(mapResultSetToProyecto(rs));
+                }
+            }
+            return proyectos;
+        } catch (final SQLException exception) {
+            throw new RuntimeException("Error al obtener proyectos del promotor con ID: " + idPromotor, exception);
+        }
+    }
+
+    @Override
+    public List<Proyecto> findByEstadoEspecifico(String estado) {
+        // Consulta CEA Adaptada 4: Filtrado dinámico por cualquier estado
+        final List<Proyecto> proyectos = new ArrayList<>();
+        String sql = "SELECT * FROM proyectos WHERE estado = ? ORDER BY denominacion ASC";
+        try (final PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, estado);
+            try (final ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    proyectos.add(mapResultSetToProyecto(rs));
+                }
+            }
+            return proyectos;
+        } catch (final SQLException exception) {
+            throw new RuntimeException("Error al filtrar portafolio por estado: " + estado, exception);
+        }
+    }
+
+    @Override
+    public List<Proyecto> findByDenominacionLike(String termino) {
+        // Consulta CEA Adaptada 5: Coincidencia parcial de texto en la denominación comercial
+        final List<Proyecto> proyectos = new ArrayList<>();
+        String sql = "SELECT * FROM proyectos WHERE denominacion LIKE ? ORDER BY denominacion ASC";
+        try (final PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + termino + "%");
+            try (final ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    proyectos.add(mapResultSetToProyecto(rs));
+                }
+            }
+            return proyectos;
+        } catch (final SQLException exception) {
+            throw new RuntimeException("Error al buscar proyectos por patrón de denominación", exception);
+        }
+    }
+
+
     private Proyecto mapResultSetToProyecto(final ResultSet rs) throws SQLException {
         final Proyecto p = new Proyecto();
         p.setIdProyecto(rs.getLong("id_proyecto"));
