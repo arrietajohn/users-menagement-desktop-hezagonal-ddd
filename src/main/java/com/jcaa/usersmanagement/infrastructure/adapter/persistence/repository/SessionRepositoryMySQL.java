@@ -23,11 +23,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public final class SessionRepositoryMySQL
         implements SaveSessionPort, GetAllSessionsPort, GetSessionByIdPort, GetSessionByDatePort, GetSessionByChairmanPort,
-                    GetSessionOrderedByDatePort, GetSessionByDateAndSalaPort {
+                    GetSessionOrderedByDatePort, GetSessionByDateAndSalaPort, GetSessionWithoutChairmanPort {
     private static final String SQL_SELECT_ALL =
             "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
                     "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions";
-
 
     private static final String SQL_INSERT =
             "INSERT INTO sessions "
@@ -59,6 +58,11 @@ public final class SessionRepositoryMySQL
             "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
                     "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions " +
                     "WHERE Fecha = ? AND ID_Sala = ?";
+
+    private static final String SQL_SELECT_WITHOUT_CHAIRMAN =
+            "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
+                    "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions " +
+                    "WHERE ID_Charman IS NULL";
 
     private final Connection connection;
 
@@ -153,5 +157,16 @@ public final class SessionRepositoryMySQL
             throw PersistenceException.becauseFindAllFailed(exception);
         }
     }
+
+    @Override
+    public List<Session> getWithoutChairman() {
+        try (final PreparedStatement statement = connection.prepareStatement(SQL_SELECT_WITHOUT_CHAIRMAN)) {
+            final ResultSet resultSet = statement.executeQuery();
+            return SessionPersistenceMapper.fromResultSetToModelList(resultSet);
+        } catch (final SQLException exception) {
+            throw PersistenceException.becauseFindAllFailed(exception);
+        }
+    }
+
 }
 

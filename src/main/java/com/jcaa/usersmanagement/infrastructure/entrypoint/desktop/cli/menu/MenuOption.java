@@ -21,6 +21,7 @@ public enum MenuOption {
   FIND_SESSION_BY_CHAIRMAN(11,"Buscar sessiones por chairman"),
   LIST_SESSION_ORDERED_BY_DATE (12,"Listar Sessiones Ordenadas por fecha y hora"),
   FIND_SESSION_BY_DATE_AND_SALA (13, "Buscar Sessiones por fecha y sala"),
+  LIST_SESSION_WITHOUT_CHAIRMAN(14, "Listar sesiones sin chairman asignado"),
   EXIT(0, "Exit");
 
   private final int number;

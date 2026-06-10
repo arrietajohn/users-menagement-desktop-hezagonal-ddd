@@ -45,7 +45,7 @@ public final class SessionDesktopMapper {
                 session.getSalaID().value(),
                 session.getInvestigacionId().value(),
                 session.getPonenteId().value(),
-                session.getChairmanId().value(),
+                session.getChairmanId() != null ? session.getChairmanId().value() : null,
                 session.getFecha() != null ? session.getFecha().toString() : null,
                 session.getHoraInicio() != null ? session.getHoraInicio().toString() : null,
                 session.getHoraFin() != null ? session.getHoraFin().toString() : null

@@ -52,7 +52,7 @@ public class SessionPersistenceMapper {
                 new SalaID(entity.salaId()),
                 new InvestigacionId(entity.investigacionId()),
                 new UserId(entity.ponenteId()),
-                new UserId(entity.chairmanId()),
+                entity.chairmanId() != null ? new UserId(entity.chairmanId()) : null,
                 LocalDate.parse(entity.fecha()),
                 LocalTime.parse(entity.horaInicio()),
                 LocalTime.parse(entity.horaFin()));

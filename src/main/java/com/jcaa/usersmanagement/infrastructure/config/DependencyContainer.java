@@ -63,6 +63,7 @@ public final class DependencyContainer {
     final GetSessionByChairmanUseCase getSessionByChairmanUseCase = new GetSessionByChairmanService(sessionRepository);
     final GetSessionOrderedByDateUseCase getSessionOrderedByDateUseCase = new GetSessionOrderedByDateService(sessionRepository);
     final GetSessionByDateAndSalaUseCase getSessionByDateAndSalaUseCase = new GetSessionByDateAndSalaService(sessionRepository);
+    final GetSessionWithoutChairmanUseCase getSessionWithoutChairmanUseCase = new GetSessionWithoutChairmanService(sessionRepository);
 
     this.userController =
         new UserController(
@@ -76,7 +77,8 @@ public final class DependencyContainer {
     this.sessionController =
             new SessionController(
                     createSessionUseCase, getAllSessionUseCase, getSessionByIdUseCase, getSessionsByDateUseCase,
-                    getSessionByChairmanUseCase, getSessionOrderedByDateUseCase, getSessionByDateAndSalaUseCase
+                    getSessionByChairmanUseCase, getSessionOrderedByDateUseCase, getSessionByDateAndSalaUseCase,
+                    getSessionWithoutChairmanUseCase
             );
   }
 

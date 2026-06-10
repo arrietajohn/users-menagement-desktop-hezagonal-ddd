@@ -18,12 +18,13 @@ public final class SessionController {
     private final GetSessionByChairmanUseCase getSessionBychairmanUseCase;
     private final GetSessionOrderedByDateUseCase getSessionOrderedByDateUseCase;
     private final GetSessionByDateAndSalaUseCase getSessionByDateAndSalaUseCase;
+    private final GetSessionWithoutChairmanUseCase getSessionWithoutChairmanUseCase;
 
 
 
     public SessionResponse createSession(final CreateSessionRequest request) {
         final var command = SessionDesktopMapper.toCreateCommand(request);
-        final var session= createSessionUseCase.execute(command);
+        final var session = createSessionUseCase.execute(command);
         return SessionDesktopMapper.toResponse(session);
     }
 
@@ -53,8 +54,13 @@ public final class SessionController {
         return SessionDesktopMapper.toResponseList(sessions);
     }
 
-    public List<SessionResponse> getSessionByDataAndSala (final String fecha, final String salaId){
+    public List<SessionResponse> getSessionByDataAndSala(final String fecha, final String salaId) {
         final var sessions = getSessionByDateAndSalaUseCase.execute(fecha, salaId);
+        return SessionDesktopMapper.toResponseList(sessions);
+    }
+
+    public List<SessionResponse> getSessionWithoutChairman() {
+        final var sessions = getSessionWithoutChairmanUseCase.execute();
         return SessionDesktopMapper.toResponseList(sessions);
     }
 }
