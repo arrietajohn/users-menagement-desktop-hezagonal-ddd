@@ -17,6 +17,7 @@ public final class SessionController {
     private final GetSessionsByDateUseCase getSessionsByDateUseCase;
     private final GetSessionByChairmanUseCase getSessionBychairmanUseCase;
     private final GetSessionOrderedByDateUseCase getSessionOrderedByDateUseCase;
+    private final GetSessionByDateAndSalaUseCase getSessionByDateAndSalaUseCase;
 
 
 
@@ -49,6 +50,11 @@ public final class SessionController {
 
     public List<SessionResponse> getSessionOrderedByDate() {
         final var sessions = getSessionOrderedByDateUseCase.execute();
+        return SessionDesktopMapper.toResponseList(sessions);
+    }
+
+    public List<SessionResponse> getSessionByDataAndSala (final String fecha, final String salaId){
+        final var sessions = getSessionByDateAndSalaUseCase.execute(fecha, salaId);
         return SessionDesktopMapper.toResponseList(sessions);
     }
 }

@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public final class SessionRepositoryMySQL
         implements SaveSessionPort, GetAllSessionsPort, GetSessionByIdPort, GetSessionByDatePort, GetSessionByChairmanPort,
-                    GetSessionOrderedByDatePort {
+                    GetSessionOrderedByDatePort, GetSessionByDateAndSalaPort {
     private static final String SQL_SELECT_ALL =
             "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
                     "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions";
@@ -54,6 +54,11 @@ public final class SessionRepositoryMySQL
             "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
                     "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions " +
                     "ORDER BY Fecha, Hora_Inicio";
+
+    private static final String SQL_SELECT_BY_DATE_AND_SALA =
+            "SELECT ID_Sesion, ID_Sala, ID_Investigacion, ID_Ponenete, " +
+                    "ID_Charman, Fecha, Hora_Inicio, Hora_Fin FROM sessions " +
+                    "WHERE Fecha = ? AND ID_Sala = ?";
 
     private final Connection connection;
 
@@ -133,6 +138,18 @@ public final class SessionRepositoryMySQL
             final ResultSet resultSet = statement.executeQuery();
             return SessionPersistenceMapper.fromResultSetToModelList(resultSet);
         } catch (final SQLException exception) {
+            throw PersistenceException.becauseFindAllFailed(exception);
+        }
+    }
+
+    @Override
+    public  List<Session> getByDateAndSala (String fecha, String salaId) {
+        try (final PreparedStatement statement = connection.prepareStatement(SQL_SELECT_BY_DATE_AND_SALA)){
+            statement.setString(1, fecha);
+            statement.setString(2, salaId);
+            final ResultSet resultSet = statement.executeQuery();
+            return SessionPersistenceMapper.fromResultSetToModelList(resultSet);
+        }  catch (final SQLException exception) {
             throw PersistenceException.becauseFindAllFailed(exception);
         }
     }
