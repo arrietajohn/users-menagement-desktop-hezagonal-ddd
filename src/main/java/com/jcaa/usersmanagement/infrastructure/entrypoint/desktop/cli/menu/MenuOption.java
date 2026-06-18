@@ -14,6 +14,14 @@ public enum MenuOption {
   UPDATE_USER(4, "Update user"),
   DELETE_USER(5, "Delete user"),
   LOGIN(6, "Login"),
+  CREATE_SESSION(7, "Create session"),
+  LIST_SESSIONS(8, "List all sessions"),
+  FIND_SESSION(9, "Find session by ID"),
+  FIND_SESSION_BY_DATE(10, "Buscar Sessiones por fecha"),
+  FIND_SESSION_BY_CHAIRMAN(11,"Buscar sessiones por chairman"),
+  LIST_SESSION_ORDERED_BY_DATE (12,"Listar Sessiones Ordenadas por fecha y hora"),
+  FIND_SESSION_BY_DATE_AND_SALA (13, "Buscar Sessiones por fecha y sala"),
+  LIST_SESSION_WITHOUT_CHAIRMAN(14, "Listar sesiones sin chairman asignado"),
   EXIT(0, "Exit");
 
   private final int number;

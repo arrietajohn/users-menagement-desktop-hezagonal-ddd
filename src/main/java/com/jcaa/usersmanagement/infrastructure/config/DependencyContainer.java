@@ -1,23 +1,14 @@
 package com.jcaa.usersmanagement.infrastructure.config;
 
-import com.jcaa.usersmanagement.application.port.in.CreateUserUseCase;
-import com.jcaa.usersmanagement.application.port.in.DeleteUserUseCase;
-import com.jcaa.usersmanagement.application.port.in.GetAllUsersUseCase;
-import com.jcaa.usersmanagement.application.port.in.GetUserByIdUseCase;
-import com.jcaa.usersmanagement.application.port.in.LoginUseCase;
-import com.jcaa.usersmanagement.application.port.in.UpdateUserUseCase;
-import com.jcaa.usersmanagement.application.service.CreateUserService;
-import com.jcaa.usersmanagement.application.service.DeleteUserService;
-import com.jcaa.usersmanagement.application.service.EmailNotificationService;
-import com.jcaa.usersmanagement.application.service.GetAllUsersService;
-import com.jcaa.usersmanagement.application.service.GetUserByIdService;
-import com.jcaa.usersmanagement.application.service.LoginService;
-import com.jcaa.usersmanagement.application.service.UpdateUserService;
+import com.jcaa.usersmanagement.application.port.in.*;
+import com.jcaa.usersmanagement.application.service.*;
 import com.jcaa.usersmanagement.infrastructure.adapter.email.JavaMailEmailSenderAdapter;
 import com.jcaa.usersmanagement.infrastructure.adapter.email.SmtpConfig;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConfig;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.DatabaseConnectionFactory;
+import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.SessionRepositoryMySQL;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.SessionController;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
 
 import java.sql.Connection;
@@ -39,6 +30,7 @@ public final class DependencyContainer {
   private static final String SMTP_FROM_NAME = "smtp.from.name";
 
   private final UserController userController;
+  private final SessionController sessionController;
 
   public DependencyContainer() {
     final AppProperties properties = new AppProperties();
@@ -63,6 +55,16 @@ public final class DependencyContainer {
     final GetAllUsersUseCase getAllUsersUseCase = new GetAllUsersService(userRepository);
     final LoginUseCase loginUseCase = new LoginService(userRepository, validator);
 
+    final SessionRepositoryMySQL sessionRepository = new SessionRepositoryMySQL(connection);
+    final CreateSessionUseCase createSessionUseCase = new CreateSessionService(sessionRepository, validator);
+    final GetAllSessionUseCase getAllSessionUseCase = new GetAllSessionService(sessionRepository);
+    final GetSessionByIdUseCase getSessionByIdUseCase = new GetSessionByIdService(sessionRepository, validator);
+    final GetSessionsByDateUseCase getSessionsByDateUseCase = new GetSessionByDateService(sessionRepository);
+    final GetSessionByChairmanUseCase getSessionByChairmanUseCase = new GetSessionByChairmanService(sessionRepository);
+    final GetSessionOrderedByDateUseCase getSessionOrderedByDateUseCase = new GetSessionOrderedByDateService(sessionRepository);
+    final GetSessionByDateAndSalaUseCase getSessionByDateAndSalaUseCase = new GetSessionByDateAndSalaService(sessionRepository);
+    final GetSessionWithoutChairmanUseCase getSessionWithoutChairmanUseCase = new GetSessionWithoutChairmanService(sessionRepository);
+
     this.userController =
         new UserController(
             createUserUseCase,
@@ -71,11 +73,19 @@ public final class DependencyContainer {
             getUserByIdUseCase,
             getAllUsersUseCase,
             loginUseCase);
+
+    this.sessionController =
+            new SessionController(
+                    createSessionUseCase, getAllSessionUseCase, getSessionByIdUseCase, getSessionsByDateUseCase,
+                    getSessionByChairmanUseCase, getSessionOrderedByDateUseCase, getSessionByDateAndSalaUseCase,
+                    getSessionWithoutChairmanUseCase
+            );
   }
 
   public UserController userController() {
     return userController;
   }
+  public SessionController sessionController() {return sessionController; }
 
   private static Connection buildDatabaseConnection(final AppProperties properties) {
     final DatabaseConfig config =
