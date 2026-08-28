@@ -20,6 +20,12 @@ import com.jcaa.usersmanagement.infrastructure.adapter.persistence.config.Databa
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository.UserRepositoryMySQL;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.controller.UserController;
 
+import com.jcaa.usersmanagement.application.port.in.ofertaempleo.OfertaEmpleoUseCase;
+import com.jcaa.usersmanagement.application.service.ofertaempleo.OfertaEmpleoService;
+import com.jcaa.usersmanagement.application.port.out.ofertaempleo.OfertaEmpleoRepositoryPort;
+import com.jcaa.usersmanagement.infrastructure.adapter.persistence.ofertaempleo.OfertaEmpleoMySQLRepository;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.ofertaempleo.OfertaEmpleoController;
+
 import java.sql.Connection;
 import jakarta.validation.Validator;
 
@@ -39,6 +45,7 @@ public final class DependencyContainer {
   private static final String SMTP_FROM_NAME = "smtp.from.name";
 
   private final UserController userController;
+  private final OfertaEmpleoController ofertaEmpleoController;
 
   public DependencyContainer() {
     final AppProperties properties = new AppProperties();
@@ -47,54 +54,78 @@ public final class DependencyContainer {
     final UserRepositoryMySQL userRepository = new UserRepositoryMySQL(connection);
 
     final JavaMailEmailSenderAdapter emailSender =
-        new JavaMailEmailSenderAdapter(buildSmtpConfig(properties));
-    final EmailNotificationService emailNotification = new EmailNotificationService(emailSender);
+            new JavaMailEmailSenderAdapter(buildSmtpConfig(properties));
 
-    // Construir Validator para las validaciones en la capa de aplicación
+    final EmailNotificationService emailNotification =
+            new EmailNotificationService(emailSender);
+
     final Validator validator = ValidatorProvider.buildValidator();
 
     final CreateUserUseCase createUserUseCase =
-        new CreateUserService(userRepository, userRepository, emailNotification, validator);
+            new CreateUserService(userRepository, userRepository, emailNotification, validator);
+
     final UpdateUserUseCase updateUserUseCase =
-        new UpdateUserService(userRepository, userRepository, userRepository, emailNotification, validator);
+            new UpdateUserService(userRepository, userRepository, userRepository, emailNotification, validator);
+
     final DeleteUserUseCase deleteUserUseCase =
-        new DeleteUserService(userRepository, userRepository, validator);
-    final GetUserByIdUseCase getUserByIdUseCase = new GetUserByIdService(userRepository, validator);
-    final GetAllUsersUseCase getAllUsersUseCase = new GetAllUsersService(userRepository);
-    final LoginUseCase loginUseCase = new LoginService(userRepository, validator);
+            new DeleteUserService(userRepository, userRepository, validator);
+
+    final GetUserByIdUseCase getUserByIdUseCase =
+            new GetUserByIdService(userRepository, validator);
+
+    final GetAllUsersUseCase getAllUsersUseCase =
+            new GetAllUsersService(userRepository);
+
+    final LoginUseCase loginUseCase =
+            new LoginService(userRepository, validator);
 
     this.userController =
-        new UserController(
-            createUserUseCase,
-            updateUserUseCase,
-            deleteUserUseCase,
-            getUserByIdUseCase,
-            getAllUsersUseCase,
-            loginUseCase);
+            new UserController(
+                    createUserUseCase,
+                    updateUserUseCase,
+                    deleteUserUseCase,
+                    getUserByIdUseCase,
+                    getAllUsersUseCase,
+                    loginUseCase);
+
+
+    final OfertaEmpleoRepositoryPort ofertaRepo =
+            new OfertaEmpleoMySQLRepository(connection);
+
+    final OfertaEmpleoUseCase ofertaUseCase =
+            new OfertaEmpleoService(ofertaRepo);
+
+    this.ofertaEmpleoController =
+            new OfertaEmpleoController(ofertaUseCase);
   }
 
   public UserController userController() {
     return userController;
   }
 
+  public OfertaEmpleoController ofertaEmpleoController() {
+    return ofertaEmpleoController;
+  }
+
   private static Connection buildDatabaseConnection(final AppProperties properties) {
     final DatabaseConfig config =
-        new DatabaseConfig(
-            properties.get(DB_HOST),
-            properties.getInt(DB_PORT),
-            properties.get(DB_NAME),
-            properties.get(DB_USER),
-            properties.get(DB_PASSWORD));
+            new DatabaseConfig(
+                    properties.get(DB_HOST),
+                    properties.getInt(DB_PORT),
+                    properties.get(DB_NAME),
+                    properties.get(DB_USER),
+                    properties.get(DB_PASSWORD));
+
     return DatabaseConnectionFactory.createConnection(config);
   }
 
   private static SmtpConfig buildSmtpConfig(final AppProperties properties) {
     return new SmtpConfig(
-        properties.get(SMTP_HOST),
-        properties.getInt(SMTP_PORT),
-        properties.get(SMTP_USER),
-        properties.get(SMTP_PASSWORD),
-        properties.get(SMTP_FROM),
-        properties.get(SMTP_FROM_NAME));
+            properties.get(SMTP_HOST),
+            properties.getInt(SMTP_PORT),
+            properties.get(SMTP_USER),
+            properties.get(SMTP_PASSWORD),
+            properties.get(SMTP_FROM),
+            properties.get(SMTP_FROM_NAME));
   }
 }
